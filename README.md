@@ -1,4 +1,6 @@
 Snodge
 ======
 
-Randomly mutate JSON documents for fuzz testing
+A small Java library to randomly mutate JSON documents. Useful for fuzz testing.
+
+
