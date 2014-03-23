@@ -1,5 +1,5 @@
 
-version:=$(shell git describe --tags --always --dirty=-local --match='r*')
+version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 
 outdir=out
 srcdir_main=src/main
