@@ -1,5 +1,6 @@
 
 version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
+release=snodge-$(version)
 
 outdir=out
 srcdir_main=src/main
@@ -11,23 +12,32 @@ JAR=jar
 JAVAC=javac
 JAVA=java
 
+java_src=$(shell find $1 -name '*.java')
 topath=$(subst $(eval) ,:,$1)
 libjars=$(filter-out %-sources.jar,$(wildcard $(patsubst %,libs/%/*.jar,$1)))
 classpath=$(patsubst %,-classpath %,$(call topath,$(filter %.jar,$^)))
 
+src_main:=$(call java_src,$(srcdir_main))
+src_test:=$(call java_src,$(srcdir_test))
+
+all: tested jars
+
 tested: $(outdir)/junit-report.txt
 
-jars: $(outdir)/snodge-$(version).jar $(outdir)/snodge-test-$(version).jar
+jars: $(outdir)/$(release).jar $(outdir)/$(release)-test.jar $(outdir)/$(release)-sources.jar
 
 
-$(outdir)/snodge-$(version).compiled: $(shell find $(srcdir_main) -name '*.java')
-$(outdir)/snodge-$(version).compiled: $(call libjars,$(libs_main))
+$(outdir)/$(release).compiled: $(src_main)
+$(outdir)/$(release).compiled: $(call libjars,$(libs_main))
 
-$(outdir)/snodge-test-$(version).compiled: $(shell find $(srcdir_test) -name '*.java')
-$(outdir)/snodge-test-$(version).compiled: $(call libjars,$(libs_main))
-$(outdir)/snodge-test-$(version).compiled: $(call libjars,$(libs_test))
-$(outdir)/snodge-test-$(version).compiled: $(outdir)/snodge-$(version).jar
+$(outdir)/$(release)-test.compiled: $(src_test)
+$(outdir)/$(release)-test.compiled: $(call libjars,$(libs_main))
+$(outdir)/$(release)-test.compiled: $(call libjars,$(libs_test))
+$(outdir)/$(release)-test.compiled: $(outdir)/$(release).jar
 
+
+$(outdir)/$(release)-sources.jar: $(src_main)
+	jar cf $@ -C $(srcdir_main) .
 
 %.jar: %.compiled
 	$(JAR) -cf$(JARFLAGS) $@ -C $* .
@@ -39,14 +49,15 @@ $(outdir)/snodge-test-$(version).compiled: $(outdir)/snodge-$(version).jar
 
 $(outdir)/junit-report.txt: $(call libjars,$(libs_main))
 $(outdir)/junit-report.txt: $(call libjars,$(libs_test))
-$(outdir)/junit-report.txt: $(outdir)/snodge-$(version).jar
-$(outdir)/junit-report.txt: $(outdir)/snodge-test-$(version).jar
-$(outdir)/junit-report.txt: TESTS=$(subst /,.,$(patsubst %.class,%,$(filter %Test.class,$(shell $(JAR) tf $(outdir)/snodge-test-$(version).jar))))
+$(outdir)/junit-report.txt: $(outdir)/$(release).jar
+$(outdir)/junit-report.txt: $(outdir)/$(release)-test.jar
+$(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.java,%,$(src_test))))
 $(outdir)/junit-report.txt:
 	$(JAVA) $(classpath) org.junit.runner.JUnitCore $(TESTS) | tee $@
 
 clean:
 	rm -rf $(outdir)
 
-.PHONY: jars tested clean
+again: clean all
 
+.PHONY: all jars tested clean
