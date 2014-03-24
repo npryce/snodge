@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.Mutagen;
-import com.natpryce.snodge.internal.ElementAtPathMutation;
 import com.natpryce.snodge.internal.JsonPath;
 
 import java.util.Collections;
@@ -20,9 +19,7 @@ public class RemoveObjectProperty implements Mutagen {
     @Override
     public Iterable<DocumentMutation> potentialMutations(JsonElement document, final JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonObject()) {
-            Set<String> indices = propertyNames(elementToMutate.getAsJsonObject());
-
-            return transform(indices, new Function<String, DocumentMutation>() {
+            return transform(propertyNames(elementToMutate.getAsJsonObject()), new Function<String, DocumentMutation>() {
                 @Override
                 public DocumentMutation apply(String propertyName) {
                     return mutationFor(pathToElement, propertyName);
@@ -34,7 +31,7 @@ public class RemoveObjectProperty implements Mutagen {
     }
 
     DocumentMutation mutationFor(final JsonPath pathToElement, final String propertyName) {
-        return new ElementAtPathMutation(pathToElement, new Function<JsonElement, JsonElement>() {
+        return pathToElement.map(new Function<JsonElement, JsonElement>() {
             @Override
             public JsonElement apply(JsonElement input) {
                 return removeObjectProperty(input.getAsJsonObject(), propertyName);

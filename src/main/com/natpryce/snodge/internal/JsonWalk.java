@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
+import static com.natpryce.snodge.internal.JsonFunctions.arrayEntrySet;
 import static java.util.Collections.singleton;
 
 public class JsonWalk {
@@ -27,7 +28,7 @@ public class JsonWalk {
             return walkChildren(elementPath, object.entrySet());
         } else if (element.isJsonArray()) {
             final JsonArray array = element.getAsJsonArray();
-            return walkChildren(elementPath, JsonFunctions.arrayEntrySet(array));
+            return walkChildren(elementPath, arrayEntrySet(array));
         } else {
             return Collections.emptyList();
         }

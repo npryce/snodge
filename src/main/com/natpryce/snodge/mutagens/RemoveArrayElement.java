@@ -5,19 +5,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.Mutagen;
-import com.natpryce.snodge.internal.ElementAtPathMutation;
-import com.natpryce.snodge.internal.JsonFunctions;
 import com.natpryce.snodge.internal.JsonPath;
 
 import java.util.Collections;
 
 import static com.google.common.collect.Iterables.transform;
+import static com.natpryce.snodge.internal.JsonFunctions.indices;
 
 public class RemoveArrayElement implements Mutagen {
     @Override
     public Iterable<DocumentMutation> potentialMutations(JsonElement document, final JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonArray()) {
-            return transform(JsonFunctions.indices(elementToMutate.getAsJsonArray()), new Function<Integer, DocumentMutation>() {
+            return transform(indices(elementToMutate.getAsJsonArray()), new Function<Integer, DocumentMutation>() {
                 @Override
                 public DocumentMutation apply(Integer index) {
                     return mutationFor(pathToElement, index);
@@ -30,7 +29,7 @@ public class RemoveArrayElement implements Mutagen {
 
 
     DocumentMutation mutationFor(final JsonPath pathToElement, final int index) {
-        return new ElementAtPathMutation(pathToElement, new Function<JsonElement, JsonElement>() {
+        return pathToElement.map(new Function<JsonElement, JsonElement>() {
             @Override
             public JsonElement apply(JsonElement input) {
                 return removeArrayElement(input.getAsJsonArray(), index);

@@ -6,7 +6,7 @@ import com.google.common.base.Joiner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.natpryce.snodge.DocumentMutation;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -105,6 +105,15 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
         }
 
         return replaced;
+    }
+
+    public DocumentMutation map(final Function<? super JsonElement, ? extends JsonElement> f) {
+        return new DocumentMutation() {
+            @Override
+            public JsonElement apply(JsonElement json) {
+                return map(json, f);
+            }
+        };
     }
 
     public JsonElement replace(JsonElement json, JsonElement replacement) {

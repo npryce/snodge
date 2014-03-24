@@ -5,10 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.Mutagen;
-import com.natpryce.snodge.internal.ElementAtPathMutation;
 import com.natpryce.snodge.internal.JsonPath;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +21,7 @@ public class AddObjectProperty implements Mutagen, Function<JsonElement, JsonEle
     @Override
     public Iterable<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonObject()) {
-            return Arrays.<DocumentMutation>asList(new ElementAtPathMutation(pathToElement, this));
+            return Collections.singletonList(pathToElement.map(this));
         } else {
             return Collections.emptyList();
         }
