@@ -1,6 +1,5 @@
 package com.natpryce.snodge;
 
-import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -11,6 +10,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Random;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.natpryce.snodge.JsonBuilders.*;
 import static com.natpryce.snodge.Mutagens.combine;
@@ -99,7 +99,7 @@ public class JsonMutatorTest {
                 withField("num", 1),
                 withField("list", list(1, 2, 3))));
 
-        String mutated = Iterables.getOnlyElement(mutator.mutate(original, 1));
+        String mutated = getOnlyElement(mutator.forStrings().mutate(original, 1));
 
         assertThat(mutated, not(equalTo(original)));
 

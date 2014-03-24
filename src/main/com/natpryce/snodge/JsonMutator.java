@@ -14,7 +14,7 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.natpryce.snodge.Mutagens.allMutagens;
 
-public class JsonMutator {
+public class JsonMutator implements Mutator<JsonElement> {
     private final Random rng;
     private final Mutagen mutagens;
 
@@ -31,12 +31,9 @@ public class JsonMutator {
         this.mutagens = mutagen;
     }
 
-    public Iterable<String> mutate(String json, int sampleSize) {
-        return transform(mutate((new Gson()).fromJson(json, JsonElement.class), sampleSize), toStringFunction());
-    }
-
-    public Iterable<JsonElement> mutate(final JsonElement document, int sampleSize) {
-        return transform(mutations(document, sampleSize), new Function<DocumentMutation, JsonElement>() {
+    @Override
+    public Iterable<JsonElement> mutate(final JsonElement document, int mutationCount) {
+        return transform(mutations(document, mutationCount), new Function<DocumentMutation, JsonElement>() {
             @Override
             public JsonElement apply(DocumentMutation mutation) {
                 return mutation.apply(document);
@@ -44,14 +41,14 @@ public class JsonMutator {
         });
     }
 
-    private List<DocumentMutation> mutations(JsonElement document, int sampleSize) {
-        List<DocumentMutation> selectedMutations = newArrayListWithCapacity(sampleSize);
+    private List<DocumentMutation> mutations(JsonElement document, int mutationCount) {
+        List<DocumentMutation> selectedMutations = newArrayListWithCapacity(mutationCount);
 
         int count = 0;
 
         for (JsonPath path : JsonWalk.walk(document)) {
             for (DocumentMutation possibleMutation : mutagens.potentialMutations(document, path, path.apply(document))) {
-                if (count < sampleSize) {
+                if (count < mutationCount) {
                     selectedMutations.add(possibleMutation);
                 } else {
                     int index = rng.nextInt(count);
@@ -65,5 +62,16 @@ public class JsonMutator {
         }
 
         return selectedMutations;
+    }
+
+    public Mutator<String> forStrings() {
+        final Gson gson = new Gson();
+
+        return new Mutator<String>() {
+            @Override
+            public Iterable<String> mutate(String original, int mutationCount) {
+                return transform(JsonMutator.this.mutate(gson.fromJson(original, JsonElement.class), mutationCount), toStringFunction());
+            }
+        };
     }
 }
