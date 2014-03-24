@@ -11,11 +11,33 @@ Examples of things you can test by mutating known good JSON documents:
 - and more!
 
 
-Dependencies
-------------
+In a Nutshell
+-------------
 
-* [Gson](https://code.google.com/p/google-gson/) - for JSON parsing and document model
-* [Guava](https://code.google.com/p/guava-libraries/) - for transforming and filtering data
+~~~~~~~~~~~~~~~~~~~~~~java
+JsonMutator mutator = new JsonMutator();
+String originalJson = "{\"x\": 1, \"y\": 2}";
+
+for (String mutatedJson : mutator.mutate(originalJson, 10)) {
+    System.out.println(mutatedJson);
+}
+~~~~~~~~~~~~~~~~~~~~~~
+
+Outputs 10 random mutations of the JSON document, for example:
+
+~~~~~~~~~~~~~~~~~~~~~~
+null
+{"y":2,"x":null}
+false
+99
+{"x":1,"y":true}
+{"y":2,"x":{}}
+[]
+{"x":1}
+{"x":1,"y":2,"xx":{}}
+{"y":2,"x":-99}
+~~~~~~~~~~~~~~~~~~~~~~
+
 
 Concepts
 --------
@@ -26,3 +48,13 @@ Concepts
 | *Mutagen*          | given an element in a JSON document, returns zero or more DocumentMutations that mutate that element.  You can write your own Mutagens to perform application-specific mutation. |
 | *DocumentMutation* |  a function from JSON document to JSON document, that returns the original document mutated in some way. |
 
+Dependencies
+------------
+
+* [Gson](https://code.google.com/p/google-gson/) - for JSON parsing and document model
+* [Guava](https://code.google.com/p/guava-libraries/) - for transforming and filtering data
+
+To build:
+
+* Java JDK 7
+* GNU Make 
