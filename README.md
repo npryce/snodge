@@ -16,9 +16,10 @@ In a Nutshell
 
 ~~~~~~~~~~~~~~~~~~~~~~java
 JsonMutator mutator = new JsonMutator();
+
 String originalJson = "{\"x\": 1, \"y\": 2}";
 
-for (String mutatedJson : mutator.mutate(originalJson, 10)) {
+for (String mutatedJson : mutator.forStrings().mutate(originalJson, 10)) {
     System.out.println(mutatedJson);
 }
 ~~~~~~~~~~~~~~~~~~~~~~
