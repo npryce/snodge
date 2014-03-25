@@ -141,14 +141,14 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
             int index = (Integer) pathBit;
             check(parent.isJsonArray(), "expected array", path, i, root);
             JsonArray original = parent.getAsJsonArray();
-            check(original.size() > index, "index out of bounds", path, i, root);
+            check(original.size() >= index, "index out of bounds", path, i, root);
 
             JsonArray replaced = new JsonArray();
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < index; j++) {
                 replaced.add(original.get(j));
             }
             replaced.add(replacement);
-            for (int j = i + 1; j < original.size(); j++) {
+            for (int j = index + 1; j < original.size(); j++) {
                 replaced.add(original.get(j));
             }
 
