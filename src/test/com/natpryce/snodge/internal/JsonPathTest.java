@@ -55,6 +55,15 @@ public class JsonPathTest
 		assertReplacement(original, JsonPath.root, new JsonPrimitive("just this"), new JsonPrimitive("just this"));
 	}
 
+	@Test
+	public void canReplaceElementInSingletonArrayAtPath() throws Exception
+	{
+		JsonElement original = list(1,2,3,list(1));
+
+		assertReplacement(original, JsonPath.of(3,0), new JsonPrimitive(-99),
+                list(1,2,3,list(-99)));
+	}
+
 	private void assertReplacement(JsonElement original, JsonPath path, JsonElement splice, JsonElement expected)
 	{
 		assertThat(path.replace(original, splice), equalTo(expected));
