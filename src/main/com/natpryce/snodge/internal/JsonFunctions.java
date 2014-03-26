@@ -12,7 +12,9 @@ import java.util.Set;
 
 import static com.google.common.collect.DiscreteDomains.integers;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.difference;
 import static com.google.common.collect.Sets.newLinkedHashSet;
+import static java.util.Collections.singleton;
 
 public class JsonFunctions {
     public static Set<Integer> indices(JsonArray array) {
@@ -22,13 +24,6 @@ public class JsonFunctions {
     public static Set<String> propertyNames(JsonObject object) {
         return newLinkedHashSet(transform(object.entrySet(), JsonFunctions.<String, JsonElement>toKey()));
     }
-
-    public static Function<JsonObject, Set<String>> propertyNames = new Function<JsonObject, Set<String>>() {
-        @Override
-        public Set<String> apply(JsonObject input) {
-            return propertyNames(input);
-        }
-    };
 
     private static <K, V> Function<Map.Entry<K, V>, K> toKey() {
         return new Function<Map.Entry<K, V>, K>() {
@@ -46,5 +41,29 @@ public class JsonFunctions {
                 return Maps.immutableEntry(index, array.get(index));
             }
         });
+    }
+
+    public static JsonElement removeArrayElement(JsonArray original, int index) {
+        JsonArray mutant = new JsonArray();
+
+        for (int i = 0; i < index; i++) {
+            mutant.add(original.get(i));
+        }
+        for (int i = index + 1; i < original.size(); i++) {
+            mutant.add(original.get(i));
+        }
+
+        return mutant;
+    }
+
+    public static JsonElement removeObjectProperty(JsonObject original, String nameToRemove) {
+        Set<String> propertiesToKeep = difference(propertyNames(original), singleton(nameToRemove));
+
+        JsonObject mutant = new JsonObject();
+        for (String propertyName : propertiesToKeep) {
+            mutant.add(propertyName, original.get(propertyName));
+        }
+
+        return mutant;
     }
 }

@@ -17,7 +17,7 @@ In a Nutshell
 ~~~~~~~~~~~~~~~~~~~~~~java
 JsonMutator mutator = new JsonMutator();
 
-String originalJson = "{\"x\": 1, \"y\": 2}";
+String originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}";
 
 for (String mutatedJson : mutator.forStrings().mutate(originalJson, 10)) {
     System.out.println(mutatedJson);
@@ -27,16 +27,16 @@ for (String mutatedJson : mutator.forStrings().mutate(originalJson, 10)) {
 Outputs 10 random mutations of the JSON document, for example:
 
 ~~~~~~~~~~~~~~~~~~~~~~
-null
-{"y":2,"x":null}
-false
-99
-{"x":1,"y":true}
-{"y":2,"x":{}}
-[]
-{"x":1}
-{"x":1,"y":2,"xx":{}}
-{"y":2,"x":-99}
+{"x":"hello","y":[1,2,3,null]}
+{"y":[1,2,3],"x":{}}
+{"x":"hello","y":[2,3]}
+{"x":"hello","y":[{},2,3]}
+{"x":"hello"}
+{"x":"hello","y":[1,2,{}]}
+{"x":"hello","y":[1,null,3]}
+{"y":[1,2,3],"x":"hello"}
+{"y":[1,2,3],"x":"a string"}
+{"x":"hello","y":[99,2,3]}
 ~~~~~~~~~~~~~~~~~~~~~~
 
 

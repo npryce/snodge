@@ -60,9 +60,8 @@ public class Mutagens {
                         return new AddObjectProperty(e);
                     }
                 }),
-                new RemoveObjectProperty(),
-                new ReorderObjectProperties(),
-                new RemoveArrayElement()
+                new RemoveJsonElement(),
+                new ReorderObjectProperties()
         );
     }
 
