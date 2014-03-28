@@ -11,6 +11,9 @@ libs_test=junit
 JAR=jar
 JAVAC=javac
 JAVA=java
+JAVADOC=javadoc
+
+JAVACFLAGS=-g
 
 java_src=$(shell find $1 -name '*.java')
 topath=$(subst $(eval) ,:,$1)
@@ -24,7 +27,9 @@ all: tested jars
 
 tested: $(outdir)/junit-report.txt
 
-jars: $(outdir)/$(release).jar $(outdir)/$(release)-test.jar $(outdir)/$(release)-sources.jar
+jars: $(outdir)/$(release).jar $(outdir)/$(release)-test.jar
+jars: $(outdir)/$(release)-sources.jar
+jars: $(outdir)/$(release)-javadoc.jar
 
 
 $(outdir)/$(release).compiled: $(src_main)
@@ -37,7 +42,14 @@ $(outdir)/$(release)-test.compiled: $(outdir)/$(release).jar
 
 
 $(outdir)/$(release)-sources.jar: $(src_main)
-	jar cf $@ -C $(srcdir_main) .
+	$(JAR) cf $@ -C $(srcdir_main) .
+
+$(outdir)/$(release)-javadoc.jar: $(outdir)/$(release)-javadoc/index.html
+	$(JAR) cf $@ -C $(dir $<) .
+
+$(outdir)/$(release)-javadoc/index.html: $(src_main) $(call libjars,$(libs_main))
+	@mkdir -p $(dir $@)
+	$(JAVADOC) -d $(dir $@) $(src_main) $(classpath)
 
 %.jar: %.compiled
 	$(JAR) -cf$(JARFLAGS) $@ -C $* .
