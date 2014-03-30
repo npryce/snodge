@@ -1,4 +1,4 @@
-package com.natpryce.snodge.internal;
+package com.natpryce.snodge;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
@@ -6,7 +6,7 @@ import com.google.common.base.Joiner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.natpryce.snodge.DocumentMutation;
+import com.natpryce.snodge.internal.JsonFunctions;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -48,6 +48,14 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
 
     public static JsonPath of(Object... path) {
         return new JsonPath(path);
+    }
+
+    public int size() {
+        return path.length;
+    }
+
+    public Object at(int n) {
+        return path[(path.length + n)%path.length];
     }
 
     public JsonPath extend(Object... morePath) {
@@ -97,8 +105,8 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
         };
     }
 
-    public JsonElement replace(JsonElement json, JsonElement replacement) {
-        return map(json, Functions.constant(replacement));
+    public JsonElement replace(JsonElement root, JsonElement replacement) {
+        return map(root, Functions.constant(replacement));
     }
 
     private JsonElement replaceElement(JsonElement root, JsonElement parent, int i, JsonElement replacement) {
@@ -147,13 +155,13 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
         };
     }
 
-    public JsonElement remove(final JsonElement json) {
+    public JsonElement remove(final JsonElement root) {
         final int lastIndex = path.length - 1;
 
-        return map(json, lastIndex, new Function<JsonElement, JsonElement>() {
+        return map(root, lastIndex, new Function<JsonElement, JsonElement>() {
             @Override
             public JsonElement apply(JsonElement input) {
-                return removeElement(json, lastIndex, input, path[lastIndex]);
+                return removeElement(root, lastIndex, input, path[lastIndex]);
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.natpryce.snodge.internal;
+package com.natpryce.snodge;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -11,6 +11,29 @@ import static org.junit.Assert.assertEquals;
 
 public class JsonPathTest
 {
+    @Test
+    public void canQueryElementsOfPath() {
+        JsonPath path = JsonPath.of("a", 1, "b", 2, "c");
+
+        assertThat(path.size(), equalTo(5));
+        assertThat(path.at(0), equalTo((Object)"a"));
+        assertThat(path.at(1), equalTo((Object)1));
+        assertThat(path.at(2), equalTo((Object)"b"));
+        assertThat(path.at(3), equalTo((Object)2));
+        assertThat(path.at(4), equalTo((Object)"c"));
+    }
+
+    @Test
+    public void negativeElementsIndexFromEndOfPath() {
+        JsonPath path = JsonPath.of("a", 1, "b", 2, "c");
+
+        assertThat(path.at(-5), equalTo((Object)"a"));
+        assertThat(path.at(-4), equalTo((Object)1));
+        assertThat(path.at(-3), equalTo((Object)"b"));
+        assertThat(path.at(-2), equalTo((Object)2));
+        assertThat(path.at(-1), equalTo((Object)"c"));
+    }
+
 	@Test
 	public void returnsSameHashCodeForSamePathNoMatterHowItIsConstructed() throws Exception
 	{

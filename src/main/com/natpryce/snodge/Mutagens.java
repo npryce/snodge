@@ -2,7 +2,6 @@ package com.natpryce.snodge;
 
 import com.google.common.base.Function;
 import com.google.gson.*;
-import com.natpryce.snodge.internal.JsonPath;
 import com.natpryce.snodge.mutagens.*;
 
 import java.util.List;
@@ -11,6 +10,9 @@ import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 import static java.util.Arrays.asList;
 
+/**
+ * Functions that apply to, or provide, {@link com.natpryce.snodge.Mutagen}s.
+ */
 public class Mutagens {
     private static final List<JsonElement> exampleElements = asList(
             JsonNull.INSTANCE,
@@ -22,10 +24,20 @@ public class Mutagens {
             new JsonArray(),
             new JsonObject());
 
+    /**
+     * Combine multiple component Mutagens into a single Mutagen that generates all the mutations of the components.
+     * @param mutagens the Mutagens to combine
+     * @return the combination Mutagen
+     */
     public static Mutagen combine(final Mutagen... mutagens) {
         return combine(asList(mutagens));
     }
 
+    /**
+     * Combine multiple component Mutagens into a single Mutagen that generates all the mutations of the components.
+     * @param mutagens the Mutagens to combine
+     * @return the combination Mutagen
+     */
     public static Mutagen combine(final Iterable<Mutagen> mutagens) {
         return new Mutagen() {
             @Override
@@ -40,6 +52,9 @@ public class Mutagens {
         };
     }
 
+    /**
+     * A combination of all the Mutagens implemented in the Snodge library.
+     */
     public static Mutagen allMutagens() {
         return combine(
                 forAll(exampleElements, new Function<JsonElement, Mutagen>() {

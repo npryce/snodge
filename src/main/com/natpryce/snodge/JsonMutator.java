@@ -3,7 +3,6 @@ package com.natpryce.snodge;
 import com.google.common.base.Function;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.natpryce.snodge.internal.JsonPath;
 import com.natpryce.snodge.internal.JsonWalk;
 
 import java.util.List;

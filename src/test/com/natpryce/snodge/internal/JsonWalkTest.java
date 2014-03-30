@@ -4,6 +4,7 @@ import com.google.common.base.Functions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
+import com.natpryce.snodge.JsonPath;
 import org.junit.Test;
 
 import java.util.Set;
