@@ -63,19 +63,17 @@ $(outdir)/junit-report.txt: $(outdir)/$(release).jar
 $(outdir)/junit-report.txt: $(outdir)/$(release)-test.jar
 $(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.java,%,$(src_test))))
 $(outdir)/junit-report.txt:
-	ivy -error -confs test -main org.junit.runner.JUnitCore -cp $(outdir)/$(release).jar:$(outdir)/$(release)-test.jar -args $(TESTS) | tee $@
-
+	tools/ivy -error -confs test -main org.junit.runner.JUnitCore -cp $(outdir)/$(release).jar:$(outdir)/$(release)-test.jar -args $(TESTS) | tee $@
 
 $(outdir)/cachepath-%.txt: ivy.xml
 	@mkdir -p $(dir $@)
-	ivy -error -cachepath $@ -confs $*
-
+	tools/ivy -error -cachepath $@ -confs $*
 
 clean:
 	rm -rf $(outdir)
 
 init:
-	ivy -error -confs dev
+	tools/ivy -error -confs dev
 
 again: clean all
 
