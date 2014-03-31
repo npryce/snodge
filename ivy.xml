@@ -11,9 +11,9 @@
     </configurations>
 
     <dependencies>
-        <dependency org="com.google.code.gson" name="gson" rev="2.2.4" conf="main->default;dev->*"/>
-        <dependency org="com.google.guava" name="guava" rev="16.0.1" conf="main->default;dev->*"/>
-        <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3" conf="test->default;dev->*"/>
-        <dependency org="junit" name="junit" rev="4.11" conf="test->default;dev->*"/>
+        <dependency org="com.google.code.gson" name="gson" rev="2.2.4" conf="main->default;dev->sources,javadoc"/>
+        <dependency org="com.google.guava" name="guava" rev="16.0.1" conf="main->default;dev->sources,javadoc"/>
+        <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3" conf="test->default;dev->sources,javadoc"/>
+        <dependency org="junit" name="junit" rev="4.11" conf="test->default;dev->sources,javadoc"/>
     </dependencies>
 </ivy-module>
