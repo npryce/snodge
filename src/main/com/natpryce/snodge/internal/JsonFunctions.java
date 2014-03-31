@@ -1,8 +1,9 @@
 package com.natpryce.snodge.internal;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Ranges;
+import com.google.common.collect.Range;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,7 +11,7 @@ import com.google.gson.JsonObject;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.collect.DiscreteDomains.integers;
+import static com.google.common.collect.DiscreteDomain.integers;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.difference;
 import static com.google.common.collect.Sets.newLinkedHashSet;
@@ -18,7 +19,7 @@ import static java.util.Collections.singleton;
 
 public class JsonFunctions {
     public static Set<Integer> indices(JsonArray array) {
-        return Ranges.closedOpen(0, array.size()).asSet(integers());
+        return ContiguousSet.create(Range.closedOpen(0, array.size()), integers());
     }
 
     public static Set<String> propertyNames(JsonObject object) {
