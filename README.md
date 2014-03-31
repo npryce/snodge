@@ -52,10 +52,14 @@ Concepts
 Dependencies
 ------------
 
+Runtime dependencies:
+
 * [Gson](https://code.google.com/p/google-gson/) - for JSON parsing and document model
 * [Guava](https://code.google.com/p/guava-libraries/) - for transforming and filtering data
 
 To build:
 
 * Java JDK 7
-* GNU Make 
+* GNU Make
+* [JUnit](http://junit.org)
+* [Hamcrest](http://hamcrest.org)
