@@ -81,7 +81,7 @@ again: clean all
 ifdef bintray-login
 reporoot=https://api.bintray.com/content/npryce/maven/$(subst .,/,$(groupid))/$(package)/$(version)
 published: $(published_jars) $(outdir)/$(release).pom
-	@for f in $(notdir $^); do echo curl -T $(outdir)/$$f -u$(bintray-login) $(reporoot)/$$f; done
+	@for f in $(notdir $^); do curl -T $(outdir)/$$f -u$(bintray-login) $(reporoot)/$$f; done
 else
 published:
 	@echo set the bintray-login make variable to '<user>:<key>'
