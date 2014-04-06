@@ -2,6 +2,7 @@
 package=snodge
 version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 release=$(package)-$(version)
+groupid=com.natpryce
 
 outdir=out
 srcdir_main=src/main
@@ -67,7 +68,7 @@ $(outdir)/$(release)-javadoc/index.html: $(src_main) $(libs_main)
 
 $(outdir)/$(release).pom: main.dependencies $(published_jars)
 	@mkdir -p $(dir $@)
-	tools/sm-pom mvn:com.natpryce.$(package):$(package):jar:$(version) main.dependencies $(dir $@)
+	tools/sm-pom mvn:$(groupid):$(package):jar:$(version) main.dependencies $(dir $@)
 
 clean:
 	rm -rf $(outdir)
@@ -78,9 +79,9 @@ distclean: clean
 again: clean all
 
 ifdef bintray-login
-reporoot=https://api.bintray.com/content/npryce/maven/$(package)/$(version)/
+reporoot=https://api.bintray.com/content/npryce/maven/$(subst .,/,$(groupid))/$(package)/$(version)
 published: $(published_jars) $(outdir)/$(release).pom
-	@for f in $(notdir $^); do echo curl -T $(outdir)/$$f -u$(bintray-login) $(reporoot)$$f; done
+	@for f in $(notdir $^); do echo curl -T $(outdir)/$$f -u$(bintray-login) $(reporoot)/$$f; done
 else
 published:
 	@echo set the bintray-login make variable to '<user>:<key>'
