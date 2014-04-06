@@ -1,0 +1,2 @@
+#!/bin/sh
+java -cp $(dirname $0)/sm-*.jar com.googlecode.shavenmaven.PomGenerator "$@"

@@ -1,4 +1,5 @@
 *.class
 out/
+libs/
 .idea/workspace.xml
 .idea/uiDesigner.xml
