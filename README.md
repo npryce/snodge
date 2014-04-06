@@ -10,6 +10,8 @@ Examples of things you can test by mutating known good JSON documents:
 - your application code does not throw unchecked exceptions when parsing values from JSON strings
 - and more!
 
+[ ![Download](https://api.bintray.com/packages/npryce/maven/snodge/images/download.png) ](https://bintray.com/npryce/maven/snodge/_latestVersion)
+
 
 In a Nutshell
 -------------
