@@ -26,6 +26,9 @@ src_test:=$(call java_src,$(srcdir_test))
 published_jars = $(outdir)/$(release).jar $(outdir)/$(release)-sources.jar $(outdir)/$(release)-javadoc.jar
 test_jars = $(outdir)/$(release)-test.jar
 
+published_files = $(published_jars) $(outdir)/$(release).pom
+published_signatures = $(published_files:%=%.asc)
+
 all: tested jars
 
 tested: $(outdir)/junit-report.txt
@@ -70,6 +73,9 @@ $(outdir)/$(release).pom: main.dependencies $(published_jars)
 	@mkdir -p $(dir $@)
 	tools/sm-pom mvn:$(groupid):$(package):jar:$(version) main.dependencies $(dir $@)
 
+$(outdir)/%.asc: $(outdir)/%
+	gpg --detach-sign --armor $<
+
 clean:
 	rm -rf $(outdir)
 
@@ -80,12 +86,21 @@ again: clean all
 
 ifdef bintray-login
 reporoot=https://api.bintray.com/content/npryce/maven/$(package)/$(version)/$(subst .,/,$(groupid))/$(package)/$(version)
-published: $(published_jars) $(outdir)/$(release).pom
-	@for f in $(notdir $^); do curl -T $(outdir)/$$f -u$(bintray-login) $(reporoot)/$$f; done
+published: $(published_files) $(published_signatures)
+	for f in $(notdir $^); do curl -T $(outdir)/$$f -u$(bintray-login) $(reporoot)/$$f; echo ; done
 else
 published:
 	@echo set the bintray-login make variable to '<user>:<key>'
 	@false
 endif
 
-.PHONY: all jars tested clean distclean published
+ifeq "$(origin version)" "command line"
+tagged:
+	git tag -s r$(version) -m "tagging version $(version)"
+else
+tagged:
+	@echo set the version to tag on the command line
+	@false
+endif
+
+.PHONY: all jars tested clean distclean published tagged
