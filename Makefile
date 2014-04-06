@@ -79,7 +79,7 @@ distclean: clean
 again: clean all
 
 ifdef bintray-login
-reporoot=https://api.bintray.com/content/npryce/maven/$(subst .,/,$(groupid))/$(package)/$(version)
+reporoot=https://api.bintray.com/content/npryce/maven/$(package)/$(version)/$(subst .,/,$(groupid))/$(package)/$(version)
 published: $(published_jars) $(outdir)/$(release).pom
 	@for f in $(notdir $^); do curl -T $(outdir)/$$f -u$(bintray-login) $(reporoot)/$$f; done
 else
