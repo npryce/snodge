@@ -72,6 +72,8 @@ $(outdir)/$(release)-javadoc/index.html: $(src_main) $(libs_main)
 $(outdir)/$(release).pom: main.dependencies $(published_jars)
 	@mkdir -p $(dir $@)
 	tools/sm-pom mvn:$(groupid):$(package):jar:$(version) main.dependencies $(dir $@)
+	mv $@ $@-tmp
+	xsltproc tools/pom.xslt $@-tmp | xmllint --format --nsclean - > $@
 
 $(outdir)/%.asc: $(outdir)/%
 	gpg --detach-sign --armor $<
