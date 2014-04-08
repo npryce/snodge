@@ -3,6 +3,7 @@ package com.natpryce.snodge;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,14 +12,16 @@ import com.natpryce.snodge.internal.JsonFunctions;
 import java.util.Arrays;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+
 @SuppressWarnings("ChainOfInstanceofChecks")
 public class JsonPath implements Function<JsonElement, JsonElement> {
     public static final JsonPath root = new JsonPath(new Object[0]);
 
-    private final Object[] path;
+    private final Object[] steps;
 
-    private JsonPath(Object[] path) {
-        this.path = path;
+    private JsonPath(Object[] steps) {
+        this.steps = steps;
     }
 
     @Override
@@ -32,18 +35,18 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
 
         JsonPath that = (JsonPath) o;
 
-        return Arrays.equals(this.path, that.path);
+        return Arrays.equals(this.steps, that.steps);
 
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(this.path);
+        return Arrays.hashCode(this.steps);
     }
 
     @Override
     public String toString() {
-        return pathBitsToString(path, path.length);
+        return pathBitsToString(steps, steps.length);
     }
 
     public static JsonPath of(Object... path) {
@@ -51,17 +54,17 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     }
 
     public int size() {
-        return path.length;
+        return steps.length;
     }
 
     public Object at(int n) {
-        return path[(path.length + n)%path.length];
+        return steps[(steps.length + n)% steps.length];
     }
 
     public JsonPath extend(Object... morePath) {
-        Object[] newPath = new Object[this.path.length + morePath.length];
-        System.arraycopy(this.path, 0, newPath, 0, this.path.length);
-        System.arraycopy(morePath, 0, newPath, this.path.length, morePath.length);
+        Object[] newPath = new Object[this.steps.length + morePath.length];
+        System.arraycopy(this.steps, 0, newPath, 0, this.steps.length);
+        System.arraycopy(morePath, 0, newPath, this.steps.length, morePath.length);
         return new JsonPath(newPath);
     }
 
@@ -69,7 +72,7 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     public JsonElement apply(JsonElement json) {
         JsonElement result = json;
 
-        for (int i = 0; i < path.length; i++) {
+        for (int i = 0; i < steps.length; i++) {
             result = applyPathElement(json, i, result);
         }
 
@@ -77,7 +80,7 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     }
 
     private JsonElement applyPathElement(JsonElement root, int i, JsonElement parent) {
-        Object pathBit = path[i];
+        Object pathBit = steps[i];
 
         if (pathBit instanceof String) {
             String memberName = (String) pathBit;
@@ -88,12 +91,12 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
             JsonArray array = jsonArrayWithIndex(root, i, parent, index);
             return array.get(index);
         } else {
-            throw new IllegalArgumentException("unexpected path element: " + pathBitsToString(path, i));
+            throw new IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i));
         }
     }
 
     public JsonElement map(JsonElement json, Function<? super JsonElement, ? extends JsonElement> f) {
-        return map(json, path.length, f);
+        return map(json, steps.length, f);
     }
 
     public DocumentMutation map(final Function<? super JsonElement, ? extends JsonElement> f) {
@@ -110,7 +113,7 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     }
 
     private JsonElement replaceElement(JsonElement root, JsonElement parent, int i, JsonElement replacement) {
-        Object pathBit = path[i];
+        Object pathBit = steps[i];
 
         if (pathBit instanceof String) {
             String memberName = (String) pathBit;
@@ -142,7 +145,7 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
             return replaced;
 
         } else {
-            throw new IllegalArgumentException("unexpected path element: " + pathBitsToString(path, i));
+            throw new IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i));
         }
     }
 
@@ -156,12 +159,12 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     }
 
     public JsonElement remove(final JsonElement root) {
-        final int lastIndex = path.length - 1;
+        final int lastIndex = steps.length - 1;
 
         return map(root, lastIndex, new Function<JsonElement, JsonElement>() {
             @Override
             public JsonElement apply(JsonElement input) {
-                return removeElement(root, lastIndex, input, path[lastIndex]);
+                return removeElement(root, lastIndex, input, steps[lastIndex]);
             }
         });
     }
@@ -178,7 +181,7 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
             return JsonFunctions.removeArrayElement(original, index);
 
         } else {
-            throw new IllegalArgumentException("unexpected path element: " + pathBitsToString(path, i));
+            throw new IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i));
         }
     }
 
@@ -200,16 +203,16 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     }
 
     private JsonObject jsonObjectWithProperty(JsonElement root, int i, JsonElement parent, String memberName) {
-        check(parent.isJsonObject(), "expected object", path, i, root);
+        check(parent.isJsonObject(), "expected object", steps, i, root);
         JsonObject original = parent.getAsJsonObject();
-        check(original.has(memberName), "no such member", path, i, root);
+        check(original.has(memberName), "no such member", steps, i, root);
         return original;
     }
 
     private JsonArray jsonArrayWithIndex(JsonElement root, int i, JsonElement parent, int index) {
-        check(parent.isJsonArray(), "expected array", path, i, root);
+        check(parent.isJsonArray(), "expected array", steps, i, root);
         JsonArray array = parent.getAsJsonArray();
-        check(array.size() > index, "index out of bounds", path, i, root);
+        check(array.size() > index, "index out of bounds", steps, i, root);
         return array;
     }
 
@@ -221,5 +224,15 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
 
     private static String pathBitsToString(Object[] pathBits, int count) {
         return "/" + Joiner.on("/").join(Arrays.copyOf(pathBits, count));
+    }
+
+    public static Predicate<JsonPath> endsWith(final Object ... suffix) {
+        return new Predicate<JsonPath>() {
+            @Override
+            public boolean apply(JsonPath path) {
+                return path.steps.length >= suffix.length
+                    && asList(suffix).equals(asList(path.steps).subList(path.size()-suffix.length, path.size()));
+            }
+        };
     }
 }

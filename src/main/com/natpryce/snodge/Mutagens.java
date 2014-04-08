@@ -1,11 +1,14 @@
 package com.natpryce.snodge;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.gson.*;
 import com.natpryce.snodge.mutagens.*;
 
+import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 import static java.util.Arrays.asList;
@@ -48,6 +51,24 @@ public class Mutagens {
                         return mutagen.potentialMutations(document, pathToElement, elementToMutate);
                     }
                 }));
+            }
+        };
+    }
+
+    public static Mutagen atPath(JsonPath path, final Mutagen atPathMutagen) {
+        return atPath(equalTo(path), atPathMutagen);
+    }
+
+    public static Mutagen atPath(final Predicate<? super JsonPath> pathSelector, final Mutagen atPathMutagen) {
+        return new Mutagen() {
+            @Override
+            public Iterable<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
+                if (pathSelector.apply(pathToElement)) {
+                    return atPathMutagen.potentialMutations(document, pathToElement, elementToMutate);
+                }
+                else {
+                    return Collections.emptyList();
+                }
             }
         };
     }
