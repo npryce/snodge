@@ -86,15 +86,8 @@ distclean: clean
 
 again: clean all
 
-ifdef bintray-login
-reporoot=https://api.bintray.com/content/npryce/maven/$(package)/$(version)/$(subst .,/,$(groupid))/$(package)/$(version)
 published: $(published_files) $(published_signatures)
-	for f in $(notdir $^); do curl -T $(outdir)/$$f -u$(bintray-login) $(reporoot)/$$f; echo ; done
-else
-published:
-	@echo set the bintray-login make variable to '<user>:<key>'
-	@false
-endif
+	publish-to-bintray $(groupid) $(package) $(version) $^
 
 ifeq "$(origin version)" "command line"
 tagged:
