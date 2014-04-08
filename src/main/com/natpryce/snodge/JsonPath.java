@@ -233,6 +233,30 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
                 return path.steps.length >= suffix.length
                     && asList(suffix).equals(asList(path.steps).subList(path.size()-suffix.length, path.size()));
             }
+
+            @Override
+            public String toString() {
+                return "endsWith(..." + JsonPath.of(suffix) + ")";
+            }
+        };
+    }
+
+    public static Predicate<JsonPath> startsWith(Object ... prefix) {
+        return startsWith(JsonPath.of(prefix));
+    }
+
+    public static Predicate<JsonPath> startsWith(final JsonPath prefix) {
+        return new Predicate<JsonPath>() {
+            @Override
+            public boolean apply(JsonPath path) {
+                return path.size() >= prefix.size()
+                    && asList(path.steps).subList(0, prefix.size()).equals(asList(prefix.steps));
+            }
+
+            @Override
+            public String toString() {
+                return "startsWith(" + prefix + ")";
+            }
         };
     }
 }
