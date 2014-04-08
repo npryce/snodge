@@ -45,7 +45,7 @@ public class MutagenAtPathTest {
     @Test
     public void canLimitMutagenToPathsByPredicate() throws Exception {
         JsonMutator mutator = new JsonMutator(
-                atPath(JsonPath.endsWith("b"), new ReplaceJsonElement(new JsonPrimitive("XXX"))));
+                atPath(JsonPath.functions.endsWith("b"), new ReplaceJsonElement(new JsonPrimitive("XXX"))));
 
         JsonElement doc = object(
                 withField("a", object(

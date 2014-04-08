@@ -4,8 +4,8 @@ import com.google.common.base.Predicate;
 import org.junit.Test;
 
 import static com.google.common.base.Predicates.not;
-import static com.natpryce.snodge.JsonPath.endsWith;
-import static com.natpryce.snodge.JsonPath.startsWith;
+import static com.natpryce.snodge.JsonPath.functions.endsWith;
+import static com.natpryce.snodge.JsonPath.functions.startsWith;
 import static org.junit.Assert.assertTrue;
 
 public class JsonPathFunctionsTest {

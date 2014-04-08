@@ -95,6 +95,16 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
         }
     }
 
+    public boolean endsWith(Object... suffix) {
+        return steps.length >= suffix.length
+            && asList(suffix).equals(asList(steps).subList(size()-suffix.length, size()));
+    }
+
+    public boolean startsWith(JsonPath prefix) {
+        return size() >= prefix.size()
+            && asList(steps).subList(0, prefix.size()).equals(asList(prefix.steps));
+    }
+
     public JsonElement map(JsonElement json, Function<? super JsonElement, ? extends JsonElement> f) {
         return map(json, steps.length, f);
     }
@@ -226,37 +236,37 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
         return "/" + Joiner.on("/").join(Arrays.copyOf(pathBits, count));
     }
 
-    public static Predicate<JsonPath> endsWith(final Object ... suffix) {
-        return new Predicate<JsonPath>() {
-            @Override
-            public boolean apply(JsonPath path) {
-                return path.steps.length >= suffix.length
-                    && asList(suffix).equals(asList(path.steps).subList(path.size()-suffix.length, path.size()));
-            }
+    public static class functions {
+        public static Predicate<JsonPath> endsWith(final Object... suffix) {
+            return new Predicate<JsonPath>() {
+                @Override
+                public boolean apply(JsonPath path) {
+                    return path.endsWith(suffix);
+                }
 
-            @Override
-            public String toString() {
-                return "endsWith(..." + JsonPath.of(suffix) + ")";
-            }
-        };
-    }
+                @Override
+                public String toString() {
+                    return "endsWith(..." + JsonPath.of(suffix) + ")";
+                }
+            };
+        }
 
-    public static Predicate<JsonPath> startsWith(Object ... prefix) {
-        return startsWith(JsonPath.of(prefix));
-    }
+        public static Predicate<JsonPath> startsWith(Object... prefix) {
+            return startsWith(JsonPath.of(prefix));
+        }
 
-    public static Predicate<JsonPath> startsWith(final JsonPath prefix) {
-        return new Predicate<JsonPath>() {
-            @Override
-            public boolean apply(JsonPath path) {
-                return path.size() >= prefix.size()
-                    && asList(path.steps).subList(0, prefix.size()).equals(asList(prefix.steps));
-            }
+        public static Predicate<JsonPath> startsWith(final JsonPath prefix) {
+            return new Predicate<JsonPath>() {
+                @Override
+                public boolean apply(JsonPath path) {
+                    return path.startsWith(prefix);
+                }
 
-            @Override
-            public String toString() {
-                return "startsWith(" + prefix + ")";
-            }
-        };
+                @Override
+                public String toString() {
+                    return "startsWith(" + prefix + ")";
+                }
+            };
+        }
     }
 }
