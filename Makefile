@@ -1,8 +1,8 @@
 
+groupid=com.natpryce
 package=snodge
 version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 release=$(package)-$(version)
-groupid=com.natpryce
 
 outdir=out
 srcdir_main=src/main
@@ -17,8 +17,7 @@ JAVACFLAGS=-g
 
 java_src=$(shell find $1 -name '*.java')
 topath=$(subst $(eval) ,:,$1)
-ivy_classpath=$(shell $(patsubst %,cat %,$(filter $(outdir)/cachepath-%.txt,$^)) && true)
-classpath=$(patsubst %,-classpath %,$(call topath,$(filter %.jar,$^)))
+classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(filter %.jar,$^))))
 
 src_main:=$(call java_src,$(srcdir_main))
 src_test:=$(call java_src,$(srcdir_test))

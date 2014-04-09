@@ -2,9 +2,14 @@
   <library name="test">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/libs/test" />
+      <root url="file://$PROJECT_DIR$/libs/test" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/libs/test" />
+    </SOURCES>
     <jarDirectory url="file://$PROJECT_DIR$/libs/test" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/libs/test" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/libs/test" recursive="false" type="SOURCES" />
   </library>
 </component>
