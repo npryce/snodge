@@ -1,9 +1,9 @@
 package com.natpryce.snodge;
 
-import com.google.common.base.Predicate;
 import org.junit.Test;
 
-import static com.google.common.base.Predicates.not;
+import java.util.function.Predicate;
+
 import static com.natpryce.snodge.JsonPath.functions.endsWith;
 import static com.natpryce.snodge.JsonPath.functions.startsWith;
 import static org.junit.Assert.assertTrue;
@@ -57,7 +57,11 @@ public class JsonPathFunctionsTest {
         assertPathMeetsPredicate(JsonPath.of(1, "a", "b"), not(startsWith("1")));
     }
 
+    private Predicate<JsonPath> not(Predicate<JsonPath> p) {
+        return x -> !p.test(x);
+    }
+
     private void assertPathMeetsPredicate(JsonPath path, Predicate<JsonPath> p) {
-        assertTrue(path + " should meet predicate " + p, p.apply(path));
+        assertTrue(path + " should meet predicate " + p, p.test(path));
     }
 }

@@ -1,6 +1,5 @@
 package com.natpryce.snodge.mutagens;
 
-import com.google.common.base.Function;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.natpryce.snodge.DocumentMutation;
@@ -10,6 +9,7 @@ import com.natpryce.snodge.Mutagen;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 public class AddObjectProperty implements Mutagen, Function<JsonElement, JsonElement> {
     private final JsonElement newElement;

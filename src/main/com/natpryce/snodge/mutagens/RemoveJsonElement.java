@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 public class RemoveJsonElement implements Mutagen {
     @Override
     public Iterable<DocumentMutation> potentialMutations(JsonElement document, final JsonPath pathToElement, JsonElement elementToMutate) {
-        if (pathToElement.equals(JsonPath.root)) {
+        if (pathToElement.isRoot()) {
             return emptyList();
         } else {
             return singletonList(pathToElement.remove());

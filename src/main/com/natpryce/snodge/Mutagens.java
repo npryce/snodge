@@ -1,14 +1,13 @@
 package com.natpryce.snodge;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.gson.*;
 import com.natpryce.snodge.mutagens.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 import static java.util.Arrays.asList;
@@ -42,33 +41,22 @@ public class Mutagens {
      * @return the combination Mutagen
      */
     public static Mutagen combine(final Iterable<Mutagen> mutagens) {
-        return new Mutagen() {
-            @Override
-            public Iterable<DocumentMutation> potentialMutations(final JsonElement document, final JsonPath pathToElement, final JsonElement elementToMutate) {
-                return concat(transform(mutagens, new Function<Mutagen, Iterable<DocumentMutation>>() {
-                    @Override
-                    public Iterable<DocumentMutation> apply(Mutagen mutagen) {
-                        return mutagen.potentialMutations(document, pathToElement, elementToMutate);
-                    }
-                }));
-            }
-        };
+        return (document, pathToElement, elementToMutate) ->
+                concat(transform(mutagens, mutagen ->
+                        mutagen.potentialMutations(document, pathToElement, elementToMutate)));
     }
 
     public static Mutagen atPath(JsonPath path, final Mutagen atPathMutagen) {
-        return atPath(equalTo(path), atPathMutagen);
+        return atPath(p -> p.equals(path), atPathMutagen);
     }
 
     public static Mutagen atPath(final Predicate<? super JsonPath> pathSelector, final Mutagen atPathMutagen) {
-        return new Mutagen() {
-            @Override
-            public Iterable<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
-                if (pathSelector.apply(pathToElement)) {
-                    return atPathMutagen.potentialMutations(document, pathToElement, elementToMutate);
-                }
-                else {
-                    return Collections.emptyList();
-                }
+        return (document, pathToElement, elementToMutate) -> {
+            if (pathSelector.test(pathToElement)) {
+                return atPathMutagen.potentialMutations(document, pathToElement, elementToMutate);
+            }
+            else {
+                return Collections.emptyList();
             }
         };
     }
@@ -78,30 +66,15 @@ public class Mutagens {
      */
     public static Mutagen allMutagens() {
         return combine(
-                forAll(exampleElements, new Function<JsonElement, Mutagen>() {
-                    @Override
-                    public Mutagen apply(JsonElement e) {
-                        return new ReplaceJsonElement(e);
-                    }
-                }),
-                forAll(exampleElements, new Function<JsonElement, Mutagen>() {
-                    @Override
-                    public Mutagen apply(JsonElement e) {
-                        return new AddArrayElement(e);
-                    }
-                }),
-                forAll(exampleElements, new Function<JsonElement, Mutagen>() {
-                    @Override
-                    public Mutagen apply(JsonElement e) {
-                        return new AddObjectProperty(e);
-                    }
-                }),
+                forAll(exampleElements, ReplaceJsonElement::new),
+                forAll(exampleElements, AddArrayElement::new),
+                forAll(exampleElements, AddObjectProperty::new),
                 new RemoveJsonElement(),
                 new ReorderObjectProperties()
         );
     }
 
     private static Mutagen forAll(List<JsonElement> elements, Function<JsonElement, Mutagen> fn) {
-        return combine(transform(elements, fn));
+        return combine(transform(elements, fn::apply));
     }
 }

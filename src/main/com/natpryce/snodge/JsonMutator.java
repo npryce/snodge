@@ -1,6 +1,5 @@
 package com.natpryce.snodge;
 
-import com.google.common.base.Function;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.natpryce.snodge.internal.JsonWalk;
@@ -8,7 +7,6 @@ import com.natpryce.snodge.internal.JsonWalk;
 import java.util.List;
 import java.util.Random;
 
-import static com.google.common.base.Functions.toStringFunction;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.natpryce.snodge.Mutagens.allMutagens;
@@ -32,12 +30,7 @@ public class JsonMutator implements Mutator<JsonElement> {
 
     @Override
     public Iterable<JsonElement> mutate(final JsonElement document, int mutationCount) {
-        return transform(mutations(document, mutationCount), new Function<DocumentMutation, JsonElement>() {
-            @Override
-            public JsonElement apply(DocumentMutation mutation) {
-                return mutation.apply(document);
-            }
-        });
+        return transform(mutations(document, mutationCount), mutation -> mutation.apply(document));
     }
 
     private List<DocumentMutation> mutations(JsonElement document, int mutationCount) {
@@ -66,11 +59,7 @@ public class JsonMutator implements Mutator<JsonElement> {
     public Mutator<String> forStrings() {
         final Gson gson = new Gson();
 
-        return new Mutator<String>() {
-            @Override
-            public Iterable<String> mutate(String original, int mutationCount) {
-                return transform(JsonMutator.this.mutate(gson.fromJson(original, JsonElement.class), mutationCount), toStringFunction());
-            }
-        };
+        return (original, mutationCount) ->
+                transform(mutate(gson.fromJson(original, JsonElement.class), mutationCount), Object::toString);
     }
 }

@@ -1,9 +1,6 @@
 package com.natpryce.snodge;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,6 +8,8 @@ import com.natpryce.snodge.internal.JsonFunctions;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 
@@ -55,6 +54,10 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
 
     public int size() {
         return steps.length;
+    }
+
+    public boolean isRoot() {
+        return size() == 0;
     }
 
     public Object at(int n) {
@@ -110,16 +113,11 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     }
 
     public DocumentMutation map(final Function<? super JsonElement, ? extends JsonElement> f) {
-        return new DocumentMutation() {
-            @Override
-            public JsonElement apply(JsonElement json) {
-                return map(json, f);
-            }
-        };
+        return json -> map(json, f);
     }
 
     public JsonElement replace(JsonElement root, JsonElement replacement) {
-        return map(root, Functions.constant(replacement));
+        return map(root, e -> replacement);
     }
 
     private JsonElement replaceElement(JsonElement root, JsonElement parent, int i, JsonElement replacement) {
@@ -160,23 +158,13 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     }
 
     public DocumentMutation remove() {
-        return new DocumentMutation() {
-            @Override
-            public JsonElement apply(JsonElement input) {
-                return remove(input);
-            }
-        };
+        return this::remove;
     }
 
     public JsonElement remove(final JsonElement root) {
         final int lastIndex = steps.length - 1;
 
-        return map(root, lastIndex, new Function<JsonElement, JsonElement>() {
-            @Override
-            public JsonElement apply(JsonElement input) {
-                return removeElement(root, lastIndex, input, steps[lastIndex]);
-            }
-        });
+        return map(root, lastIndex, input -> removeElement(root, lastIndex, input, steps[lastIndex]));
     }
 
     private JsonElement removeElement(JsonElement root, int i, JsonElement parent, Object pathBit) {
@@ -240,7 +228,7 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
         public static Predicate<JsonPath> endsWith(final Object... suffix) {
             return new Predicate<JsonPath>() {
                 @Override
-                public boolean apply(JsonPath path) {
+                public boolean test(JsonPath path) {
                     return path.endsWith(suffix);
                 }
 
@@ -258,7 +246,7 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
         public static Predicate<JsonPath> startsWith(final JsonPath prefix) {
             return new Predicate<JsonPath>() {
                 @Override
-                public boolean apply(JsonPath path) {
+                public boolean test(JsonPath path) {
                     return path.startsWith(prefix);
                 }
 

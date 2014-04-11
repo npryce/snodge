@@ -1,6 +1,5 @@
 package com.natpryce.snodge.mutagens;
 
-import com.google.common.base.Function;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.natpryce.snodge.DocumentMutation;
@@ -10,6 +9,7 @@ import com.natpryce.snodge.Mutagen;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;

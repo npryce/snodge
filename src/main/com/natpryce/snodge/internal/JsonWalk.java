@@ -1,6 +1,5 @@
 package com.natpryce.snodge.internal;
 
-import com.google.common.base.Function;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,11 +35,6 @@ public class JsonWalk {
     }
 
     private static <T> Iterable<JsonPath> walkChildren(final JsonPath parentPath, Iterable<Map.Entry<T, JsonElement>> children) {
-        return concat(transform(children, new Function<Map.Entry<T, JsonElement>, Iterable<JsonPath>>() {
-            @Override
-            public Iterable<JsonPath> apply(Map.Entry<T, JsonElement> child) {
-                return walk(child.getValue(), parentPath.extend(child.getKey()));
-            }
-        }));
+        return concat(transform(children, child -> walk(child.getValue(), parentPath.extend(child.getKey()))));
     }
 }

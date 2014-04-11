@@ -1,6 +1,5 @@
 package com.natpryce.snodge.internal;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Range;
@@ -23,25 +22,12 @@ public class JsonFunctions {
     }
 
     public static Set<String> propertyNames(JsonObject object) {
-        return newLinkedHashSet(transform(object.entrySet(), JsonFunctions.<String, JsonElement>toKey()));
-    }
-
-    private static <K, V> Function<Map.Entry<K, V>, K> toKey() {
-        return new Function<Map.Entry<K, V>, K>() {
-            @Override
-            public K apply(Map.Entry<K, V> entry) {
-                return entry.getKey();
-            }
-        };
+        //noinspection Convert2MethodRef
+        return newLinkedHashSet(transform(object.entrySet(), entry -> entry.getKey()));
     }
 
     public static Iterable<Map.Entry<Integer, JsonElement>> arrayEntrySet(final JsonArray array) {
-        return transform(indices(array), new Function<Integer, Map.Entry<Integer, JsonElement>>() {
-            @Override
-            public Map.Entry<Integer, JsonElement> apply(Integer index) {
-                return Maps.immutableEntry(index, array.get(index));
-            }
-        });
+        return transform(indices(array), index -> Maps.immutableEntry(index, array.get(index)));
     }
 
     public static JsonElement removeArrayElement(JsonArray original, int index) {
