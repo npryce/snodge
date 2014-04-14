@@ -1,7 +1,7 @@
 Snodge
 ======
 
-A small, extensible Java library to randomly mutate JSON documents. Useful for fuzz testing.
+A small, extensible Java 8 library to randomly mutate JSON documents. Useful for fuzz testing.
 
 Examples of things you can test by mutating known good JSON documents:
 
@@ -9,8 +9,6 @@ Examples of things you can test by mutating known good JSON documents:
 - your application code ignores additional fields
 - your application code does not throw unchecked exceptions when parsing values from JSON strings
 - and more!
-
-[ ![Download](https://api.bintray.com/packages/npryce/maven/snodge/images/download.png) ](https://bintray.com/npryce/maven/snodge/_latestVersion)
 
 
 In a Nutshell
@@ -57,11 +55,10 @@ Dependencies
 Runtime dependencies:
 
 * [Gson](https://code.google.com/p/google-gson/) - for JSON parsing and document model
-* [Guava](https://code.google.com/p/guava-libraries/) - for transforming and filtering data
 
 To build:
 
-* Java JDK 7
+* Java JDK 8
 * GNU Make
 * [JUnit](http://junit.org)
 * [Hamcrest](http://hamcrest.org)
