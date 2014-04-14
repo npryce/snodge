@@ -10,8 +10,6 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Random;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.common.collect.Lists.newArrayList;
 import static com.natpryce.snodge.JsonBuilders.*;
 import static com.natpryce.snodge.Mutagens.combine;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,7 +30,7 @@ public class JsonMutatorTest {
                 withField("alice", 1),
                 withField("bob", 2));
 
-        List<JsonElement> mutations = newArrayList(mutator.mutate(doc, 1));
+        List<JsonElement> mutations = mutator.mutate(doc, 1);
 
         assertThat("should only be one mutation", mutations.size(), equalTo(1));
 
@@ -46,7 +44,7 @@ public class JsonMutatorTest {
     public void canAddNullArrayProperty() throws Exception {
         JsonElement doc = list(1, 2, 3);
 
-        List<JsonElement> mutations = newArrayList(mutator.mutate(doc, 1));
+        List<JsonElement> mutations = mutator.mutate(doc, 1);
 
         assertThat("should only be one mutation", mutations.size(), equalTo(1));
 
@@ -59,7 +57,7 @@ public class JsonMutatorTest {
                 withField("num", 1),
                 withField("list", list(1, 2, 3)));
 
-        List<JsonElement> mutatedDocs = newArrayList(mutator.mutate(doc, 2));
+        List<JsonElement> mutatedDocs = mutator.mutate(doc, 2);
 
         assertThat("number of mutations", mutatedDocs.size(), equalTo(2));
 
@@ -77,7 +75,7 @@ public class JsonMutatorTest {
     public void returnsARandomSampleOfAllPossibleMutations() {
         JsonElement doc = list(list(1, 2), list(list(3, 4), list(5, 6, list(7, 8)), list(9, 10)), list(11, 12));
 
-        List<JsonElement> mutatedDocs = newArrayList(mutator.mutate(doc, 2));
+        List<JsonElement> mutatedDocs = mutator.mutate(doc, 2);
         assertThat("number of mutations", mutatedDocs.size(), equalTo(2));
 
         rng.setSeed(99);
@@ -88,7 +86,7 @@ public class JsonMutatorTest {
     public void willNotReturnMoreMutationsThanCanBeGeneratedByTheMutagens() throws Exception {
         JsonElement doc = list(list(1, 2), list(3, 4));
 
-        List<JsonElement> mutatedDocs = newArrayList(mutator.mutate(doc, 10));
+        List<JsonElement> mutatedDocs = mutator.mutate(doc, 10);
         assertThat("number of mutations", mutatedDocs.size(), equalTo(3));
     }
 
@@ -99,7 +97,7 @@ public class JsonMutatorTest {
                 withField("num", 1),
                 withField("list", list(1, 2, 3))));
 
-        String mutated = getOnlyElement(mutator.forStrings().mutate(original, 1));
+        String mutated = mutator.forStrings().mutate(original, 1).get(0);
 
         assertThat(mutated, not(equalTo(original)));
 

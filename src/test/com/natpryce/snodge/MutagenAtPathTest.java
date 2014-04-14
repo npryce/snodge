@@ -5,9 +5,9 @@ import com.google.gson.JsonPrimitive;
 import com.natpryce.snodge.mutagens.ReplaceJsonElement;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.natpryce.snodge.JsonBuilders.object;
 import static com.natpryce.snodge.JsonBuilders.withField;
 import static com.natpryce.snodge.Mutagens.atPath;
@@ -30,7 +30,7 @@ public class MutagenAtPathTest {
                         withField("c", 2)))
         );
 
-        List<JsonElement> mutations = newArrayList(mutator.mutate(doc, 1));
+        List<JsonElement> mutations = new ArrayList<>(mutator.mutate(doc, 1));
 
         assertThat(mutations.get(0), equalTo((JsonElement) object(
                 withField("a", object(
@@ -56,7 +56,7 @@ public class MutagenAtPathTest {
                         withField("c", 2)))
         );
 
-        List<JsonElement> mutations = newArrayList(mutator.mutate(doc, 2));
+        List<JsonElement> mutations = new ArrayList<>(mutator.mutate(doc, 2));
 
         assertTrue("a.b mutated", mutations.contains(
                 object(

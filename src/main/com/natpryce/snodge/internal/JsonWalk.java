@@ -1,40 +1,34 @@
 package com.natpryce.snodge.internal;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.natpryce.snodge.JsonPath;
 
-import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import static com.google.common.collect.Iterables.concat;
-import static com.google.common.collect.Iterables.transform;
-import static com.natpryce.snodge.internal.JsonFunctions.arrayEntrySet;
-import static java.util.Collections.singleton;
+import static com.natpryce.snodge.internal.JsonFunctions.arrayEntries;
+import static java.util.stream.Stream.concat;
 
 public class JsonWalk {
-    public static Iterable<JsonPath> walk(JsonElement start) {
+    public static Stream<JsonPath> walk(JsonElement start) {
         return walk(start, JsonPath.root);
     }
 
-    private static Iterable<JsonPath> walk(JsonElement element, JsonPath elementPath) {
-        return concat(singleton(elementPath), walkChildren(element, elementPath));
+    private static Stream<JsonPath> walk(JsonElement element, JsonPath elementPath) {
+        return concat(Stream.of(elementPath), walkChildren(element, elementPath));
     }
 
-    private static Iterable<JsonPath> walkChildren(JsonElement element, JsonPath elementPath) {
+    private static Stream<JsonPath> walkChildren(JsonElement element, JsonPath elementPath) {
         if (element.isJsonObject()) {
-            JsonObject object = element.getAsJsonObject();
-            return walkChildren(elementPath, object.entrySet());
+            return walkChildren(elementPath, element.getAsJsonObject().entrySet().stream());
         } else if (element.isJsonArray()) {
-            final JsonArray array = element.getAsJsonArray();
-            return walkChildren(elementPath, arrayEntrySet(array));
+            return walkChildren(elementPath, arrayEntries(element.getAsJsonArray()));
         } else {
-            return Collections.emptyList();
+            return Stream.empty();
         }
     }
 
-    private static <T> Iterable<JsonPath> walkChildren(final JsonPath parentPath, Iterable<Map.Entry<T, JsonElement>> children) {
-        return concat(transform(children, child -> walk(child.getValue(), parentPath.extend(child.getKey()))));
+    private static <T> Stream<JsonPath> walkChildren(final JsonPath parentPath, Stream<Map.Entry<T, JsonElement>> children) {
+        return children.flatMap(child -> walk(child.getValue(), parentPath.extend(child.getKey())));
     }
 }

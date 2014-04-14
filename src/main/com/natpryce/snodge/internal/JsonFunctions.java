@@ -1,55 +1,41 @@
 package com.natpryce.snodge.internal;
 
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Range;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.AbstractMap;
 import java.util.Map;
-import java.util.Set;
-
-import static com.google.common.collect.DiscreteDomain.integers;
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Sets.difference;
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static java.util.Collections.singleton;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class JsonFunctions {
-    public static Set<Integer> indices(JsonArray array) {
-        return ContiguousSet.create(Range.closedOpen(0, array.size()), integers());
+    public static <K,V> Map.Entry<K,V> entry(K key, V value) {
+        return new AbstractMap.SimpleEntry<K, V>(key, value);
     }
 
-    public static Set<String> propertyNames(JsonObject object) {
-        //noinspection Convert2MethodRef
-        return newLinkedHashSet(transform(object.entrySet(), entry -> entry.getKey()));
+    public static IntStream indices(JsonArray array) {
+        return IntStream.range(0, array.size());
     }
 
-    public static Iterable<Map.Entry<Integer, JsonElement>> arrayEntrySet(final JsonArray array) {
-        return transform(indices(array), index -> Maps.immutableEntry(index, array.get(index)));
+    public static Stream<Map.Entry<Integer, JsonElement>> arrayEntries(final JsonArray array) {
+        return indices(array).mapToObj(index -> entry(index, array.get(index)));
     }
 
-    public static JsonElement removeArrayElement(JsonArray original, int index) {
+    public static JsonElement removeArrayElement(JsonArray original, int indexToRemove) {
         JsonArray mutant = new JsonArray();
-
-        for (int i = 0; i < index; i++) {
-            mutant.add(original.get(i));
-        }
-        for (int i = index + 1; i < original.size(); i++) {
-            mutant.add(original.get(i));
-        }
-
+        indices(original)
+                .filter(i -> i != indexToRemove)
+                .forEach(i -> mutant.add(original.get(i)));
         return mutant;
     }
 
     public static JsonElement removeObjectProperty(JsonObject original, String nameToRemove) {
-        Set<String> propertiesToKeep = difference(propertyNames(original), singleton(nameToRemove));
-
         JsonObject mutant = new JsonObject();
-        for (String propertyName : propertiesToKeep) {
-            mutant.add(propertyName, original.get(propertyName));
-        }
+
+        original.entrySet().stream()
+                .filter(e -> !e.getKey().equals(nameToRemove))
+                .forEach(e -> mutant.add(e.getKey(), e.getValue()));
 
         return mutant;
     }

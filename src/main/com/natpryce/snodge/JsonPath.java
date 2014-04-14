@@ -1,6 +1,5 @@
 package com.natpryce.snodge;
 
-import com.google.common.base.Joiner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,8 +9,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 
 @SuppressWarnings("ChainOfInstanceofChecks")
 public class JsonPath implements Function<JsonElement, JsonElement> {
@@ -221,7 +222,7 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
     }
 
     private static String pathBitsToString(Object[] pathBits, int count) {
-        return "/" + Joiner.on("/").join(Arrays.copyOf(pathBits, count));
+        return Stream.of(pathBits).limit(count).map(Object::toString).collect(joining("/", "/", ""));
     }
 
     public static class functions {

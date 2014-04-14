@@ -2,6 +2,8 @@ package com.natpryce.snodge;
 
 import com.google.gson.JsonElement;
 
+import java.util.stream.Stream;
+
 /**
  * A source of mutation within a JSON document.
  * <p>
@@ -9,7 +11,7 @@ import com.google.gson.JsonElement;
  * to zero or more potential {@link com.natpryce.snodge.DocumentMutation}s that can be applied to the document.
  * <p>
  * Multiple Mutagens can be combined into a more powerful Mutagen by the
- * {@link com.natpryce.snodge.Mutagens#combine(Iterable)} function.
+ * {@link com.natpryce.snodge.Mutagens#combine(Mutagen...)} function.
  *
  */
 public interface Mutagen {
@@ -21,5 +23,5 @@ public interface Mutagen {
      * @param elementToMutate the element in the document that will be affected by the mutations returned
      * @return zero or more mutations of the entire document.
      */
-    Iterable<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate);
+    Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate);
 }

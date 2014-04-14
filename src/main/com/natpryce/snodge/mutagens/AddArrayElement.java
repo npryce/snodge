@@ -7,6 +7,7 @@ import com.natpryce.snodge.JsonPath;
 import com.natpryce.snodge.Mutagen;
 
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -19,11 +20,11 @@ public class AddArrayElement implements Mutagen, Function<JsonElement, JsonEleme
     }
 
     @Override
-    public Iterable<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
+    public Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonArray()) {
-            return singletonList(pathToElement.map(this));
+            return Stream.of(pathToElement.map(this));
         } else {
-            return emptyList();
+            return Stream.empty();
         }
     }
 

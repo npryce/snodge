@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.natpryce.snodge.internal.JsonWalk;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.natpryce.snodge.Mutagens.allMutagens;
+import static java.util.stream.Collectors.toList;
 
 public class JsonMutator implements Mutator<JsonElement> {
     private final Random rng;
@@ -29,37 +30,43 @@ public class JsonMutator implements Mutator<JsonElement> {
     }
 
     @Override
-    public Iterable<JsonElement> mutate(final JsonElement document, int mutationCount) {
-        return transform(mutations(document, mutationCount), mutation -> mutation.apply(document));
+    public List<JsonElement> mutate(final JsonElement document, int mutationCount) {
+        return mutations(document, mutationCount).stream()
+                .map(mutation -> mutation.apply(document))
+                .collect(toList());
     }
 
     private List<DocumentMutation> mutations(JsonElement document, int mutationCount) {
-        List<DocumentMutation> selectedMutations = newArrayListWithCapacity(mutationCount);
+        List<DocumentMutation> selectedMutations = new ArrayList<>(mutationCount);
 
-        int count = 0;
+        AtomicInteger counter = new AtomicInteger(0) ;
 
-        for (JsonPath path : JsonWalk.walk(document)) {
-            for (DocumentMutation possibleMutation : mutagens.potentialMutations(document, path, path.apply(document))) {
-                if (count < mutationCount) {
-                    selectedMutations.add(possibleMutation);
-                } else {
-                    int index = rng.nextInt(count);
-                    if (index < selectedMutations.size()) {
-                        selectedMutations.set(index, possibleMutation);
+        JsonWalk.walk(document)
+                .flatMap(path -> mutagens.potentialMutations(document, path, path.apply(document)))
+                .sequential()
+                .forEach(potentialMutation -> {
+                    int count = counter.getAndIncrement();
+                    if (count < mutationCount) {
+                        selectedMutations.add(potentialMutation);
+                    } else {
+                        int index = rng.nextInt(count);
+                        if (index < selectedMutations.size()) {
+                            selectedMutations.set(index, potentialMutation);
+                        }
                     }
-                }
-
-                count++;
-            }
-        }
+                });
 
         return selectedMutations;
     }
 
     public Mutator<String> forStrings() {
-        final Gson gson = new Gson();
+        Gson gson = new Gson();
 
-        return (original, mutationCount) ->
-                transform(mutate(gson.fromJson(original, JsonElement.class), mutationCount), Object::toString);
+        return (originalJsonString, mutationCount) -> {
+            JsonElement originalJsonDocument = gson.fromJson(originalJsonString, JsonElement.class);
+            return mutate(originalJsonDocument, mutationCount).stream()
+                    .map(Object::toString)
+                    .collect(toList());
+        };
     }
 }

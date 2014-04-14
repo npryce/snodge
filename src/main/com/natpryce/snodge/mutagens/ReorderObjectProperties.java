@@ -8,31 +8,29 @@ import com.natpryce.snodge.Mutagen;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import java.util.stream.Stream;
 
 public class ReorderObjectProperties implements Mutagen, Function<JsonElement,JsonElement> {
     @Override
-    public Iterable<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
+    public Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonObject()) {
-            return singletonList(pathToElement.map(this));
+            return Stream.of(pathToElement.map(this));
         }
         else {
-            return emptyList();
+            return Stream.empty();
         }
     }
 
     @Override
-    public JsonElement apply(JsonElement input) {
-        ArrayList<Map.Entry<String, JsonElement>> properties = newArrayList(input.getAsJsonObject().entrySet());
-        Collections.shuffle(properties);
+    public JsonElement apply(JsonElement element) {
+        List<Map.Entry<String, JsonElement>> objectProperties = new ArrayList<>(element.getAsJsonObject().entrySet());
+        Collections.shuffle(objectProperties);
 
         JsonObject mutant = new JsonObject();
-        for (Map.Entry<String, JsonElement> property : properties) {
+        for (Map.Entry<String, JsonElement> property : objectProperties) {
             mutant.add(property.getKey(), property.getValue());
         }
         return mutant;

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class AddObjectProperty implements Mutagen, Function<JsonElement, JsonElement> {
     private final JsonElement newElement;
@@ -19,11 +20,11 @@ public class AddObjectProperty implements Mutagen, Function<JsonElement, JsonEle
     }
 
     @Override
-    public Iterable<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
+    public Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonObject()) {
-            return Collections.singletonList(pathToElement.map(this));
+            return Stream.of(pathToElement.map(this));
         } else {
-            return Collections.emptyList();
+            return Stream.empty();
         }
     }
 

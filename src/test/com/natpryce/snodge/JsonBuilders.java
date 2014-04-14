@@ -1,10 +1,11 @@
 package com.natpryce.snodge;
 
-import com.google.common.collect.Maps;
 import com.google.gson.*;
+import com.natpryce.snodge.internal.JsonFunctions;
 
 import java.util.Map;
 
+import static com.natpryce.snodge.internal.JsonFunctions.entry;
 import static java.util.Arrays.asList;
 
 public class JsonBuilders {
@@ -14,19 +15,19 @@ public class JsonBuilders {
 	}
 
 	public static Map.Entry<String, Object> withNullField(String name) {
-		return Maps.immutableEntry(name, null);
+		return entry(name, null);
 	}
 
 	public static Map.Entry<String, Object> withField(String name, String value) {
-		return Maps.immutableEntry(name, (Object) value);
+		return entry(name, (Object) value);
 	}
 
 	public static Map.Entry<String, Object> withField(String name, Integer value) {
-		return Maps.immutableEntry(name, (Object) value);
+		return entry(name, (Object) value);
 	}
 
     public static Map.Entry<String, Object> withField(String name, JsonElement value) {
-		return Maps.immutableEntry(name, (Object) value);
+		return entry(name, (Object) value);
 	}
 
     public static JsonArray list(Object... elements) {

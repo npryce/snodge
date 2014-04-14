@@ -1,6 +1,5 @@
 package com.natpryce.snodge.internal;
 
-import com.google.common.base.Functions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
@@ -8,11 +7,11 @@ import com.natpryce.snodge.JsonPath;
 import org.junit.Test;
 
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Stream;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Sets.newTreeSet;
 import static com.natpryce.snodge.JsonBuilders.*;
-import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toCollection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -113,8 +112,8 @@ public class JsonWalkTest
 
 	private void assertWalk(JsonElement json, JsonPath... expected)
 	{
-		Set<String> actualAsStrings = newTreeSet(transform(JsonWalk.walk(json), Functions.toStringFunction()));
-		Set<String> expectedAsStrings = newTreeSet(transform(asList(expected), Functions.toStringFunction()));
+		Set<String> actualAsStrings = JsonWalk.walk(json).map(Object::toString).collect(toCollection(TreeSet::new));
+		Set<String> expectedAsStrings = Stream.of(expected).map(Object::toString).collect(toCollection(TreeSet::new));
 
 		assertThat(actualAsStrings, equalTo(expectedAsStrings));
 	}

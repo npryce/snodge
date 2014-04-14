@@ -5,6 +5,8 @@ import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.JsonPath;
 import com.natpryce.snodge.Mutagen;
 
+import java.util.stream.Stream;
+
 import static java.util.Collections.singletonList;
 
 public class ReplaceJsonElement implements Mutagen {
@@ -15,7 +17,7 @@ public class ReplaceJsonElement implements Mutagen {
     }
 
     @Override
-    public Iterable<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
-        return singletonList(pathToElement.map(e -> replacement));
+    public Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
+        return Stream.of(pathToElement.map(e -> replacement));
     }
 }
