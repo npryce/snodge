@@ -2,7 +2,6 @@ package com.natpryce.snodge;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.natpryce.snodge.internal.JsonWalk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.natpryce.snodge.Mutagens.allMutagens;
+import static com.natpryce.snodge.internal.JsonWalk.walk;
 import static java.util.stream.Collectors.toList;
 
 public class JsonMutator implements Mutator<JsonElement> {
@@ -38,15 +38,14 @@ public class JsonMutator implements Mutator<JsonElement> {
 
     private List<DocumentMutation> mutations(JsonElement document, int mutationCount) {
         List<DocumentMutation> selectedMutations = new ArrayList<>(mutationCount);
+        AtomicInteger counter = new AtomicInteger(0);
 
-        AtomicInteger counter = new AtomicInteger(0) ;
-
-        JsonWalk.walk(document)
+        walk(document)
                 .flatMap(path -> mutagens.potentialMutations(document, path, path.apply(document)))
                 .sequential()
                 .forEach(potentialMutation -> {
-                    int count = counter.getAndIncrement();
-                    if (count < mutationCount) {
+                    int count = counter.incrementAndGet();
+                    if (count <= mutationCount) {
                         selectedMutations.add(potentialMutation);
                     } else {
                         int index = rng.nextInt(count);
