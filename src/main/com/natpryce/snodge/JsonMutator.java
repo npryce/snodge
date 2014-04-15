@@ -47,7 +47,9 @@ public class JsonMutator implements Mutator<JsonElement> {
 
         for (JsonPath path : JsonWalk.walk(document)) {
             for (DocumentMutation possibleMutation : mutagens.potentialMutations(document, path, path.apply(document))) {
-                if (count < mutationCount) {
+                count++;
+
+                if (count <= mutationCount) {
                     selectedMutations.add(possibleMutation);
                 } else {
                     int index = rng.nextInt(count);
@@ -55,8 +57,6 @@ public class JsonMutator implements Mutator<JsonElement> {
                         selectedMutations.set(index, possibleMutation);
                     }
                 }
-
-                count++;
             }
         }
 
