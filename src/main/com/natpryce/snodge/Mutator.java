@@ -1,7 +1,7 @@
 package com.natpryce.snodge;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface Mutator<T> {
-    List<T> mutate(T original, int mutationCount);
+    Stream<T> mutate(T original, int mutationCount);
 }

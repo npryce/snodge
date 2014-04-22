@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static com.natpryce.snodge.Mutagens.allMutagens;
 import static com.natpryce.snodge.internal.JsonWalk.walk;
-import static java.util.stream.Collectors.toList;
 
 public class JsonMutator implements Mutator<JsonElement> {
     private final Random rng;
@@ -30,10 +30,9 @@ public class JsonMutator implements Mutator<JsonElement> {
     }
 
     @Override
-    public List<JsonElement> mutate(final JsonElement document, int mutationCount) {
+    public Stream<JsonElement> mutate(final JsonElement document, int mutationCount) {
         return mutations(document, mutationCount).stream()
-                .map(mutation -> mutation.apply(document))
-                .collect(toList());
+                .map(mutation -> mutation.apply(document));
     }
 
     private List<DocumentMutation> mutations(JsonElement document, int mutationCount) {
@@ -63,9 +62,8 @@ public class JsonMutator implements Mutator<JsonElement> {
 
         return (originalJsonString, mutationCount) -> {
             JsonElement originalJsonDocument = gson.fromJson(originalJsonString, JsonElement.class);
-            return mutate(originalJsonDocument, mutationCount).stream()
-                    .map(Object::toString)
-                    .collect(toList());
+            return mutate(originalJsonDocument, mutationCount)
+                    .map(Object::toString);
         };
     }
 }

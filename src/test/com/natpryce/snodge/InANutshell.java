@@ -5,8 +5,7 @@ public class InANutshell {
         JsonMutator mutator = new JsonMutator();
         String originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}";
 
-        for (String mutatedJson : mutator.forStrings().mutate(originalJson, 10)) {
-            System.out.println(mutatedJson);
-        }
+        mutator.forStrings().mutate(originalJson, 10)
+                .forEach(System.out::println);
     }
 }
