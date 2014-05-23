@@ -1,7 +1,7 @@
 Snodge
 ======
 
-A small, extensible Java 8 library to randomly mutate JSON documents. Useful for fuzz testing.
+A small, extensible Java library to randomly mutate JSON documents. Useful for fuzz testing.
 
 Examples of things you can test by mutating known good JSON documents:
 
@@ -11,8 +11,18 @@ Examples of things you can test by mutating known good JSON documents:
 - and more!
 
 
+[Download from Bintray](https://bintray.com/npryce/maven/snodge/)
+
+- Version 2.x.x.x (java8 branch) is for Java 8, and uses streams and Java 8 function types
+- Version 1.x.x.x (master branch) is for Java 7 and depends on Guava
+
+
 In a Nutshell
 -------------
+
+Output 10 random mutations of the JSON document:
+
+Java 7:
 
 ~~~~~~~~~~~~~~~~~~~~~~java
 JsonMutator mutator = new JsonMutator();
@@ -24,7 +34,18 @@ for (String mutatedJson : mutator.forStrings().mutate(originalJson, 10)) {
 }
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Outputs 10 random mutations of the JSON document, for example:
+Java 8:
+
+~~~~~~~~~~~~~~~~~~~~~~java
+JsonMutator mutator = new JsonMutator();
+
+String originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}";
+
+mutator.forStrings().mutate(originalJson, 10)
+        .forEach(System.out::println);
+~~~~~~~~~~~~~~~~~~~~~~
+
+Example output:
 
 ~~~~~~~~~~~~~~~~~~~~~~
 {"x":"hello","y":[1,2,3,null]}
@@ -49,16 +70,8 @@ Concepts
 | *Mutagen*          | given an element in a JSON document, returns zero or more DocumentMutations that mutate that element.  You can write your own Mutagens to perform application-specific mutation. |
 | *DocumentMutation* | a function from JSON document to JSON document, that returns the original document mutated in some way. |
 
-Dependencies
-------------
-
-Runtime dependencies:
-
-* [Gson](https://code.google.com/p/google-gson/) - for JSON parsing and document model
 
 To build:
 
-* Java JDK 8
+* Java JDK 7 (master branch) or JDK 8 (java8 branch)
 * GNU Make
-* [JUnit](http://junit.org)
-* [Hamcrest](http://hamcrest.org)
