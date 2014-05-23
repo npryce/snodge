@@ -11,7 +11,7 @@ Examples of things you can test by mutating known good JSON documents:
 - and more!
 
 
-[Download from Bintray](https://bintray.com/npryce/maven/snodge/)
+[Download from Maven Central](http://mvnrepository.com/artifact/com.natpryce/snodge)
 
 - Version 2.x.x.x (java8 branch) is for Java 8, and uses streams and Java 8 function types
 - Version 1.x.x.x (master branch) is for Java 7 and depends on Guava
