@@ -20,7 +20,7 @@ Examples of things you can test by mutating known good JSON documents:
 In a Nutshell
 -------------
 
-Output 10 random mutations of the JSON document, for example:
+Output 10 random mutations of the JSON document:
 
 Java 7:
 
@@ -45,7 +45,7 @@ mutator.forStrings().mutate(originalJson, 10)
         .forEach(System.out::println);
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Output:
+Example output:
 
 ~~~~~~~~~~~~~~~~~~~~~~
 {"x":"hello","y":[1,2,3,null]}
