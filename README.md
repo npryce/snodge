@@ -17,8 +17,12 @@ Examples of things you can test by mutating known good JSON documents:
 - Version 1.x.x.x (master branch) is for Java 7 and depends on Guava
 
 
-In a Nutshell (Java 7)
-----------------------
+In a Nutshell
+-------------
+
+Output 10 random mutations of the JSON document, for example:
+
+Java 7:
 
 ~~~~~~~~~~~~~~~~~~~~~~java
 JsonMutator mutator = new JsonMutator();
@@ -30,7 +34,18 @@ for (String mutatedJson : mutator.forStrings().mutate(originalJson, 10)) {
 }
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Outputs 10 random mutations of the JSON document, for example:
+Java 8:
+
+~~~~~~~~~~~~~~~~~~~~~~java
+JsonMutator mutator = new JsonMutator();
+
+String originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}";
+
+mutator.forStrings().mutate(originalJson, 10)
+        .forEach(System.out::println);
+~~~~~~~~~~~~~~~~~~~~~~
+
+Output:
 
 ~~~~~~~~~~~~~~~~~~~~~~
 {"x":"hello","y":[1,2,3,null]}
