@@ -2,7 +2,9 @@ package com.natpryce.snodge;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.natpryce.snodge.internal.EncodedStringMutator;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -65,5 +67,13 @@ public class JsonMutator implements Mutator<JsonElement> {
             return mutate(originalJsonDocument, mutationCount)
                     .map(Object::toString);
         };
+    }
+
+    public Mutator<byte[]> forEncodedStrings(Charset encoding) {
+        return new EncodedStringMutator(encoding, this.forStrings());
+    }
+
+    public Mutator<byte[]> forEncodedStrings(String encodingName) {
+        return this.forEncodedStrings(Charset.forName(encodingName));
     }
 }

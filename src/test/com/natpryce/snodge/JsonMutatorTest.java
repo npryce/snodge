@@ -7,6 +7,8 @@ import com.natpryce.snodge.mutagens.AddArrayElement;
 import com.natpryce.snodge.mutagens.AddObjectProperty;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -106,5 +108,25 @@ public class JsonMutatorTest {
 
         // Does not blow up
         gson.fromJson(mutated, JsonElement.class);
+    }
+
+    @Test
+    public void canMutateEncodedJsonText() throws UnsupportedEncodingException {
+        Charset charset = Charset.forName("UTF-8");
+
+        Gson gson = new Gson();
+        final String originalString = gson.toJson(object(
+                withField("num", 1),
+                withField("list", list(1, 2, 3))));
+
+        byte[] originalBytes = originalString.getBytes(charset);
+        byte[] mutatedBytes = mutator.forEncodedStrings(charset.name()).mutate(originalBytes, 1).findAny().get();
+
+        assertThat(mutatedBytes, not(equalTo(originalBytes)));
+
+        String mutatedString = new String(mutatedBytes, charset);
+
+        // Does not blow up
+        gson.fromJson(mutatedString, JsonElement.class);
     }
 }
