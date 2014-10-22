@@ -9,6 +9,6 @@ public class IdentityMutator<T> implements Mutator<T> {
     }
 
     public static <T> Mutator<T> id() {
-        return new IdentityMutator<>();
+        return new IdentityMutator<T>();
     }
 }

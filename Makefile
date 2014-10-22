@@ -48,7 +48,7 @@ $(outdir)/$(release)-test.compiled: $(src_test) $(outdir)/$(release).jar $(libs_
 
 %.compiled:
 	@mkdir -p $*/
-	$(JAVAC) $(JAVACFLAGS) $(classpath) -d $*/ $(filter %.java,$^)
+	$(JAVAC) -source 1.6 -target 1.6 $(JAVACFLAGS) $(classpath) -d $*/ $(filter %.java,$^)
 	@touch $@
 
 %.jar: %.compiled
