@@ -13,7 +13,7 @@ JAVAC=javac
 JAVA=java
 JAVADOC=javadoc
 
-JAVACFLAGS=-g
+JAVACFLAGS=-g -source 1.6 -target 1.6
 
 java_src=$(shell find $1 -name '*.java')
 topath=$(subst $(eval) ,:,$1)
@@ -48,7 +48,7 @@ $(outdir)/$(release)-test.compiled: $(src_test) $(outdir)/$(release).jar $(libs_
 
 %.compiled:
 	@mkdir -p $*/
-	$(JAVAC) -source 1.6 -target 1.6 $(JAVACFLAGS) $(classpath) -d $*/ $(filter %.java,$^)
+	$(JAVAC) $(JAVACFLAGS) $(classpath) -d $*/ $(filter %.java,$^)
 	@touch $@
 
 %.jar: %.compiled
