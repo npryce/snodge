@@ -1,6 +1,7 @@
 package com.natpryce.snodge;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.junit.Test;
 
@@ -86,6 +87,21 @@ public class JsonPathTest
 		assertReplacement(original, JsonPath.of(3,0), new JsonPrimitive(-99),
                 list(1,2,3,list(-99)));
 	}
+
+    @Test
+    public void replacingAnObjectFieldDoesNotChangeOrderOfElementsWhenSerialised() {
+        JsonObject original = object(
+                withField("a", 1),
+                withField("x", 2),
+                withField("b", 3),
+                withField("y", 4));
+
+        assertThat(original.toString(), equalTo("{\"a\":1,\"x\":2,\"b\":3,\"y\":4}"));
+
+        JsonObject replaced = (JsonObject) JsonPath.of("x").replace(original, new JsonPrimitive(99));
+
+        assertThat(replaced.toString(), equalTo("{\"a\":1,\"x\":99,\"b\":3,\"y\":4}"));
+    }
 
 	private void assertReplacement(JsonElement original, JsonPath path, JsonElement splice, JsonElement expected)
 	{

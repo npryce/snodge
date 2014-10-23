@@ -128,34 +128,45 @@ public class JsonPath implements Function<JsonElement, JsonElement> {
             String memberName = (String) pathBit;
             JsonObject original = jsonObjectWithProperty(root, i, parent, memberName);
 
-            JsonObject replaced = new JsonObject();
-            for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
-                if (!entry.getKey().equals(memberName)) {
-                    replaced.add(entry.getKey(), entry.getValue());
-                }
-            }
-            replaced.add(memberName, replacement);
-
-            return replaced;
+            return replaceObjectPropertyValue(original, memberName, replacement);
 
         } else if (pathBit instanceof Integer) {
             int index = (Integer) pathBit;
             JsonArray original = jsonArrayWithIndex(root, i, parent, index);
 
-            JsonArray replaced = new JsonArray();
-            for (int j = 0; j < index; j++) {
-                replaced.add(original.get(j));
-            }
-            replaced.add(replacement);
-            for (int j = index + 1; j < original.size(); j++) {
-                replaced.add(original.get(j));
-            }
-
-            return replaced;
+            return replaceArrayElement(original, index, replacement);
 
         } else {
             throw new IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i));
         }
+    }
+
+    private JsonElement replaceObjectPropertyValue(JsonObject original, String memberName, JsonElement replacement) {
+        JsonObject replaced = new JsonObject();
+
+        for (Map.Entry<String, JsonElement> entry : original.entrySet()) {
+            if (entry.getKey().equals(memberName)) {
+                replaced.add(memberName, replacement);
+            } else {
+                replaced.add(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return replaced;
+    }
+
+    private JsonElement replaceArrayElement(JsonArray original, int index, JsonElement replacement) {
+        JsonArray replaced = new JsonArray();
+
+        for (int j = 0; j < index; j++) {
+            replaced.add(original.get(j));
+        }
+        replaced.add(replacement);
+        for (int j = index + 1; j < original.size(); j++) {
+            replaced.add(original.get(j));
+        }
+
+        return replaced;
     }
 
     public DocumentMutation remove() {
