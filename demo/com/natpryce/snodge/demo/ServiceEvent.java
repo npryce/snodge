@@ -3,6 +3,7 @@ package com.natpryce.snodge.demo;
 import java.net.URI;
 
 public class ServiceEvent {
+    @SuppressWarnings("UnusedDeclaration")
     public static enum Type {
         STARTING, READY, BUSY, POWERSAVE, STOPPING, STOPPED
     }
@@ -24,11 +25,10 @@ public class ServiceEvent {
 
         ServiceEvent that = (ServiceEvent) o;
 
-        if (timestamp != that.timestamp) return false;
-        if (!service.equals(that.service)) return false;
-        if (type != that.type) return false;
+        return timestamp == that.timestamp &&
+                service.equals(that.service) &&
+                type == that.type;
 
-        return true;
     }
 
     @Override
