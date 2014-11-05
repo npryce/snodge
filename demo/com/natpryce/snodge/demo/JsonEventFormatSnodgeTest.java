@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class JsonEventFormatSnodgeTest {
     static final int mutationCount = 100;
 
-//    JsonEventFormat format = new JsonEventFormat();
+    // JsonEventFormat format = new JsonEventFormat();
     // Replace the line below with the line above to see the test catch failures
     RobustJsonEventFormat format = new RobustJsonEventFormat();
 
@@ -64,7 +64,7 @@ public class JsonEventFormatSnodgeTest {
         try {
             format.deserialise(json);
         }
-        catch (IOException _) {
+        catch (IOException e) {
             // allowed
         }
         catch (Exception e) {
