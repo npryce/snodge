@@ -1,7 +1,7 @@
 Snodge
 ======
 
-> JSON -[reorder]-> SNOJ -[title-case]-> Snoj -[replace "j" with "dge"]-> Snodge
+> JSON -[shuffle]-> SNOJ -[replace "J" with "DGE"]-> SNODGE
 
 A small, extensible Java library to randomly mutate JSON documents. Useful for fuzz testing.
 
