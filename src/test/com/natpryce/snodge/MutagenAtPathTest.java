@@ -11,8 +11,8 @@ import static com.natpryce.snodge.JsonBuilders.object;
 import static com.natpryce.snodge.JsonBuilders.withField;
 import static com.natpryce.snodge.Mutagens.atPath;
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class MutagenAtPathTest {

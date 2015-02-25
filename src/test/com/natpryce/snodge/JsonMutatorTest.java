@@ -16,9 +16,9 @@ import java.util.Random;
 import static com.natpryce.snodge.JsonBuilders.*;
 import static com.natpryce.snodge.Mutagens.combine;
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class JsonMutatorTest {
