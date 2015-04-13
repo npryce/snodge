@@ -1,4 +1,3 @@
-
 groupid=com.natpryce
 package=snodge
 version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
@@ -8,10 +7,11 @@ outdir=out
 srcdir_main=src/main
 srcdir_test=src/test
 
-JAR=jar
-JAVAC=javac
-JAVA=java
-JAVADOC=javadoc
+JAR=$(JAVA_HOME)/bin/jar
+JAVAC=$(JAVA_HOME)/bin/javac
+JAVA=$(JAVA_HOME)/bin/java
+JAVADOC=$(JAVA_HOME)/bin/javadoc
+JARJAR=$(JAVA) -jar $(libs_tool)
 
 JAVACFLAGS=-g -source 1.6 -target 1.6
 
@@ -22,7 +22,12 @@ classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(f
 src_main:=$(call java_src,$(srcdir_main))
 src_test:=$(call java_src,$(srcdir_test))
 
-published_jars = $(outdir)/$(release).jar $(outdir)/$(release)-sources.jar $(outdir)/$(release)-javadoc.jar
+published_jars = \
+    $(outdir)/$(release).jar \
+    $(outdir)/$(release)-standalone.jar \
+    $(outdir)/$(release)-sources.jar \
+    $(outdir)/$(release)-javadoc.jar
+
 test_jars = $(outdir)/$(release)-test.jar
 
 published_files = $(published_jars) $(outdir)/$(release).pom
@@ -36,12 +41,12 @@ jars: $(published_jars) $(test_jars)
 
 include libs/main.mk
 include libs/test.mk
+include libs/tool.mk
 
 libs/%.mk: %.dependencies
 	rm -rf libs/$*
 	mkdir -p libs/$*
 	tools/sm-download $< libs/$*
-	echo 'libs_$*=$$(filter-out %-source.jar,$$(wildcard libs/$*/*.jar))' > $@
 
 $(outdir)/$(release).compiled: $(src_main) $(libs_main)
 $(outdir)/$(release)-test.compiled: $(src_test) $(outdir)/$(release).jar $(libs_main) $(libs_test)
@@ -74,6 +79,16 @@ $(outdir)/$(release).pom: main.dependencies $(published_jars)
 	mv $@ $@-tmp
 	xsltproc tools/pom.xslt $@-tmp | xmllint --format --nsclean - > $@
 
+$(outdir)/$(release)-standalone.jar: standalone.jarjar $(outdir)/tmp/$(release)-combined.jar
+	@mkdir -p $(dir $@)
+	$(JARJAR) process $^ $@
+
+$(outdir)/tmp/$(release)-combined.jar: $(libs_main) $(outdir)/$(release).jar
+	@mkdir -p $@.contents
+	cd $@.contents && for f in $(abspath $^); do jar xf $$f; done
+	rm -rf $@.contents/META-INF/
+	jar cf $@ -C $@.contents .
+
 $(outdir)/%.asc: $(outdir)/%
 	gpg --detach-sign --armor $<
 
@@ -98,3 +113,6 @@ tagged:
 endif
 
 .PHONY: all jars tested clean distclean published tagged
+
+tmp:
+	echo $(libs_tool)
