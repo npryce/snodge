@@ -6,9 +6,8 @@ import com.google.gson.JsonPrimitive;
 import org.junit.Test;
 
 import static com.natpryce.snodge.JsonBuilders.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 
 public class JsonPathTest
 {
@@ -40,8 +39,8 @@ public class JsonPathTest
 	{
 		JsonPath path = JsonPath.of("a", 1, "b", 2, "c");
 
-		assertEquals(path.hashCode(), JsonPath.root.extend("a").extend(1).extend("b").extend(2).extend("c").hashCode());
-		assertEquals(path.hashCode(), JsonPath.root.extend("a", 1, "b", 2, "c").hashCode());
+		assertThat(path.hashCode(), equalTo(JsonPath.root.extend("a").extend(1).extend("b").extend(2).extend("c").hashCode()));
+		assertThat(path.hashCode(), equalTo(JsonPath.root.extend("a", 1, "b", 2, "c").hashCode()));
 	}
 
 	@Test
@@ -49,8 +48,8 @@ public class JsonPathTest
 	{
 		JsonPath path = JsonPath.of("a", 1, "b", 2, "c");
 
-		assertEquals(path, JsonPath.root.extend("a").extend(1).extend("b").extend(2).extend("c"));
-		assertEquals(path, JsonPath.root.extend("a", 1, "b", 2, "c"));
+        assertThat(path, equalTo(JsonPath.root.extend("a").extend(1).extend("b").extend(2).extend("c")));
+        assertThat(path, equalTo(JsonPath.root.extend("a", 1, "b", 2, "c")));
 	}
 
 	@Test

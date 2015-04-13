@@ -1,3 +1,3 @@
-mvn:org.hamcrest:hamcrest-core:jar|sources:1.3
-mvn:org.hamcrest:hamcrest-library:jar|sources:1.3
-mvn:junit:junit:jar|sources:4.11
+mvn:junit:junit:jar|sources:4.12
+mvn:org.hamcrest:java-hamcrest:jar|sources:2.0.0.0
+mvn:org.hamcrest:hamcrest-junit:jar|sources:2.0.0.0
