@@ -47,6 +47,7 @@ libs/%.mk: %.dependencies
 	rm -rf libs/$*
 	mkdir -p libs/$*
 	tools/sm-download $< libs/$*
+	echo 'libs_$*=$$(filter-out %-source.jar,$$(wildcard libs/$*/*.jar))' > $@
 
 $(outdir)/$(release).compiled: $(src_main) $(libs_main)
 $(outdir)/$(release)-test.compiled: $(src_test) $(outdir)/$(release).jar $(libs_main) $(libs_test)
