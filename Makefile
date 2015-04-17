@@ -2,6 +2,7 @@ groupid=com.natpryce
 package=snodge
 version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 release=$(package)-$(version)
+standalone=$(package)-standalone-$(version)
 
 outdir=out
 srcdir_main=src/main
@@ -24,13 +25,13 @@ src_test:=$(call java_src,$(srcdir_test))
 
 published_jars = \
     $(outdir)/$(release).jar \
-    $(outdir)/$(release)-standalone.jar \
     $(outdir)/$(release)-sources.jar \
-    $(outdir)/$(release)-javadoc.jar
+    $(outdir)/$(release)-javadoc.jar \
+    $(outdir)/$(standalone).jar
 
 test_jars = $(outdir)/$(release)-test.jar
 
-published_files = $(published_jars) $(outdir)/$(release).pom
+published_files = $(published_jars) $(outdir)/$(release).pom $(outdir)/$(standalone).pom
 published_signatures = $(published_files:%=%.asc)
 
 all: tested jars
@@ -80,7 +81,10 @@ $(outdir)/$(release).pom: main.dependencies $(published_jars)
 	mv $@ $@-tmp
 	xsltproc tools/pom.xslt $@-tmp | xmllint --format --nsclean - > $@
 
-$(outdir)/$(release)-standalone.jar: standalone.jarjar $(outdir)/tmp/$(release)-combined.jar
+$(outdir)/$(standalone).pom: $(outdir)/$(release).pom
+	xmlstarlet ed -N m='http://maven.apache.org/POM/4.0.0' --delete '/m:project/m:dependencies/m:dependency' $< > $@
+
+$(outdir)/$(standalone).jar: standalone.jarjar $(outdir)/tmp/$(release)-combined.jar
 	@mkdir -p $(dir $@)
 	$(JARJAR) process $^ $@
 
@@ -101,6 +105,8 @@ distclean: clean
 
 again: clean all
 
+distro: $(published_files) $(published_signatures)
+
 published: $(published_files) $(published_signatures)
 	publish-to-bintray $(groupid) $(package) $(version) $^
 
@@ -113,7 +119,7 @@ tagged:
 	@false
 endif
 
-.PHONY: all jars tested clean distclean published tagged
+.PHONY: all jars tested clean distclean published tagged distro
 
 tmp:
 	echo $(libs_tool)
