@@ -127,6 +127,3 @@ tagged:
 endif
 
 .PHONY: all tested clean distclean published tagged distro ci
-
-tmp:
-	@for f in $(published_files); do echo $$f; done
