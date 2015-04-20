@@ -41,6 +41,7 @@ published_signatures = $(published_artefacts:%=%.asc)
 published_files = $(published_artefacts) $(published_signatures)
 
 all: tested distro
+ci: tested $(published_artefacts)
 tested: $(outdir)/junit-report.txt
 distro: $(published_files)
 
@@ -125,7 +126,7 @@ tagged:
 	@false
 endif
 
-.PHONY: all tested clean distclean published tagged distro
+.PHONY: all tested clean distclean published tagged distro ci
 
 tmp:
 	@for f in $(published_files); do echo $$f; done

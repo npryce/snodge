@@ -9,4 +9,4 @@ before_install:
   - sudo apt-get install -y xsltproc xmlstarlet
 
 script:
-  - make
+  - make ci
