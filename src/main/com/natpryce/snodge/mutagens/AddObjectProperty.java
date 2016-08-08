@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.JsonPath;
 import com.natpryce.snodge.Mutagen;
+import kotlin.jvm.functions.Function1;
 
 import java.util.Collections;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class AddObjectProperty implements Mutagen, Function<JsonElement, JsonElement> {
+public class AddObjectProperty implements Mutagen, Function1<JsonElement, JsonElement> {
     private final JsonElement newElement;
 
     public AddObjectProperty(JsonElement newElement) {
@@ -29,7 +30,7 @@ public class AddObjectProperty implements Mutagen, Function<JsonElement, JsonEle
     }
 
     @Override
-    public JsonElement apply(JsonElement original) {
+    public JsonElement invoke(JsonElement original) {
         JsonObject mutated = new JsonObject();
         Set<Map.Entry<String, JsonElement>> entries = original.getAsJsonObject().entrySet();
         for (Map.Entry<String, JsonElement> entry : entries) {

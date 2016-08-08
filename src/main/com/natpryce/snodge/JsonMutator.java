@@ -34,7 +34,7 @@ public class JsonMutator implements Mutator<JsonElement> {
     @Override
     public Stream<JsonElement> mutate(final JsonElement document, int mutationCount) {
         return mutations(document, mutationCount).stream()
-                .map(mutation -> mutation.apply(document));
+                .map(mutation -> mutation.invoke(document));
     }
 
     private List<DocumentMutation> mutations(JsonElement document, int mutationCount) {
@@ -42,7 +42,7 @@ public class JsonMutator implements Mutator<JsonElement> {
         AtomicInteger counter = new AtomicInteger(0);
 
         walk(document)
-                .flatMap(path -> mutagens.potentialMutations(document, path, path.apply(document)))
+                .flatMap(path -> mutagens.potentialMutations(document, path, path.invoke(document)))
                 .sequential()
                 .forEach(potentialMutation -> {
                     int count = counter.incrementAndGet();

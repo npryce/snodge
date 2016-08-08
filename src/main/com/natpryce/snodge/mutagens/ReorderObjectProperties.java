@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.JsonPath;
 import com.natpryce.snodge.Mutagen;
+import kotlin.jvm.functions.Function1;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class ReorderObjectProperties implements Mutagen, Function<JsonElement,JsonElement> {
+public class ReorderObjectProperties implements Mutagen, Function1<JsonElement,JsonElement> {
     @Override
     public Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonObject()) {
@@ -25,7 +26,7 @@ public class ReorderObjectProperties implements Mutagen, Function<JsonElement,Js
     }
 
     @Override
-    public JsonElement apply(JsonElement element) {
+    public JsonElement invoke(JsonElement element) {
         List<Map.Entry<String, JsonElement>> objectProperties = new ArrayList<>(element.getAsJsonObject().entrySet());
         Collections.shuffle(objectProperties);
 

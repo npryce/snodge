@@ -6,24 +6,23 @@ outdir=out
 srcdir_main=src/main
 srcdir_test=src/test
 
-ifndef JAVA_HOME
-JAVA_HOME:=$(shell realpath `which javac` | sed -e 's:\(/jre\)\?/bin/javac::')
-endif
-
-JAR=$(JAVA_HOME)/bin/jar
-JAVAC=$(JAVA_HOME)/bin/javac
-JAVA=$(JAVA_HOME)/bin/java
-JAVADOC=$(JAVA_HOME)/bin/javadoc
+JAR:=$(shell jenv which jar)
+JAVAC:=$(shell jenv which javac)
+JAVA:=$(shell jenv which java)
+JAVADOC=$(shell jenv which javadoc)
 JARJAR=$(JAVA) -jar $(libs_tool)
 
 JAVACFLAGS=-g
 
-java_src=$(shell find $1 -name '*.java')
+KOTLINC=kotlinc
+KOTLINCFLAGS=
+
+srcfiles=$(shell find "$1" -name '*.java' -o -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
 classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(filter %.jar,$^))))
 
-src_main:=$(call java_src,$(srcdir_main))
-src_test:=$(call java_src,$(srcdir_test))
+src_main:=$(call srcfiles,$(srcdir_main))
+src_test:=$(call srcfiles,$(srcdir_test))
 
 package_distro = \
     $(outdir)/$(package)-$(version).jar \
@@ -55,8 +54,8 @@ libs/%.mk: %.dependencies
 	tools/sm-download $< libs/$*
 	echo 'libs_$*=$$(filter-out %-source.jar,$$(wildcard libs/$*/*.jar))' > $@
 
-$(outdir)/$(package)-$(version).compiled: $(src_main) $(libs_main)
-$(outdir)/$(package)-$(version)-test.compiled: $(src_test) $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_test)
+$(outdir)/$(package)-$(version).jar: $(src_main) $(libs_main)
+$(outdir)/$(package)-$(version)-test.jar: $(src_test) $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_test)
 
 $(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.java,%,$(src_test))))
 $(outdir)/junit-report.txt: $(outdir)/$(package)-$(version).jar $(outdir)/$(package)-$(version)-test.jar $(libs_main) $(libs_test)
@@ -97,13 +96,9 @@ $(outdir)/tmp/$(package)-$(version)-combined.jar: $(libs_main) $(outdir)/$(packa
 $(outdir)/%.asc: $(outdir)/%
 	gpg --detach-sign --armor $<
 
-%.compiled:
-	@mkdir -p $*/
-	$(JAVAC) $(JAVACFLAGS) $(classpath) -d $*/ $(filter %.java,$^)
-	@touch $@
-
-%.jar: %.compiled
-	$(JAR) -cf$(JARFLAGS) $@ -C $* .
+%.jar:
+	@mkdir -p $(dir $@)
+	$(KOTLINC) $(KOTLINCFLAGS) $(filter-out %.jar,$^) $(classpath) -d $@
 
 clean:
 	rm -rf $(outdir)
@@ -126,4 +121,4 @@ tagged:
 	@false
 endif
 
-.PHONY: all tested clean distclean published tagged distro ci
+.PHONY: all tested clean distclean published tagged distro ci tst
