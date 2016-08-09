@@ -4,10 +4,9 @@ import com.google.gson.JsonElement;
 import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.JsonPath;
 import com.natpryce.snodge.Mutagen;
+import kotlin.sequences.Sequence;
 
-import java.util.stream.Stream;
-
-import static java.util.Collections.singletonList;
+import static kotlin.sequences.SequencesKt.sequenceOf;
 
 public class ReplaceJsonElement implements Mutagen {
     private final JsonElement replacement;
@@ -17,7 +16,7 @@ public class ReplaceJsonElement implements Mutagen {
     }
 
     @Override
-    public Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
-        return Stream.of(pathToElement.map(e -> replacement));
+    public Sequence<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
+        return sequenceOf(pathToElement.map(e -> replacement));
     }
 }

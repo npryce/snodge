@@ -3,8 +3,8 @@ package com.natpryce.snodge
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.natpryce.snodge.internal.JsonFunctions
-import java.util.function.Predicate
+import com.natpryce.snodge.internal.removeArrayElement
+import com.natpryce.snodge.internal.removeObjectProperty
 
 data class JsonPath(
     private val steps: List<Any>
@@ -133,12 +133,12 @@ data class JsonPath(
     private fun removeElement(root: JsonElement, i: Int, parent: JsonElement, pathBit: Any): JsonElement {
         if (pathBit is String) {
             val original = jsonObjectWithProperty(root, i, parent, pathBit)
-            return JsonFunctions.removeObjectProperty(original, pathBit)
+            return removeObjectProperty(original, pathBit)
             
         }
         else if (pathBit is Int) {
             val original = jsonArrayWithIndex(root, i, parent, pathBit)
-            return JsonFunctions.removeArrayElement(original, pathBit)
+            return removeArrayElement(original, pathBit)
             
         }
         else {
@@ -179,9 +179,9 @@ data class JsonPath(
     
     object functions {
         @JvmStatic
-        fun endsWith(vararg suffix: Any): Predicate<JsonPath> {
-            return object : Predicate<JsonPath> {
-                override fun test(path: JsonPath): Boolean {
+        fun endsWith(vararg suffix: Any): (JsonPath)->Boolean {
+            return object : (JsonPath)->Boolean {
+                override fun invoke(path: JsonPath): Boolean {
                     return path.endsWith(*suffix)
                 }
                 
@@ -192,14 +192,14 @@ data class JsonPath(
         }
     
         @JvmStatic
-        fun startsWith(vararg prefix: Any): Predicate<JsonPath> {
+        fun startsWith(vararg prefix: Any): (JsonPath)->Boolean {
             return startsWith(JsonPath.of(*prefix))
         }
     
         @JvmStatic
-        fun startsWith(prefix: JsonPath): Predicate<JsonPath> {
-            return object : Predicate<JsonPath> {
-                override fun test(path: JsonPath): Boolean {
+        fun startsWith(prefix: JsonPath): (JsonPath)->Boolean {
+            return object : (JsonPath)->Boolean {
+                override fun invoke(path: JsonPath): Boolean {
                     return path.startsWith(prefix)
                 }
                 

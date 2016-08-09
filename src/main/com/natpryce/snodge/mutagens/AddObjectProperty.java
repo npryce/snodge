@@ -5,15 +5,15 @@ import com.google.gson.JsonObject;
 import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.JsonPath;
 import com.natpryce.snodge.Mutagen;
-import kotlin.jvm.functions.Function1;
+import kotlin.sequences.Sequence;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
-public class AddObjectProperty implements Mutagen, Function1<JsonElement, JsonElement> {
+import static kotlin.sequences.SequencesKt.emptySequence;
+import static kotlin.sequences.SequencesKt.sequenceOf;
+
+public class AddObjectProperty implements Mutagen {
     private final JsonElement newElement;
 
     public AddObjectProperty(JsonElement newElement) {
@@ -21,16 +21,15 @@ public class AddObjectProperty implements Mutagen, Function1<JsonElement, JsonEl
     }
 
     @Override
-    public Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
+    public Sequence<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonObject()) {
-            return Stream.of(pathToElement.map(this));
+            return sequenceOf(pathToElement.map(this::mutate));
         } else {
-            return Stream.empty();
+            return emptySequence();
         }
     }
 
-    @Override
-    public JsonElement invoke(JsonElement original) {
+    private JsonElement mutate(JsonElement original) {
         JsonObject mutated = new JsonObject();
         Set<Map.Entry<String, JsonElement>> entries = original.getAsJsonObject().entrySet();
         for (Map.Entry<String, JsonElement> entry : entries) {

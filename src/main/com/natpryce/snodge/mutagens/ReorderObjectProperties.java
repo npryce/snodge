@@ -6,27 +6,28 @@ import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.JsonPath;
 import com.natpryce.snodge.Mutagen;
 import kotlin.jvm.functions.Function1;
+import kotlin.sequences.Sequence;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
-public class ReorderObjectProperties implements Mutagen, Function1<JsonElement,JsonElement> {
+import static kotlin.sequences.SequencesKt.emptySequence;
+import static kotlin.sequences.SequencesKt.sequenceOf;
+
+public class ReorderObjectProperties implements Mutagen {
     @Override
-    public Stream<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
+    public Sequence<DocumentMutation> potentialMutations(JsonElement document, JsonPath pathToElement, JsonElement elementToMutate) {
         if (elementToMutate.isJsonObject()) {
-            return Stream.of(pathToElement.map(this));
+            return sequenceOf(pathToElement.map(this::mutate));
         }
         else {
-            return Stream.empty();
+            return emptySequence();
         }
     }
 
-    @Override
-    public JsonElement invoke(JsonElement element) {
+    public JsonElement mutate(JsonElement element) {
         List<Map.Entry<String, JsonElement>> objectProperties = new ArrayList<>(element.getAsJsonObject().entrySet());
         Collections.shuffle(objectProperties);
 

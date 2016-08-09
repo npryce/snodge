@@ -30,5 +30,5 @@ interface Mutagen {
     fun potentialMutations(
         document: JsonElement,
         pathToElement: JsonPath,
-        elementToMutate: JsonElement): Stream<DocumentMutation>
+        elementToMutate: JsonElement): Sequence<DocumentMutation>
 }

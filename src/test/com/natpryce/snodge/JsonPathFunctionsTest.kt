@@ -1,11 +1,9 @@
 package com.natpryce.snodge
 
-import org.junit.Test
-
 import com.natpryce.snodge.JsonPath.functions.endsWith
 import com.natpryce.snodge.JsonPath.functions.startsWith
 import org.junit.Assert.assertTrue
-import java.util.function.Predicate
+import org.junit.Test
 
 class JsonPathFunctionsTest {
     @Test
@@ -56,11 +54,9 @@ class JsonPathFunctionsTest {
         assertPathMeetsPredicate(JsonPath.of(1, "a", "b"), not(startsWith("1")))
     }
     
-    private fun not(p: Predicate<JsonPath>): Predicate<JsonPath> {
-        return p.negate()
-    }
+    private fun not(p: (JsonPath)->Boolean): (JsonPath)->Boolean = {!p(it)}
     
-    private fun assertPathMeetsPredicate(path: JsonPath, p: Predicate<JsonPath>) {
-        assertTrue("$path should meet predicate $p", p.test(path))
+    private fun assertPathMeetsPredicate(path: JsonPath, p: (JsonPath)->Boolean) {
+        assertTrue("$path should meet predicate $p", p(path))
     }
 }

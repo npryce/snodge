@@ -2,13 +2,11 @@ package com.natpryce.snodge
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
-import com.natpryce.snodge.Mutagens.atPath
 import com.natpryce.snodge.mutagens.ReplaceJsonElement
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.junit.MatcherAssert.assertThat
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.stream.Collectors.toList
 
 class MutagenAtPathTest {
     @Test
@@ -25,7 +23,7 @@ class MutagenAtPathTest {
                 withField("b", 1),
                 withField("c", 2))))
         
-        val mutant = mutator.mutate(doc, 1).findAny().get()
+        val mutant = mutator.mutate(doc, 1).first()
         
         assertThat(mutant, equalTo(obj(
             withField("a", obj(
@@ -50,7 +48,7 @@ class MutagenAtPathTest {
                 withField("b", 1),
                 withField("c", 2))))
         
-        val mutations = mutator.mutate(doc, 2).collect(toList<JsonElement>())
+        val mutations = mutator.mutate(doc, 2)
         
         assertTrue("a.b mutated", mutations.contains(
             obj(

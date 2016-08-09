@@ -4,19 +4,16 @@ import com.google.gson.JsonElement;
 import com.natpryce.snodge.DocumentMutation;
 import com.natpryce.snodge.JsonPath;
 import com.natpryce.snodge.Mutagen;
-
-import java.util.stream.Stream;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt;
 
 public class RemoveJsonElement implements Mutagen {
     @Override
-    public Stream<DocumentMutation> potentialMutations(JsonElement document, final JsonPath pathToElement, JsonElement elementToMutate) {
+    public Sequence<DocumentMutation> potentialMutations(JsonElement document, final JsonPath pathToElement, JsonElement elementToMutate) {
         if (pathToElement.isRoot()) {
-            return Stream.empty();
+            return SequencesKt.emptySequence();
         } else {
-            return Stream.of(pathToElement.remove());
+            return SequencesKt.sequenceOf(pathToElement.remove());
         }
     }
 }

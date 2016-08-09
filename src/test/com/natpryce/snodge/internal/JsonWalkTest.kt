@@ -10,9 +10,6 @@ import com.natpryce.snodge.list
 import com.natpryce.snodge.obj
 import com.natpryce.snodge.withField
 import org.junit.Test
-import java.util.*
-import java.util.stream.Collectors.toCollection
-import java.util.stream.Stream
 
 class JsonWalkTest {
     @Test
@@ -100,8 +97,8 @@ class JsonWalkTest {
     }
     
     private fun assertWalk(json: JsonElement, vararg expected: JsonPath) {
-        val actualAsStrings = JsonWalk.walk(json).map({ it.toString() }).collect(toCollection( { TreeSet<String>() }))
-        val expectedAsStrings = Stream.of(*expected).map({ it.toString() }).collect(toCollection({ TreeSet<String>() }))
+        val actualAsStrings = walk(json).map { it.toString() }.toSortedSet()
+        val expectedAsStrings = expected.map { it.toString() }.toSortedSet()
         
         assertThat(actualAsStrings, equalTo(expectedAsStrings))
     }
