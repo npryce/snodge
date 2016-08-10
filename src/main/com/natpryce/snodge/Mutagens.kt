@@ -16,12 +16,6 @@ import java.util.stream.Stream
 import java.util.Arrays.asList
 import java.util.stream.Collectors.*
 
-private fun Mutagen(f: (JsonElement, JsonPath, JsonElement) -> Sequence<DocumentMutation>) =
-    object : Mutagen {
-        override fun potentialMutations(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
-            f(document, pathToElement, elementToMutate)
-    }
-
 private val exampleElements = asList(
     JsonNull.INSTANCE,
     JsonPrimitive(true),
@@ -40,7 +34,7 @@ private val exampleElements = asList(
  * @return the combination Mutagen
  */
 fun combine(vararg mutagens: Mutagen): Mutagen {
-    return combine(asList(*mutagens))
+    return combine(mutagens.toList())
 }
 
 /**
@@ -58,18 +52,17 @@ fun combine(mutagens: Collection<Mutagen>): Mutagen {
     }
 }
 
-fun atPath(path: JsonPath, atPathMutagen: Mutagen): Mutagen {
-    return atPath({ p -> p == path }, atPathMutagen)
-}
+fun Mutagen.atPath(path: JsonPath) = this.atPath { p -> p == path }
 
-fun atPath(pathSelector: (JsonPath) -> Boolean, atPathMutagen: Mutagen): Mutagen {
-    return Mutagen { document, pathToElement, elementToMutate ->
-        if (pathSelector(pathToElement))
-            atPathMutagen.potentialMutations(document, pathToElement, elementToMutate)
-        else
+fun Mutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
+    Mutagen { document, pathToElement, elementToMutate ->
+        if (pathSelector(pathToElement)) {
+            potentialMutations(document, pathToElement, elementToMutate)
+        }
+        else {
             emptySequence()
+        }
     }
-}
 
 /**
  * @return A combination of all the Mutagens implemented in the Snodge library.

@@ -32,3 +32,9 @@ interface Mutagen {
         pathToElement: JsonPath,
         elementToMutate: JsonElement): Sequence<DocumentMutation>
 }
+
+fun Mutagen(f: (JsonElement, JsonPath, JsonElement) -> Sequence<DocumentMutation>) =
+    object : Mutagen {
+        override fun potentialMutations(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
+            f(document, pathToElement, elementToMutate)
+    }

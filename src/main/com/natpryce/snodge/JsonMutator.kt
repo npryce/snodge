@@ -46,22 +46,23 @@ class JsonMutator(private val rng: Random, private val mutagens: Mutagen) : Muta
         
         return selectedMutations
     }
+}
+
+
+fun Mutator<JsonElement>.forStrings(): Mutator<String> {
+    val gson = Gson()
     
-    fun forStrings(): Mutator<String> {
-        val gson = Gson()
-        
-        return object : Mutator<String> {
-            override fun mutate(original: String, mutationCount: Int) =
-                mutate(gson.fromJson(original, JsonElement::class.java), mutationCount)
-                    .map { it.toString() }
-        }
+    return object : Mutator<String> {
+        override fun mutate(original: String, mutationCount: Int) =
+            mutate(gson.fromJson(original, JsonElement::class.java), mutationCount)
+                .map { it.toString() }
     }
-    
-    fun forEncodedStrings(encoding: Charset): Mutator<ByteArray> {
-        return EncodedStringMutator(encoding, this.forStrings())
-    }
-    
-    fun forEncodedStrings(encodingName: String): Mutator<ByteArray> {
-        return this.forEncodedStrings(Charset.forName(encodingName))
-    }
+}
+
+fun Mutator<JsonElement>.forEncodedStrings(encoding: Charset): Mutator<ByteArray> {
+    return EncodedStringMutator(encoding, this.forStrings())
+}
+
+fun Mutator<JsonElement>.forEncodedStrings(encodingName: String): Mutator<ByteArray> {
+    return this.forEncodedStrings(Charset.forName(encodingName))
 }
