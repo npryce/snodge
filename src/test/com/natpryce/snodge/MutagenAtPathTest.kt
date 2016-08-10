@@ -10,11 +10,10 @@ import org.junit.Test
 
 class MutagenAtPathTest {
     @Test
-    @Throws(Exception::class)
     fun canLimitMutagenToPath() {
         val mutator = JsonMutator(
             ReplaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath.of("a", "b")))
-        
+    
         val doc = obj(
             withField("a", obj(
                 withField("b", 1),

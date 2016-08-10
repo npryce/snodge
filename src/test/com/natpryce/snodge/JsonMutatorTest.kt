@@ -16,9 +16,9 @@ import java.util.*
 class JsonMutatorTest {
     internal var rng = Random()
     
-    internal var mutator = JsonMutator(rng,
-        combine(AddObjectProperty(JsonNull.INSTANCE),
-            AddArrayElement(JsonNull.INSTANCE)))
+    internal var mutator = JsonMutator(combine(AddObjectProperty(JsonNull.INSTANCE),
+        AddArrayElement(JsonNull.INSTANCE)),
+        rng)
     
     @Test
     fun canAddNullObjectProperty() {
