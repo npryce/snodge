@@ -2,9 +2,9 @@ package com.natpryce.snodge
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import com.natpryce.snodge.mutagens.ReplaceJsonElement
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.junit.MatcherAssert.assertThat
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
