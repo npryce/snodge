@@ -2,13 +2,14 @@ package com.natpryce.snodge
 
 import java.util.*
 
-fun Sequence<DocumentMutation>.sample(maxSampleSize: Int, random: Random = Random()):
-    List<DocumentMutation>
-{
-    val selectedMutations = mutableListOf<DocumentMutation>()
+fun <T> Random.sample(maxSampleSize: Int, sequence: Sequence<T>): List<T> = sampleFrom(sequence.iterator(), maxSampleSize, this)
+fun <T> Random.sample(maxSampleSize: Int, sequence: Iterable<T>): List<T> = sampleFrom(sequence.iterator(), maxSampleSize, this)
+
+private fun <T> sampleFrom(sequence: Iterator<T>, maxSampleSize: Int, random: Random): MutableList<T> {
+    val selectedMutations = mutableListOf<T>()
     var counter = 0
     
-    forEach { potentialMutation ->
+    sequence.forEach { potentialMutation ->
         val count = ++counter
         if (count <= maxSampleSize) {
             selectedMutations.add(potentialMutation)

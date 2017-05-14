@@ -1,16 +1,15 @@
 package com.natpryce.snodge.demo
 
 import com.google.gson.JsonPrimitive
-import com.natpryce.snodge.JsonMutator
-import com.natpryce.snodge.Mutagen
-import com.natpryce.snodge.forStrings
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
+import com.natpryce.snodge.*
 import com.natpryce.snodge.mutagens.AddObjectProperty
 import com.natpryce.snodge.mutagens.ReorderObjectProperties
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.junit.MatcherAssert.assertThat
 import org.junit.Test
 import java.io.IOException
 import java.net.URI
+import java.util.*
 
 class JsonEventFormatSnodgeTest {
     
@@ -41,11 +40,8 @@ class JsonEventFormatSnodgeTest {
     }
     
     private fun assertSerialisationUnaffectedBy(mutagen: Mutagen) {
-        JsonMutator(mutagen).forStrings()
-            .mutate(format.serialise(originalEvent), mutationCount)
-            .forEach {
-                assertParsedEventEqualToOriginal(it)
-            }
+        Random().mutateJson(format.serialise(originalEvent), 1000, mutagen)
+            .forEach { assertParsedEventEqualToOriginal(it) }
     }
     
     private fun assertParsedEventEqualToOriginal(json: String) {
@@ -55,7 +51,6 @@ class JsonEventFormatSnodgeTest {
         catch (e: Exception) {
             fail("deserialisation failed for JSON: " + json, e)
         }
-        
     }
     
     private fun assertParsesEventSuccessfullyOrThrowsIOException(json: String) {
@@ -71,9 +66,7 @@ class JsonEventFormatSnodgeTest {
         
     }
     
-    private fun fail(detailMessage: String, e: Exception) {
-        throw AssertionError(detailMessage, e)
-    }
+    private fun fail(detailMessage: String, e: Exception): Nothing = throw AssertionError(detailMessage, e)
     
     internal val mutationCount = 100
 }

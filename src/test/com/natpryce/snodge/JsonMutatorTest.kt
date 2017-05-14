@@ -16,9 +16,9 @@ import java.util.*
 class JsonMutatorTest {
     internal var rng = Random()
     
-    internal var mutator = JsonMutator(combine(AddObjectProperty(JsonNull.INSTANCE),
-        AddArrayElement(JsonNull.INSTANCE)),
-        rng)
+    private val mutagen = combine(
+        AddObjectProperty(JsonNull.INSTANCE),
+        AddArrayElement(JsonNull.INSTANCE))
     
     @Test
     fun canAddNullObjectProperty() {
@@ -26,11 +26,11 @@ class JsonMutatorTest {
             withField("alice", 1),
             withField("bob", 2))
         
-        val mutations: List<JsonElement> = mutator.mutate(doc, 1)
+        val mutations = rng.mutateJson(doc, 1, mutagen)
         
         assertThat("should only be one mutation", mutations.size, equalTo(1))
         
-        assertThat(mutations[0], equalTo(obj(
+        assertThat(mutations.first(), equalTo(obj(
             withField("alice", 1),
             withField("bob", 2),
             withNullField("x")) as JsonElement))
@@ -40,10 +40,10 @@ class JsonMutatorTest {
     fun canAddNullArrayProperty() {
         val doc = list(1, 2, 3)
         
-        val mutations = mutator.mutate(doc, 1).firstOrNull()
+        val mutations = rng.mutateJson(doc, 1, mutagen)
         
         assertThat("should be one mutation",
-            mutations, present(equalTo<JsonElement>(list(1, 2, 3, null))))
+            mutations, equalTo<List<JsonElement>>(listOf(list(1, 2, 3, null))))
     }
     
     @Test
@@ -52,7 +52,7 @@ class JsonMutatorTest {
             withField("num", 1),
             withField("list", list(1, 2, 3)))
         
-        val mutatedDocs = mutator.mutate(doc, 2)
+        val mutatedDocs = rng.mutateJson(doc, 2, mutagen)
         
         assertThat("number of mutations", mutatedDocs.size, equalTo(2))
         
@@ -71,19 +71,19 @@ class JsonMutatorTest {
         val doc = list(list(1, 2), list(list(3, 4), list(5, 6, list(7, 8)), list(9, 10)), list(11, 12))
         
         rng.setSeed(0)
-        val mutatedDocs = mutator.mutate(doc, 2)
+        val mutatedDocs = rng.mutateJson(doc, 2, mutagen)
         
         assertThat("number of mutations", mutatedDocs.size, equalTo(2))
         
         rng.setSeed(99)
-        assertThat(mutator.mutate(doc, 2), !equalTo(mutator.mutate(doc, 2)))
+        assertThat(rng.mutateJson(doc, 2, mutagen), !equalTo(rng.mutateJson(doc, 2, mutagen)))
     }
     
     @Test
     fun willNotReturnMoreMutationsThanCanBeGeneratedByTheMutagens() {
         val doc = list(list(1, 2), list(3, 4))
         
-        assertThat("number of mutations", mutator.mutate(doc, 10).size, equalTo(3))
+        assertThat("number of mutations", rng.mutateJson(doc, 10, mutagen).size, equalTo(3))
     }
     
     @Test
@@ -93,12 +93,11 @@ class JsonMutatorTest {
             withField("num", 1),
             withField("list", list(1, 2, 3))))
         
-        val mutated = mutator.forStrings().mutate(original, 1).first()
+        val mutated = rng.mutateJson(original, 1, mutagen).first()
         
         assertThat(mutated, !equalTo(original))
-        
-        // Does not blow up
-        gson.fromJson(mutated, JsonElement::class.java)
+    
+        gson.canParse(mutated)
     }
     
     @Test
@@ -111,13 +110,17 @@ class JsonMutatorTest {
             withField("list", list(1, 2, 3))))
         
         val originalBytes = originalString.toByteArray(charset)
-        val mutatedBytes = mutator.forEncodedStrings(charset.name()).mutate(originalBytes, 1).first()
+        val mutatedBytes = rng.mutateEncodedJson(originalBytes, charset, 2).first()
         
         assertThat(mutatedBytes, !equalTo(originalBytes))
         
         val mutatedString = String(mutatedBytes, charset)
         
+        gson.canParse(mutatedString)
+    }
+    
+    private fun Gson.canParse(mutated: String) {
         // Does not blow up
-        gson.fromJson(mutatedString, JsonElement::class.java)
+        fromJson(mutated, JsonElement::class.java)
     }
 }

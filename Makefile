@@ -7,15 +7,14 @@ srcdir_main=src/main
 srcdir_test=src/test
 
 JAR:=$(shell jenv which jar)
-JAVAC:=$(shell jenv which javac)
 JAVA:=$(shell jenv which java)
-JAVADOC=$(shell jenv which javadoc)
 JARJAR=$(JAVA) -jar $(libs_tool)
 
-JAVACFLAGS=-g
-
+KOTLIN=kotlin
 KOTLINC=kotlinc
 KOTLINCFLAGS=
+
+KOTLINHOME=$(realpath $(shell which $(KOTLIN))/../..)
 
 srcfiles=$(shell find "$1" -name '*.java' -o -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
@@ -27,7 +26,7 @@ src_test:=$(call srcfiles,$(srcdir_test))
 package_distro = \
     $(outdir)/$(package)-$(version).jar \
     $(outdir)/$(package)-$(version)-sources.jar \
-    $(outdir)/$(package)-$(version)-javadoc.jar \
+    #$(outdir)/$(package)-$(version)-javadoc.jar \
     $(outdir)/$(package)-$(version).pom
 
 standalone_distro = \
@@ -57,9 +56,10 @@ libs/%.mk: %.dependencies
 $(outdir)/$(package)-$(version).jar: $(src_main) $(libs_main)
 $(outdir)/$(package)-$(version)-test.jar: $(src_test) $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_test)
 
-$(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.java,%,$(src_test))))
-$(outdir)/junit-report.txt: $(outdir)/$(package)-$(version).jar $(outdir)/$(package)-$(version)-test.jar $(libs_main) $(libs_test)
-	$(JAVA) $(classpath) org.junit.runner.JUnitCore $(TESTS) | tee $@
+$(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.kt,%,$(src_test))))
+$(outdir)/junit-report.txt: $(outdir)/$(package)-$(version)-test.jar $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_test)
+	$(KOTLIN) $(classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
+	    org.junit.runner.JUnitCore $(TESTS) | tee $@
 
 $(outdir)/$(package)-$(version)-sources.jar: $(src_main)
 	$(JAR) cf $@ -C $(srcdir_main) .
@@ -121,4 +121,7 @@ tagged:
 	@false
 endif
 
-.PHONY: all tested clean distclean published tagged distro ci tst
+.PHONY: all tested clean distclean published tagged distro ci
+
+tst:
+	echo $(KOTLINHOME)
