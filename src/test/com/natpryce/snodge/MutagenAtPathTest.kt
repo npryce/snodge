@@ -22,7 +22,7 @@ class MutagenAtPathTest {
                 withField("b", 1),
                 withField("c", 2))))
         
-        val mutant = mutator.mutate(doc, 1).first()
+        val mutant = mutator.invoke(doc, 1).first()
         
         assertThat(mutant, equalTo(obj(
             withField("a", obj(
@@ -47,7 +47,7 @@ class MutagenAtPathTest {
                 withField("b", 1),
                 withField("c", 2))))
         
-        val mutations = mutator.mutate(doc, 2)
+        val mutations = mutator.invoke(doc, 2)
         
         assertTrue("a.b mutated", mutations.contains(
             obj(

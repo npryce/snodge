@@ -12,7 +12,7 @@ class JsonMutator(
 
 ) : Mutator<JsonElement> {
     
-    override fun mutate(original: JsonElement, mutationCount: Int) =
+    override fun invoke(original: JsonElement, mutationCount: Int) =
         mutations(original, mutationCount).map { mutation -> mutation(original) }
     
     private fun mutations(document: JsonElement, mutationCount: Int): List<DocumentMutation> {
@@ -25,11 +25,9 @@ class JsonMutator(
 fun Mutator<JsonElement>.forStrings(): Mutator<String> {
     val gson = Gson()
     
-    return object : Mutator<String> {
-        override fun mutate(original: String, mutationCount: Int) =
-            mutate(gson.fromJson(original, JsonElement::class.java), mutationCount)
-                .map { it.toString() }
-    }
+    return fun(original: String, mutationCount: Int) =
+        invoke(gson.fromJson(original, JsonElement::class.java), mutationCount)
+            .map { it.toString() }
 }
 
 fun Mutator<JsonElement>.forEncodedStrings(encoding: Charset) =
@@ -37,13 +35,13 @@ fun Mutator<JsonElement>.forEncodedStrings(encoding: Charset) =
 
 
 fun Random.mutateJson(doc: JsonElement, count: Int, mutagen: Mutagen = allMutagens()): List<JsonElement> {
-    return JsonMutator(mutagen, this).mutate(doc, count)
+    return JsonMutator(mutagen, this).invoke(doc, count)
 }
 
 fun Random.mutateJson(doc: String, count: Int, mutagen: Mutagen = allMutagens()): List<String> {
-    return JsonMutator(mutagen, this).forStrings().mutate(doc, count)
+    return JsonMutator(mutagen, this).forStrings().invoke(doc, count)
 }
 
 fun Random.mutateEncodedJson(doc: ByteArray, encoding: Charset, count: Int, mutagen: Mutagen = allMutagens()): List<ByteArray> {
-    return JsonMutator(mutagen, this).forEncodedStrings(encoding).mutate(doc, count)
+    return JsonMutator(mutagen, this).forEncodedStrings(encoding).invoke(doc, count)
 }

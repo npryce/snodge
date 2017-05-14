@@ -9,6 +9,6 @@ class EncodedStringMutator(
 
 ) : Mutator<ByteArray> {
     
-    override fun mutate(original: ByteArray, mutationCount: Int) =
-        stringMutator.mutate(String(original, charset), mutationCount).map({ stringMutant -> stringMutant.toByteArray(charset) })
+    override fun invoke(original: ByteArray, mutationCount: Int) =
+        stringMutator(String(original, charset), mutationCount).map { stringMutant -> stringMutant.toByteArray(charset) }
 }

@@ -5,6 +5,6 @@ object InANutshell {
         val mutator = JsonMutator()
         val originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}"
         
-        mutator.forStrings().mutate(originalJson, 10).forEach { println(it) }
+        mutator.forStrings().invoke(originalJson, 10).forEach { println(it) }
     }
 }
