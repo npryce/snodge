@@ -1,17 +1,14 @@
 package com.natpryce.snodge
 
-import com.google.gson.JsonElement
-import com.natpryce.snodge.internal.EncodedStringMutator
 import java.nio.charset.Charset
 
 
-typealias Mutator<T> = (original: T, count: Int)->List<T>
+typealias Mutator<T> = (original: T) -> List<T>
 
-fun <T> id() = IdentityMutator<T>()
+fun <T> id() = fun(original: T) = listOf(original)
 
-fun Mutator<String>.encodedAs(encoding: Charset) =
-    fun (original: ByteArray, mutationCount: Int) =
-        this(original.toString(encoding), mutationCount).map { it.toByteArray(encoding) }
+fun <T, U> Mutator<U>.mapped(toFn: (T) -> U, fromFn: (U) -> T): Mutator<T> =
+    fun(original: T) = this(toFn(original)).map { fromFn(it) }
 
-fun Mutator<JsonElement>.forEncodedStrings(encodingName: String) =
-    this.forEncodedStrings(Charset.forName(encodingName))
+fun Mutator<String>.encodedAs(encoding: Charset): Mutator<ByteArray> =
+    mapped({ it.toString(encoding) }, { it.toByteArray(encoding) })

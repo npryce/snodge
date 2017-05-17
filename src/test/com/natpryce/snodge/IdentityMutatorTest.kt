@@ -11,7 +11,7 @@ class IdentityMutatorTest {
         
         val original = 8
         
-        val actualMutations: List<Int> = m.invoke(original, 100)
+        val actualMutations: List<Int> = m.invoke(original)
         val expectedMutations : List<Int> = listOf(original)
         
         assertThat("mutations", actualMutations, equalTo(expectedMutations))
