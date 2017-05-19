@@ -7,7 +7,7 @@ object InANutshell {
         val random = Random()
         val originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}"
         
-        random.mutants(originalJson, 10, allMutagens().forStrings())
+        random.mutants(originalJson, 10, allJsonMutagens().forStrings())
             .forEach(::println)
     }
 }

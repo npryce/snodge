@@ -6,34 +6,67 @@ import com.google.gson.JsonElement
 /**
  * A source of mutation within a JSON document.
  *
+ * A JsonNodeMutagen maps an element within a JSON document, at a location described by a [com.natpryce.snodge.JsonPath],
+ * to zero or more lazily evaluated mutations of the entire document.
  *
- * A Mutagen maps an element within a JSON document, at a location described by a [com.natpryce.snodge.JsonPath],
- * to zero or more potential [com.natpryce.snodge.DocumentMutation]s that can be applied to the document.
- *
- *
- * Multiple Mutagens can be combined into a more powerful Mutagen by the
- * [com.natpryce.snodge.Mutagens.combine] function.
+ * Multiple JsonNodeMutagen can be combined into a more powerful JsonNodeMutagen by the
+ * [com.natpryce.snodge.JsonNodeMutagen.combine] function.
  */
-interface JsonNodeMutagen {
-    /**
-     * Returns zero or more mutations that can be applied to the document.
-     
-     * @param document the document for which potential mutations are calculated
-     * *
-     * @param pathToElement the path from the root of the document to the elementToMutate
-     * *
-     * @param elementToMutate the element in the document that will be affected by the mutations returned
-     * *
-     * @return zero or more mutations of the entire document.
-     */
-    fun potentialMutations(
-        document: JsonElement,
-        pathToElement: JsonPath,
-        elementToMutate: JsonElement): Sequence<Lazy<JsonElement>>
+typealias JsonNodeMutagen =
+    (document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) ->Sequence<Lazy<JsonElement>>
+
+
+/**
+ * Useful for turning a lambda to a fully typed JsonNodeMutagen
+ */
+fun JsonNodeMutagen(f: (JsonElement, JsonPath, JsonElement) -> Sequence<Lazy<JsonElement>>) = f
+
+
+/**
+ * Combine multiple component JsonNodeMutagen into a single JsonNodeMutagen that generates all the mutations of the components.
+ 
+ * @param mutagens the JsonNodeMutagen to combine
+ * *
+ * @return the combination JsonNodeMutagen
+ */
+fun combine(vararg mutagens: JsonNodeMutagen): JsonNodeMutagen {
+    return combine(mutagens.toList())
 }
 
-fun Mutagen(f: (JsonElement, JsonPath, JsonElement) -> Sequence<Lazy<JsonElement>>) =
-    object : JsonNodeMutagen {
-        override fun potentialMutations(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
-            f(document, pathToElement, elementToMutate)
+
+/**
+ * Combine multiple component JsonNodeMutagen into a single JsonNodeMutagen that generates all the mutations of the components.
+ 
+ * @param mutagens the JsonNodeMutagen to combine
+ * *
+ * @return the combination JsonNodeMutagen
+ */
+fun combine(mutagens: Collection<JsonNodeMutagen>): JsonNodeMutagen {
+    return JsonNodeMutagen { document, pathToElement, elementToMutate ->
+        mutagens.asSequence().flatMap { it(document, pathToElement, elementToMutate) }
     }
+}
+
+/**
+ * Constrain a JsonNodeMutagen to apply only to the element at the given path
+ */
+fun JsonNodeMutagen.atPath(path: JsonPath) = this.atPath { it == path }
+
+/**
+ * Constrain a JsonNodeMutagen to apply only to the element at the given path or its children
+ */
+fun JsonNodeMutagen.atOrBelowPath(path: JsonPath) = this.atPath { it.startsWith(path) }
+
+/**
+ * Constrain a JsonNodeMutagen to apply only to elements at paths that match the given predicate
+ */
+fun JsonNodeMutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
+    JsonNodeMutagen { document, pathToElement, elementToMutate ->
+        if (pathSelector(pathToElement)) {
+            invoke(document, pathToElement, elementToMutate)
+        }
+        else {
+            emptySequence()
+        }
+    }
+

@@ -5,7 +5,7 @@ import com.natpryce.snodge.JsonNodeMutagen
 import com.natpryce.snodge.JsonPath
 
 class RemoveJsonElement : JsonNodeMutagen {
-    override fun potentialMutations(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> {
+    override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> {
         if (pathToElement.isRoot) {
             return emptySequence()
         }

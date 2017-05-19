@@ -24,7 +24,7 @@ class JsonEventFormatSnodgeTest {
     
     @Test
     fun parsesEventSuccessfullyOrThrowsIOException() {
-        Random().mutants(format.serialise(originalEvent), mutationCount, allMutagens().forStrings()).forEach {
+        Random().mutants(format.serialise(originalEvent), mutationCount, allJsonMutagens().forStrings()).forEach {
             assertParsesEventSuccessfullyOrThrowsIOException(it)
         }
     }
