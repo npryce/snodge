@@ -7,7 +7,7 @@ import java.util.ArrayList
 import java.util.Collections
 
 
-fun AddArrayElement(newElement: JsonElement): JsonNodeMutagen =
+fun addArrayElement(newElement: JsonElement): JsonNodeMutagen =
     fun(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         if (elementToMutate is JsonArray) {
             sequenceOf(lazy {
@@ -24,7 +24,7 @@ fun AddArrayElement(newElement: JsonElement): JsonNodeMutagen =
         }
 
 
-fun AddObjectProperty(newElement: JsonElement): JsonNodeMutagen =
+fun addObjectProperty(newElement: JsonElement): JsonNodeMutagen =
     fun(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         if (elementToMutate.isJsonObject) {
             sequenceOf(lazy {
@@ -47,17 +47,17 @@ private fun JsonObject.newProperty(basename: String) =
         .first()
 
 
-fun RemoveJsonElement(): JsonNodeMutagen =
+fun removeJsonElement(): JsonNodeMutagen =
     fun(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         if (pathToElement.isRoot) emptySequence() else sequenceOf(lazy { pathToElement.remove(document) })
 
 
-fun ReplaceJsonElement(replacement: JsonElement): JsonNodeMutagen =
+fun replaceJsonElement(replacement: JsonElement): JsonNodeMutagen =
     fun(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         sequenceOf(lazy { pathToElement.replace(document, replacement) })
 
 
-fun ReorderObjectProperties(): JsonNodeMutagen =
+fun reorderObjectProperties(): JsonNodeMutagen =
     fun(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         if (elementToMutate.isJsonObject) {
             sequenceOf(lazy {

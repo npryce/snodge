@@ -3,12 +3,12 @@ package com.natpryce.snodge.demo
 import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.snodge.json.AddObjectProperty
 import com.natpryce.snodge.json.JsonMutagen
 import com.natpryce.snodge.json.JsonNodeMutagen
-import com.natpryce.snodge.json.ReorderObjectProperties
+import com.natpryce.snodge.json.addObjectProperty
 import com.natpryce.snodge.json.allJsonMutagens
 import com.natpryce.snodge.json.forStrings
+import com.natpryce.snodge.json.reorderObjectProperties
 import com.natpryce.snodge.mutants
 import org.junit.Test
 import java.io.IOException
@@ -35,12 +35,12 @@ class JsonEventFormatSnodgeTest {
     
     @Test
     fun jsonPropertiesCanOccurInAnyOrder() {
-        assertSerialisationUnaffectedBy(ReorderObjectProperties())
+        assertSerialisationUnaffectedBy(reorderObjectProperties())
     }
     
     @Test
     fun ignoresUnrecognisedProperties() {
-        assertSerialisationUnaffectedBy(AddObjectProperty(JsonPrimitive("new-property-value")))
+        assertSerialisationUnaffectedBy(addObjectProperty(JsonPrimitive("new-property-value")))
     }
     
     private fun assertSerialisationUnaffectedBy(mutagen: JsonNodeMutagen) {

@@ -39,11 +39,11 @@ fun Mutagen<JsonElement>.forEncodedStrings(encodingName: String) =
  */
 fun allJsonMutagens(): Mutagen<JsonElement> {
     return JsonMutagen(
-        forAll(exampleElements, { ReplaceJsonElement(it) }),
-        forAll(exampleElements, { AddArrayElement(it) }),
-        forAll(exampleElements, { AddObjectProperty(it) }),
-        RemoveJsonElement(),
-        ReorderObjectProperties())
+        forAll(exampleElements, { replaceJsonElement(it) }),
+        forAll(exampleElements, { addArrayElement(it) }),
+        forAll(exampleElements, { addObjectProperty(it) }),
+        removeJsonElement(),
+        reorderObjectProperties())
 }
 
 private fun forAll(elements: List<JsonElement>, fn: (JsonElement) -> JsonNodeMutagen): JsonNodeMutagen {

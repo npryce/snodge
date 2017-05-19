@@ -15,8 +15,8 @@ class JsonMutatorTest {
     internal var random = Random()
     
     private val mutagen = JsonMutagen(
-            AddObjectProperty(JsonNull.INSTANCE),
-            AddArrayElement(JsonNull.INSTANCE))
+            addObjectProperty(JsonNull.INSTANCE),
+            addArrayElement(JsonNull.INSTANCE))
     
     @Test
     fun canAddNullObjectProperty() {

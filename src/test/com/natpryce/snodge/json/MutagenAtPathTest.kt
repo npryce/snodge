@@ -12,7 +12,7 @@ import org.junit.Test
 class MutagenAtPathTest {
     @Test
     fun canLimitMutagenToPath() {
-        val mutator = JsonMutagen(ReplaceJsonElement(JsonPrimitive("XXX")).atPath(Companion.of("a", "b")))
+        val mutator = JsonMutagen(replaceJsonElement(JsonPrimitive("XXX")).atPath(Companion.of("a", "b")))
     
         val doc = obj(
             withField("a", obj(
@@ -36,7 +36,7 @@ class MutagenAtPathTest {
     @Test
     @Throws(Exception::class)
     fun canLimitMutagenToPathsByPredicate() {
-        val mutator = JsonMutagen(ReplaceJsonElement(JsonPrimitive("XXX")).atPath(functions.endsWith("b")))
+        val mutator = JsonMutagen(replaceJsonElement(JsonPrimitive("XXX")).atPath(functions.endsWith("b")))
         
         val doc = obj(
             withField("a", obj(
