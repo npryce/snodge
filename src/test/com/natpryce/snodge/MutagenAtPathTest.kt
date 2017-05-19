@@ -11,8 +11,7 @@ import org.junit.Test
 class MutagenAtPathTest {
     @Test
     fun canLimitMutagenToPath() {
-        val mutator = JsonMutator(1,
-            mutagens = ReplaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath.of("a", "b")))
+        val mutator = JsonMutagen(ReplaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath.of("a", "b")))
     
         val doc = obj(
             withField("a", obj(
@@ -22,22 +21,21 @@ class MutagenAtPathTest {
                 withField("b", 1),
                 withField("c", 2))))
         
-        val (mutant) = mutator.invoke(doc)
+        val mutant = mutator(doc).first().value
         
-        assertThat(mutant, equalTo(obj(
+        assertThat(mutant, equalTo<JsonElement>(obj(
             withField("a", obj(
                 withField("b", "XXX"),
                 withField("c", 2))),
             withField("d", obj(
                 withField("b", 1),
-                withField("c", 2)))) as JsonElement))
+                withField("c", 2))))))
     }
     
     @Test
     @Throws(Exception::class)
     fun canLimitMutagenToPathsByPredicate() {
-        val mutator = JsonMutator(2,
-            mutagens = ReplaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath.functions.endsWith("b")))
+        val mutator = JsonMutagen(ReplaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath.functions.endsWith("b")))
         
         val doc = obj(
             withField("a", obj(
@@ -47,7 +45,7 @@ class MutagenAtPathTest {
                 withField("b", 1),
                 withField("c", 2))))
         
-        val mutations = mutator.invoke(doc)
+        val mutations = mutator.invoke(doc).take(2).map { it.value }
         
         assertTrue("a.b mutated", mutations.contains(
             obj(

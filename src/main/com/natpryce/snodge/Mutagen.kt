@@ -1,40 +1,26 @@
 package com.natpryce.snodge
 
-import com.google.gson.JsonElement
+import java.nio.charset.Charset
+import java.util.Random
 
-import java.util.stream.Stream
 
 /**
- * A source of mutation within a JSON document.
+ * A Mutagen maps a value to a finite sequence of mutations of that value.
  *
- *
- * A Mutagen maps an element within a JSON document, at a location described by a [com.natpryce.snodge.JsonPath],
- * to zero or more potential [com.natpryce.snodge.DocumentMutation]s that can be applied to the document.
- *
- *
- * Multiple Mutagens can be combined into a more powerful Mutagen by the
- * [com.natpryce.snodge.Mutagens.combine] function.
+ * Mutations are calculated lazily so that mutants only need be constructed
+ * for a random sample of all possible mutations.
  */
-interface Mutagen {
-    /**
-     * Returns zero or more mutations that can be applied to the document.
-     
-     * @param document the document for which potential mutations are calculated
-     * *
-     * @param pathToElement the path from the root of the document to the elementToMutate
-     * *
-     * @param elementToMutate the element in the document that will be affected by the mutations returned
-     * *
-     * @return zero or more mutations of the entire document.
-     */
-    fun potentialMutations(
-        document: JsonElement,
-        pathToElement: JsonPath,
-        elementToMutate: JsonElement): Sequence<DocumentMutation>
-}
+typealias Mutagen<T> = (T) -> Sequence<Lazy<T>>
 
-fun Mutagen(f: (JsonElement, JsonPath, JsonElement) -> Sequence<DocumentMutation>) =
-    object : Mutagen {
-        override fun potentialMutations(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
-            f(document, pathToElement, elementToMutate)
-    }
+fun <T, U> Mutagen<U>.mapped(mapIn: (T) -> U, mapOut: (U) -> T): Mutagen<T> =
+    fun(original: T) =
+        this@mapped(mapIn(original)).map { lazy { mapOut(it.value) } }
+
+fun Mutagen<String>.encodedAs(encoding: Charset): Mutagen<ByteArray> =
+    mapped({ it.toString(encoding) }, { it.toByteArray(encoding) })
+
+
+fun <T> Random.mutants(original: T, sampleSize: Int, mutagen: Mutagen<T>): List<T> =
+    mutagen(original)
+        .let { sample(sampleSize, it) }
+        .map { it.value }

@@ -62,10 +62,6 @@ data class JsonPath(
     fun map(json: JsonElement, f: (JsonElement) -> JsonElement) =
         map(json, steps.size, f)
     
-    fun map(f: (JsonElement) -> JsonElement) = object : DocumentMutation {
-        override fun invoke(p1: JsonElement) = map(p1, f)
-    }
-    
     fun replace(root: JsonElement, replacement: JsonElement) =
         map(root) { replacement }
     
@@ -116,12 +112,6 @@ data class JsonPath(
         }
         
         return replaced
-    }
-    
-    fun remove(): DocumentMutation {
-        return object : DocumentMutation {
-            override fun invoke(p1: JsonElement) = remove(p1)
-        }
     }
     
     fun remove(root: JsonElement): JsonElement {

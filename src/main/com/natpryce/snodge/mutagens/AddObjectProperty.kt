@@ -2,18 +2,14 @@ package com.natpryce.snodge.mutagens
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.natpryce.snodge.DocumentMutation
+import com.natpryce.snodge.JsonNodeMutagen
 import com.natpryce.snodge.JsonPath
-import com.natpryce.snodge.Mutagen
 
-import kotlin.sequences.emptySequence
-import kotlin.sequences.sequenceOf
-
-class AddObjectProperty(private val newElement: JsonElement) : Mutagen {
+class AddObjectProperty(private val newElement: JsonElement) : JsonNodeMutagen {
     
-    override fun potentialMutations(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<DocumentMutation> {
+    override fun potentialMutations(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> {
         if (elementToMutate.isJsonObject) {
-            return sequenceOf(pathToElement.map { original: JsonElement -> this.mutate(original) })
+            return sequenceOf(lazy {pathToElement.map(document, this::mutate) })
         }
         else {
             return emptySequence()

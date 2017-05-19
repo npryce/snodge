@@ -8,13 +8,8 @@ package com.natpryce.snodge
 
 import com.google.gson.*
 import com.natpryce.snodge.mutagens.*
-import java.util.function.Function
-import java.util.function.Predicate
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 import java.util.Arrays.asList
-import java.util.stream.Collectors.*
 
 private val exampleElements = asList(
     JsonNull.INSTANCE,
@@ -27,24 +22,24 @@ private val exampleElements = asList(
     JsonObject())
 
 /**
- * Combine multiple component Mutagens into a single Mutagen that generates all the mutations of the components.
+ * Combine multiple component JsonNodeMutagen into a single JsonNodeMutagen that generates all the mutations of the components.
  
- * @param mutagens the Mutagens to combine
+ * @param mutagens the JsonNodeMutagen to combine
  * *
- * @return the combination Mutagen
+ * @return the combination JsonNodeMutagen
  */
-fun combine(vararg mutagens: Mutagen): Mutagen {
+fun combine(vararg mutagens: JsonNodeMutagen): JsonNodeMutagen {
     return combine(mutagens.toList())
 }
 
 /**
- * Combine multiple component Mutagens into a single Mutagen that generates all the mutations of the components.
+ * Combine multiple component JsonNodeMutagen into a single JsonNodeMutagen that generates all the mutations of the components.
  
- * @param mutagens the Mutagens to combine
+ * @param mutagens the JsonNodeMutagen to combine
  * *
- * @return the combination Mutagen
+ * @return the combination JsonNodeMutagen
  */
-fun combine(mutagens: Collection<Mutagen>): Mutagen {
+fun combine(mutagens: Collection<JsonNodeMutagen>): JsonNodeMutagen {
     return Mutagen { document, pathToElement, elementToMutate ->
         mutagens.asSequence().flatMap { mutagen ->
             mutagen.potentialMutations(document, pathToElement, elementToMutate)
@@ -52,9 +47,9 @@ fun combine(mutagens: Collection<Mutagen>): Mutagen {
     }
 }
 
-fun Mutagen.atPath(path: JsonPath) = this.atPath { p -> p == path }
+fun JsonNodeMutagen.atPath(path: JsonPath) = this.atPath { p -> p == path }
 
-fun Mutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
+fun JsonNodeMutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
     Mutagen { document, pathToElement, elementToMutate ->
         if (pathSelector(pathToElement)) {
             potentialMutations(document, pathToElement, elementToMutate)
@@ -67,8 +62,8 @@ fun Mutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
 /**
  * @return A combination of all the Mutagens implemented in the Snodge library.
  */
-fun allMutagens(): Mutagen {
-    return combine(
+fun allMutagens(): Mutagen<JsonElement> {
+    return JsonMutagen(
         forAll(exampleElements, { ReplaceJsonElement(it) }),
         forAll(exampleElements, { AddArrayElement(it) }),
         forAll(exampleElements, { AddObjectProperty(it) }),
@@ -76,6 +71,6 @@ fun allMutagens(): Mutagen {
         ReorderObjectProperties())
 }
 
-private fun forAll(elements: List<JsonElement>, fn: (JsonElement) -> Mutagen): Mutagen {
+private fun forAll(elements: List<JsonElement>, fn: (JsonElement) -> JsonNodeMutagen): JsonNodeMutagen {
     return combine(elements.map(fn).toList())
 }

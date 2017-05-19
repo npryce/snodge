@@ -24,7 +24,7 @@ class JsonEventFormatSnodgeTest {
     
     @Test
     fun parsesEventSuccessfullyOrThrowsIOException() {
-        Random().mutateJson(format.serialise(originalEvent), mutationCount).forEach {
+        Random().mutants(format.serialise(originalEvent), mutationCount, allMutagens().forStrings()).forEach {
             assertParsesEventSuccessfullyOrThrowsIOException(it)
         }
     }
@@ -39,8 +39,8 @@ class JsonEventFormatSnodgeTest {
         assertSerialisationUnaffectedBy(AddObjectProperty(JsonPrimitive("new-property-value")))
     }
     
-    private fun assertSerialisationUnaffectedBy(mutagen: Mutagen) {
-        Random().mutateJson(format.serialise(originalEvent), 1000, mutagen)
+    private fun assertSerialisationUnaffectedBy(mutagen: JsonNodeMutagen) {
+        Random().mutants(format.serialise(originalEvent), 1000, JsonMutagen(mutagen).forStrings())
             .forEach { assertParsedEventEqualToOriginal(it) }
     }
     
