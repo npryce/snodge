@@ -1,4 +1,4 @@
-package com.natpryce.snodge
+package com.natpryce.snodge.json
 
 import com.google.gson.JsonElement
 

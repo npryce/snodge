@@ -1,14 +1,10 @@
-package com.natpryce.snodge.internal
+package com.natpryce.snodge.json
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.snodge.JsonPath
-import com.natpryce.snodge.list
-import com.natpryce.snodge.obj
-import com.natpryce.snodge.withField
 import org.junit.Test
 
 class JsonWalkTest {

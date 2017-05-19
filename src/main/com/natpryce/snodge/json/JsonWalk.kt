@@ -1,14 +1,14 @@
 @file:JvmName("JsonWalk")
 
-package com.natpryce.snodge.internal
+package com.natpryce.snodge.json
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.natpryce.snodge.JsonPath
+import com.natpryce.snodge.json.JsonPath.Companion
 
-fun JsonElement.walk(): Sequence<JsonPath> {
-    return walk(this, JsonPath.root)
+internal fun JsonElement.walk(): Sequence<JsonPath> {
+    return walk(this, Companion.root)
 }
 
 private fun walk(element: JsonElement, elementPath: JsonPath): Sequence<JsonPath> {

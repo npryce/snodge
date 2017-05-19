@@ -1,7 +1,7 @@
-package com.natpryce.snodge
+package com.natpryce.snodge.json
 
-import com.natpryce.snodge.JsonPath.functions.endsWith
-import com.natpryce.snodge.JsonPath.functions.startsWith
+import com.natpryce.snodge.json.JsonPath.functions.endsWith
+import com.natpryce.snodge.json.JsonPath.functions.startsWith
 import org.junit.Assert.assertTrue
 import org.junit.Test
 

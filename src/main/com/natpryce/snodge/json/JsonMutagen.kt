@@ -1,4 +1,4 @@
-package com.natpryce.snodge
+package com.natpryce.snodge.json
 
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -6,14 +6,13 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import com.natpryce.snodge.internal.walk
-import com.natpryce.snodge.mutagens.AddArrayElement
-import com.natpryce.snodge.mutagens.AddObjectProperty
-import com.natpryce.snodge.mutagens.RemoveJsonElement
-import com.natpryce.snodge.mutagens.ReorderObjectProperties
-import com.natpryce.snodge.mutagens.ReplaceJsonElement
+import com.natpryce.snodge.Mutagen
+import com.natpryce.snodge.encodedAs
+import com.natpryce.snodge.mapped
+import com.natpryce.snodge.mutants
 import java.nio.charset.Charset
 import java.util.Arrays
+import java.util.Random
 
 
 fun JsonMutagen(vararg nodeMutagens: JsonNodeMutagen) =
@@ -60,3 +59,6 @@ private val exampleElements = Arrays.asList(
     JsonPrimitive("a string"),
     JsonArray(),
     JsonObject())
+
+fun <T> Random.mutants(sampleSize: Int, original: JsonElement): List<JsonElement> =
+    mutants(allJsonMutagens(), sampleSize, original)

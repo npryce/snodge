@@ -1,10 +1,11 @@
-package com.natpryce.snodge
+package com.natpryce.snodge.json
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.snodge.json.JsonPath.Companion
 import org.junit.Test
 
 class JsonPathTest {
@@ -36,8 +37,8 @@ class JsonPathTest {
     fun returnsSameHashCodeForSamePathNoMatterHowItIsConstructed() {
         val path = JsonPath.of("a", 1, "b", 2, "c")
         
-        assertThat(path.hashCode(), equalTo(JsonPath.root.extend("a").extend(1).extend("b").extend(2).extend("c").hashCode()))
-        assertThat(path.hashCode(), equalTo(JsonPath.root.extend("a", 1, "b", 2, "c").hashCode()))
+        assertThat(path.hashCode(), equalTo(Companion.root.extend("a").extend(1).extend("b").extend(2).extend("c").hashCode()))
+        assertThat(path.hashCode(), equalTo(Companion.root.extend("a", 1, "b", 2, "c").hashCode()))
     }
     
     @Test
@@ -45,8 +46,8 @@ class JsonPathTest {
     fun pathsAreEqualNoMatterHowTheyAreConstructed() {
         val path = JsonPath.of("a", 1, "b", 2, "c")
         
-        assertThat(path, equalTo(JsonPath.root.extend("a").extend(1).extend("b").extend(2).extend("c")))
-        assertThat(path, equalTo(JsonPath.root.extend("a", 1, "b", 2, "c")))
+        assertThat(path, equalTo(Companion.root.extend("a").extend(1).extend("b").extend(2).extend("c")))
+        assertThat(path, equalTo(Companion.root.extend("a", 1, "b", 2, "c")))
     }
     
     @Test

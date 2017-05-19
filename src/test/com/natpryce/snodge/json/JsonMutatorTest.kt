@@ -1,12 +1,11 @@
-package com.natpryce.snodge
+package com.natpryce.snodge.json
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.snodge.mutagens.AddArrayElement
-import com.natpryce.snodge.mutagens.AddObjectProperty
+import com.natpryce.snodge.mutants
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.nio.charset.Charset
@@ -25,7 +24,7 @@ class JsonMutatorTest {
             withField("alice", 1),
             withField("bob", 2))
         
-        val mutations = random.mutants(doc, 1, mutagen)
+        val mutations = random.mutants(mutagen, 1, doc)
         
         assertThat("should only be one mutation", mutations.size, equalTo(1))
         
@@ -39,7 +38,7 @@ class JsonMutatorTest {
     fun canAddNullArrayProperty() {
         val doc = list(1, 2, 3)
         
-        val mutations = random.mutants(doc, 1, mutagen)
+        val mutations = random.mutants(mutagen, 1, doc)
         
         assertThat("should be one mutation",
             mutations, equalTo<List<JsonElement>>(listOf(list(1, 2, 3, null))))
@@ -51,7 +50,7 @@ class JsonMutatorTest {
             withField("num", 1),
             withField("list", list(1, 2, 3)))
         
-        val mutatedDocs = random.mutants(doc, 2, mutagen)
+        val mutatedDocs = random.mutants(mutagen, 2, doc)
         
         assertThat("number of mutations", mutatedDocs.size, equalTo(2))
         
@@ -70,19 +69,19 @@ class JsonMutatorTest {
         val doc = list(list(1, 2), list(list(3, 4), list(5, 6, list(7, 8)), list(9, 10)), list(11, 12))
         
         random.setSeed(0)
-        val mutatedDocs = random.mutants(doc, 2, mutagen)
+        val mutatedDocs = random.mutants(mutagen, 2, doc)
         
         assertThat("number of mutations", mutatedDocs.size, equalTo(2))
         
         random.setSeed(99)
-        assertThat(random.mutants(doc, 2, mutagen), !equalTo(random.mutants(doc, 2, mutagen)))
+        assertThat(random.mutants(mutagen, 2, doc), !equalTo(random.mutants(mutagen, 2, doc)))
     }
     
     @Test
     fun willNotReturnMoreMutationsThanCanBeGeneratedByTheMutagens() {
         val doc = list(list(1, 2), list(3, 4))
         
-        assertThat("number of mutations", random.mutants(doc, 10, mutagen).size, equalTo(3))
+        assertThat("number of mutations", random.mutants(mutagen, 10, doc).size, equalTo(3))
     }
     
     @Test
@@ -92,7 +91,7 @@ class JsonMutatorTest {
             withField("num", 1),
             withField("list", list(1, 2, 3))))
         
-        val mutated = random.mutants(original, 1, mutagen.forStrings()).first()
+        val mutated = random.mutants(mutagen.forStrings(), 1, original).first()
         
         assertThat(mutated, !equalTo(original))
         
@@ -110,7 +109,7 @@ class JsonMutatorTest {
         
         val originalBytes = originalString.toByteArray(charset)
         
-        val mutatedBytes = random.mutants(originalBytes, 2, mutagen.forEncodedStrings(charset)).first()
+        val mutatedBytes = random.mutants(mutagen.forEncodedStrings(charset), 2, originalBytes).first()
         
         assertThat(mutatedBytes, !equalTo(originalBytes))
         

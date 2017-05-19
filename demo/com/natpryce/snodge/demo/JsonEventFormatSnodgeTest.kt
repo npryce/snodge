@@ -3,13 +3,17 @@ package com.natpryce.snodge.demo
 import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.snodge.*
-import com.natpryce.snodge.mutagens.AddObjectProperty
-import com.natpryce.snodge.mutagens.ReorderObjectProperties
+import com.natpryce.snodge.json.AddObjectProperty
+import com.natpryce.snodge.json.JsonMutagen
+import com.natpryce.snodge.json.JsonNodeMutagen
+import com.natpryce.snodge.json.ReorderObjectProperties
+import com.natpryce.snodge.json.allJsonMutagens
+import com.natpryce.snodge.json.forStrings
+import com.natpryce.snodge.mutants
 import org.junit.Test
 import java.io.IOException
 import java.net.URI
-import java.util.*
+import java.util.Random
 
 class JsonEventFormatSnodgeTest {
     
@@ -24,7 +28,7 @@ class JsonEventFormatSnodgeTest {
     
     @Test
     fun parsesEventSuccessfullyOrThrowsIOException() {
-        Random().mutants(format.serialise(originalEvent), mutationCount, allJsonMutagens().forStrings()).forEach {
+        Random().mutants(allJsonMutagens().forStrings(), mutationCount, format.serialise(originalEvent)).forEach {
             assertParsesEventSuccessfullyOrThrowsIOException(it)
         }
     }
@@ -40,7 +44,7 @@ class JsonEventFormatSnodgeTest {
     }
     
     private fun assertSerialisationUnaffectedBy(mutagen: JsonNodeMutagen) {
-        Random().mutants(format.serialise(originalEvent), 1000, JsonMutagen(mutagen).forStrings())
+        Random().mutants(JsonMutagen(mutagen).forStrings(), 1000, format.serialise(originalEvent))
             .forEach { assertParsedEventEqualToOriginal(it) }
     }
     

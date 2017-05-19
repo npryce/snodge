@@ -1,5 +1,6 @@
-package com.natpryce.snodge
+package com.natpryce.snodge.json
 
+import com.natpryce.snodge.mutants
 import java.util.Random
 
 object InANutshell {
@@ -7,7 +8,7 @@ object InANutshell {
         val random = Random()
         val originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}"
         
-        random.mutants(originalJson, 10, allJsonMutagens().forStrings())
+        random.mutants(allJsonMutagens().forStrings(), 10, originalJson)
             .forEach(::println)
     }
 }

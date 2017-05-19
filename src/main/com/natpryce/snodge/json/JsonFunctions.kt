@@ -1,27 +1,27 @@
 @file:JvmName("JsonFunctions")
 
-package com.natpryce.snodge.internal
+package com.natpryce.snodge.json
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import java.util.*
+import java.util.AbstractMap.SimpleEntry
 
-fun <K, V> entry(key: K, value: V): Map.Entry<K, V> {
-    return AbstractMap.SimpleEntry(key, value)
+internal fun <K, V> entry(key: K, value: V): Map.Entry<K, V> {
+    return SimpleEntry(key, value)
 }
 
-fun arrayEntries(array: JsonArray): Sequence<Map.Entry<Int, JsonElement>> {
+internal fun arrayEntries(array: JsonArray): Sequence<Map.Entry<Int, JsonElement>> {
     return array.mapIndexed { i, element -> entry(i, element) }.asSequence()
 }
 
-fun removeArrayElement(original: JsonArray, indexToRemove: Int) =
+internal fun removeArrayElement(original: JsonArray, indexToRemove: Int) =
     JsonArray().apply {
         addAll(original)
         remove(indexToRemove)
     }
 
-fun removeObjectProperty(original: JsonObject, nameToRemove: String): JsonElement {
+internal fun removeObjectProperty(original: JsonObject, nameToRemove: String): JsonElement {
     val mutant = JsonObject()
     
     original.entrySet()
