@@ -10,8 +10,8 @@ import java.io.StringWriter
 import java.net.URI
 import java.net.URISyntaxException
 
-class RobustJsonEventFormat {
-    fun serialise(event: ServiceEvent): String {
+class RobustJsonEventFormat : EventFormat {
+    override fun serialise(event: ServiceEvent): String {
         val serialised = StringWriter()
         
         val writer = JsonWriter(serialised)
@@ -21,14 +21,24 @@ class RobustJsonEventFormat {
         writer.name("service")
         writer.value(event.service.toString())
         writer.name("type")
-        writer.value(event.serviceState.toString())
+        when (event.serviceState) {
+            STARTING -> writer.value("STARTING")
+            READY -> writer.value("READY")
+            STOPPING -> writer.value("STOPPING")
+            STOPPED -> writer.value("STOPPED")
+            is FAILED -> {
+                writer.value("FAILED")
+                writer.name("error")
+                writer.value(event.serviceState.error)
+            }
+        }.let { /* ensure exhaustive */ }
         writer.endObject()
         writer.flush()
         
         return serialised.toString()
     }
     
-    fun deserialise(input: String): ServiceEvent {
+    override fun deserialise(input: String): ServiceEvent {
         val reader = JsonReader(StringReader(input))
         
         expect(reader, JsonToken.BEGIN_OBJECT)
@@ -39,46 +49,57 @@ class RobustJsonEventFormat {
         
         var timestamp: Long? = null
         var service: URI? = null
-        var serviceState: ServiceState? = null
+        var serviceStateType: String? = null
+        var error: String? = null
         
         while (reader.peek() != JsonToken.END_OBJECT) {
             val fieldName = reader.nextName()
-            if (fieldName == "timestamp") {
-                expect(reader, JsonToken.NUMBER)
-                timestamp = reader.nextLong()
-            }
-            else if (fieldName == "service") {
-                expect(reader, JsonToken.STRING)
-                try {
-                    service = URI(reader.nextString())
+            when (fieldName) {
+                "timestamp" -> {
+                    expect(reader, JsonToken.NUMBER)
+                    timestamp = reader.nextLong()
                 }
-                catch (e: URISyntaxException) {
-                    throw IOException("invalid URI syntax for $fieldName property")
+                "service" -> {
+                    expect(reader, JsonToken.STRING)
+                    try {
+                        service = URI(reader.nextString())
+                    }
+                    catch (e: URISyntaxException) {
+                        throw IOException("invalid URI syntax for $fieldName property")
+                    }
                 }
-                
-            }
-            else if (fieldName == "type") {
-                expect(reader, JsonToken.STRING)
-                try {
-                    serviceState = ServiceState.valueOf(reader.nextString())
+                "type" -> {
+                    expect(reader, JsonToken.STRING)
+                    serviceStateType = reader.nextString()
                 }
-                catch (e: IllegalArgumentException) {
-                    throw IOException("invalid event type", e)
+                "error" -> {
+                    expect(reader, JsonToken.STRING)
+                    error = reader.nextString()
                 }
-                
-            }
-            else {
-                reader.skipValue()
+                else -> reader.skipValue()
             }
         }
         
         expect(reader, JsonToken.END_OBJECT)
         
-        if (timestamp == null || service == null || serviceState == null) {
-            throw IOException("missing field(s)")
+        if (timestamp == null || service == null || serviceStateType == null) {
+            missingFields()
+        }
+        
+        val serviceState = when (serviceStateType) {
+            "STARTING" -> STARTING
+            "READY" -> READY
+            "STOPPING" -> STOPPING
+            "STOPPED" -> STOPPED
+            "FAILED" -> error?.let(::FAILED) ?: missingFields()
+            else -> throw IOException("unknown service state: $serviceStateType")
         }
         
         return ServiceEvent(timestamp, service, serviceState)
+    }
+    
+    private fun missingFields(): Nothing {
+        throw IOException("missing field(s)")
     }
     
     private fun expect(reader: JsonReader, expectedToken: JsonToken) {

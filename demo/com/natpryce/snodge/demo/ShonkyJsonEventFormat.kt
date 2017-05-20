@@ -3,7 +3,6 @@ package com.natpryce.snodge.demo
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
-
 import java.io.IOException
 import java.io.StringReader
 import java.io.StringWriter
@@ -12,8 +11,8 @@ import java.net.URI
 /*
  * Defects in this class are corrected in the RobustJsonEventFormat
  */
-class JsonEventFormat {
-    fun serialise(event: ServiceEvent): String {
+class ShonkyJsonEventFormat : EventFormat {
+    override fun serialise(event: ServiceEvent): String {
         val serialised = StringWriter()
         
         val writer = JsonWriter(serialised)
@@ -23,14 +22,18 @@ class JsonEventFormat {
         writer.name("service")
         writer.value(event.service.toString())
         writer.name("type")
-        writer.value(event.serviceState.toString())
+        writer.value(event.serviceState.javaClass.name)
+        if (event.serviceState is FAILED) {
+            writer.name("error")
+            writer.value(event.serviceState.error)
+        }
         writer.endObject()
         writer.flush()
         
         return serialised.toString()
     }
     
-    fun deserialise(input: String): ServiceEvent {
+    override fun deserialise(input: String): ServiceEvent {
         val reader = JsonReader(StringReader(input))
         
         expect(reader, JsonToken.BEGIN_OBJECT)
@@ -48,9 +51,16 @@ class JsonEventFormat {
         val service = URI.create(reader.nextString())
         
         expectProperty(reader, "type", JsonToken.STRING)
-        // Defect: throws IllegalArgumentException on unrecognised enum value.  Caught by
+        
+        // Defect: throws ClassNotFoundException on unrecognised class name & loads arbitrary classes.
         // Caught by JsonEventFormatSnodgeTest.parsesEventSuccessfullyOrThrowsIOException
-        val serviceState = ServiceState.valueOf(reader.nextString())
+        val serviceStateClass = Class.forName(reader.nextString())
+        val serviceState = if (serviceStateClass == FAILED::class.java) {
+            expectProperty(reader, "error", JsonToken.STRING)
+            FAILED(reader.nextString())
+        } else {
+            serviceStateClass.kotlin.objectInstance as ServiceState
+        }
         
         // Defect: fails if new fields added to protocol.
         // Caught by JsonEventFormatSnodgeTest.ignoresUnrecognisedProperties

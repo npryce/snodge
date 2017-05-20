@@ -42,7 +42,8 @@ fun allJsonMutagens() =
         forAll(exampleElements, { addArrayElement(it) }),
         forAll(exampleElements, { addObjectProperty(it) }),
         removeJsonElement(),
-        reorderObjectProperties())
+        reorderObjectProperties(),
+        securityMutagens())
 
 private fun forAll(elements: List<JsonElement>, fn: (JsonElement) -> JsonNodeMutagen) =
     combine(elements.map(fn).toList())

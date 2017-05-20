@@ -70,3 +70,12 @@ fun JsonNodeMutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
         }
     }
 
+
+fun JsonNodeMutagen.ifElement(criteria: (JsonElement)->Boolean) =
+    JsonNodeMutagen { document, pathToElement, elementToMutate ->
+        if (criteria(elementToMutate)) {
+            this(document, pathToElement, elementToMutate)
+        } else {
+            emptySequence()
+        }
+    }

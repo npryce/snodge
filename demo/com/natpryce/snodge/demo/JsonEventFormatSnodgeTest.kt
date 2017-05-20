@@ -17,19 +17,20 @@ import java.util.Random
 
 class JsonEventFormatSnodgeTest {
     
-    // use JsonEventFormat to see the test detect defects
-//    val format = JsonEventFormat();
+    // uncomment one of the formats below to see the test detect defects
+//    val format = ShonkyJsonEventFormat();
+//    val format = ReflectomagicJsonEventFormat()
     val format = RobustJsonEventFormat()
     
-    internal var originalEvent = ServiceEvent(
+    internal val originalEvent = ServiceEvent(
         System.currentTimeMillis(),
         URI.create("iotp://192.168.1.47/sensor/temp"),
-        ServiceState.READY)
+        FAILED("testing"))
     
     @Test
     fun parsesEventSuccessfullyOrThrowsIOException() {
-        Random().mutants(allJsonMutagens().forStrings(), mutationCount, format.serialise(originalEvent)).forEach {
-            assertParsesEventSuccessfullyOrThrowsIOException(it)
+        Random().mutants(allJsonMutagens().forStrings(), mutationCount, format.serialise(originalEvent)).forEach { s ->
+            assertParsesEventSuccessfullyOrThrowsIOException(s)
         }
     }
     
@@ -72,5 +73,5 @@ class JsonEventFormatSnodgeTest {
     
     private fun fail(detailMessage: String, e: Exception): Nothing = throw AssertionError(detailMessage, e)
     
-    internal val mutationCount = 100
+    internal val mutationCount = 1000
 }
