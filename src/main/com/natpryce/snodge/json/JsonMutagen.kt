@@ -11,7 +11,6 @@ import com.natpryce.snodge.encodedAs
 import com.natpryce.snodge.mapped
 import com.natpryce.snodge.mutants
 import java.nio.charset.Charset
-import java.util.Arrays
 import java.util.Random
 
 
@@ -37,20 +36,18 @@ fun Mutagen<JsonElement>.forEncodedStrings(encodingName: String) =
 /**
  * @return Applies all the JSON mutations implemented in the Snodge library.
  */
-fun allJsonMutagens(): Mutagen<JsonElement> {
-    return JsonMutagen(
+fun allJsonMutagens() =
+    JsonMutagen(
         forAll(exampleElements, { replaceJsonElement(it) }),
         forAll(exampleElements, { addArrayElement(it) }),
         forAll(exampleElements, { addObjectProperty(it) }),
         removeJsonElement(),
         reorderObjectProperties())
-}
 
-private fun forAll(elements: List<JsonElement>, fn: (JsonElement) -> JsonNodeMutagen): JsonNodeMutagen {
-    return combine(elements.map(fn).toList())
-}
+private fun forAll(elements: List<JsonElement>, fn: (JsonElement) -> JsonNodeMutagen) =
+    combine(elements.map(fn).toList())
 
-private val exampleElements = Arrays.asList(
+private val exampleElements = listOf(
     JsonNull.INSTANCE,
     JsonPrimitive(true),
     JsonPrimitive(false),
@@ -59,6 +56,7 @@ private val exampleElements = Arrays.asList(
     JsonPrimitive("a string"),
     JsonArray(),
     JsonObject())
+
 
 fun <T> Random.mutants(sampleSize: Int, original: JsonElement): List<JsonElement> =
     mutants(allJsonMutagens(), sampleSize, original)

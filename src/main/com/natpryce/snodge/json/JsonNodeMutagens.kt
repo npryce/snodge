@@ -48,12 +48,12 @@ private fun JsonObject.newProperty(basename: String) =
 
 
 fun removeJsonElement(): JsonNodeMutagen =
-    fun(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
+    fun(document: JsonElement, pathToElement: JsonPath, _: JsonElement) =
         if (pathToElement.isRoot) emptySequence() else sequenceOf(lazy { pathToElement.remove(document) })
 
 
 fun replaceJsonElement(replacement: JsonElement): JsonNodeMutagen =
-    fun(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
+    fun(document: JsonElement, pathToElement: JsonPath, _: JsonElement) =
         sequenceOf(lazy { pathToElement.replace(document, replacement) })
 
 

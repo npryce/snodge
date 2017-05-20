@@ -7,26 +7,24 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.natpryce.snodge.json.JsonPath.Companion
 
-internal fun JsonElement.walk(): Sequence<JsonPath> {
-    return walk(this, Companion.root)
-}
+fun JsonElement.walk(): Sequence<JsonPath> =
+    walk(this, Companion.root)
 
-private fun walk(element: JsonElement, elementPath: JsonPath): Sequence<JsonPath> {
-    return sequenceOf(elementPath) + walkChildren(element, elementPath)
-}
+private fun walk(element: JsonElement, elementPath: JsonPath): Sequence<JsonPath> =
+    sequenceOf(elementPath) + walkChildren(element, elementPath)
 
-private fun walkChildren(element: JsonElement, elementPath: JsonPath): Sequence<JsonPath> {
-    if (element is JsonObject) {
-        return walkChildren(elementPath, element.entrySet().asSequence())
+private fun walkChildren(element: JsonElement, elementPath: JsonPath) =
+    when (element) {
+        is JsonObject ->
+            walkChildren(elementPath, element.entrySet().map { it.key to it.value })
+        is JsonArray ->
+            walkChildren(elementPath, arrayEntries(element))
+        else ->
+            emptySequence()
     }
-    else if (element is JsonArray) {
-        return walkChildren(elementPath, arrayEntries(element))
-    }
-    else {
-        return emptySequence()
-    }
-}
 
-private fun <T : Any> walkChildren(parentPath: JsonPath, children: Sequence<Map.Entry<T, JsonElement>>): Sequence<JsonPath> {
-    return children.flatMap { child -> walk(child.value, parentPath.extend(child.key)) }
-}
+private fun <T : Any> walkChildren(parentPath: JsonPath, children: List<Pair<T, JsonElement>>) =
+    children.asSequence().flatMap { (key, value) -> walk(value, parentPath.extend(key)) }
+
+private fun arrayEntries(array: JsonArray) =
+    array.mapIndexed(::Pair)

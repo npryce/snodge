@@ -21,17 +21,17 @@ class JsonMutatorTest {
     @Test
     fun canAddNullObjectProperty() {
         val doc = obj(
-            withField("alice", 1),
-            withField("bob", 2))
+            "alice" to 1,
+            "bob" to 2)
         
         val mutations = random.mutants(mutagen, 1, doc)
         
         assertThat("should only be one mutation", mutations.size, equalTo(1))
         
         assertThat(mutations.first(), equalTo(obj(
-            withField("alice", 1),
-            withField("bob", 2),
-            withNullField("x")) as JsonElement))
+            "alice" to 1,
+            "bob" to 2,
+            "x" to null) as JsonElement))
     }
     
     @Test
@@ -47,21 +47,21 @@ class JsonMutatorTest {
     @Test
     fun canReturnMultipleMutations() {
         val doc = obj(
-            withField("num", 1),
-            withField("list", list(1, 2, 3)))
+            "num" to 1,
+            "list" to list(1, 2, 3))
         
         val mutatedDocs = random.mutants(mutagen, 2, doc)
         
         assertThat("number of mutations", mutatedDocs.size, equalTo(2))
         
         assertTrue(mutatedDocs.contains(obj(
-            withField("num", 1),
-            withField("list", list(1, 2, 3)),
-            withNullField("x"))))
+            "num" to 1,
+            "list" to list(1, 2, 3),
+            "x" to null)))
         
         assertTrue(mutatedDocs.contains(obj(
-            withField("num", 1),
-            withField("list", list(1, 2, 3, null)))))
+            "num" to 1,
+            "list" to list(1, 2, 3, null))))
     }
     
     @Test
@@ -88,8 +88,8 @@ class JsonMutatorTest {
     fun canMutateJsonText() {
         val gson = Gson()
         val original = gson.toJson(obj(
-            withField("num", 1),
-            withField("list", list(1, 2, 3))))
+            "num" to 1,
+            "list" to list(1, 2, 3)))
         
         val mutated = random.mutants(mutagen.forStrings(), 1, original).first()
         
@@ -104,8 +104,8 @@ class JsonMutatorTest {
         
         val gson = Gson()
         val originalString = gson.toJson(obj(
-            withField("num", 1),
-            withField("list", list(1, 2, 3))))
+            "num" to 1,
+            "list" to list(1, 2, 3)))
         
         val originalBytes = originalString.toByteArray(charset)
         

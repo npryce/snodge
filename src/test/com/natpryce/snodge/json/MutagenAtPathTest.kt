@@ -15,22 +15,22 @@ class MutagenAtPathTest {
         val mutator = JsonMutagen(replaceJsonElement(JsonPrimitive("XXX")).atPath(Companion.of("a", "b")))
     
         val doc = obj(
-            withField("a", obj(
-                withField("b", 1),
-                withField("c", 2))),
-            withField("d", obj(
-                withField("b", 1),
-                withField("c", 2))))
+            "a" to obj(
+                "b" to 1,
+                "c" to 2),
+            "d" to obj(
+                "b" to 1,
+                "c" to 2))
         
         val mutant = mutator(doc).first().value
         
         assertThat(mutant, equalTo<JsonElement>(obj(
-            withField("a", obj(
-                withField("b", "XXX"),
-                withField("c", 2))),
-            withField("d", obj(
-                withField("b", 1),
-                withField("c", 2))))))
+            "a" to obj(
+                "b" to "XXX",
+                "c" to 2),
+            "d" to obj(
+                "b" to 1,
+                "c" to 2))))
     }
     
     @Test
@@ -39,31 +39,31 @@ class MutagenAtPathTest {
         val mutator = JsonMutagen(replaceJsonElement(JsonPrimitive("XXX")).atPath(functions.endsWith("b")))
         
         val doc = obj(
-            withField("a", obj(
-                withField("b", 1),
-                withField("c", 2))),
-            withField("d", obj(
-                withField("b", 1),
-                withField("c", 2))))
+            "a" to obj(
+                "b" to 1,
+                "c" to 2),
+            "d" to obj(
+                "b" to 1,
+                "c" to 2))
         
         val mutations = mutator.invoke(doc).take(2).map { it.value }
         
         assertTrue("a.b mutated", mutations.contains(
             obj(
-                withField("a", obj(
-                    withField("b", "XXX"),
-                    withField("c", 2))),
-                withField("d", obj(
-                    withField("b", 1),
-                    withField("c", 2))))))
+                "a" to obj(
+                    "b" to "XXX",
+                    "c" to 2),
+                "d" to obj(
+                    "b" to 1,
+                    "c" to 2))))
         
         assertTrue("d.b mutated", mutations.contains(
             obj(
-                withField("a", obj(
-                    withField("b", 1),
-                    withField("c", 2))),
-                withField("d", obj(
-                    withField("b", "XXX"),
-                    withField("c", 2))))))
+                "a" to obj(
+                    "b" to 1,
+                    "c" to 2),
+                "d" to obj(
+                    "b" to "XXX",
+                    "c" to 2))))
     }
 }

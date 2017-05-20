@@ -54,24 +54,24 @@ class JsonPathTest {
     @Throws(Exception::class)
     fun canReplaceElementAtPath() {
         val original = obj(
-            withField("a", list(
-                obj(
-                    withField("x", 10),
-                    withField("y", 20)),
-                obj(
-                    withField("x", 100),
-                    withField("y", 200)))),
-            withField("b", "bubbles"))
+            "a" to list(
+                        obj(
+                            "x" to 10,
+                            "y" to 20),
+                        obj(
+                            "x" to 100,
+                            "y" to 200)),
+            "b" to "bubbles")
         
         assertReplacement(original, JsonPath.of("a", 1, "x"), JsonPrimitive(-99), obj(
-            withField("a", list(
-                obj(
-                    withField("x", 10),
-                    withField("y", 20)),
-                obj(
-                    withField("x", -99),
-                    withField("y", 200)))),
-            withField("b", "bubbles")))
+            "a" to list(
+                        obj(
+                            "x" to 10,
+                            "y" to 20),
+                        obj(
+                            "x" to -99,
+                            "y" to 200)),
+            "b" to "bubbles"))
         
         assertReplacement(original, JsonPath.root, JsonPrimitive("just this"), JsonPrimitive("just this"))
     }
@@ -88,10 +88,10 @@ class JsonPathTest {
     @Test
     fun replacingAnObjectFieldDoesNotChangeOrderOfElementsWhenSerialised() {
         val original = obj(
-            withField("a", 1),
-            withField("x", 2),
-            withField("b", 3),
-            withField("y", 4))
+            "a" to 1,
+            "x" to 2,
+            "b" to 3,
+            "y" to 4)
         
         assertThat(original.toString(), equalTo("{\"a\":1,\"x\":2,\"b\":3,\"y\":4}"))
         

@@ -1,13 +1,17 @@
 package com.natpryce.snodge.json
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+
 data class JsonPath(
     private val steps: List<Any>
 
-) : (com.google.gson.JsonElement) -> com.google.gson.JsonElement {
+) : (JsonElement) -> JsonElement {
     
     
     override fun toString(): String {
-        return com.natpryce.snodge.json.JsonPath.Companion.pathBitsToString(steps, steps.size)
+        return pathBitsToString(steps, steps.size)
     }
     
     fun size(): Int {
@@ -19,9 +23,9 @@ data class JsonPath(
     
     fun at(n: Int) = steps[(steps.size + n) % steps.size]
     
-    fun extend(vararg morePath: Any) = com.natpryce.snodge.json.JsonPath(steps + morePath.toList())
+    fun extend(vararg morePath: Any) = JsonPath(steps + morePath.toList())
     
-    override fun invoke(json: com.google.gson.JsonElement): com.google.gson.JsonElement {
+    override fun invoke(json: JsonElement): JsonElement {
         var result = json
         
         for (i in steps.indices) {
@@ -31,7 +35,7 @@ data class JsonPath(
         return result
     }
     
-    private fun applyPathElement(root: com.google.gson.JsonElement, i: Int, parent: com.google.gson.JsonElement): com.google.gson.JsonElement {
+    private fun applyPathElement(root: JsonElement, i: Int, parent: JsonElement): JsonElement {
         val pathBit = steps[i]
         
         if (pathBit is String) {
@@ -41,7 +45,7 @@ data class JsonPath(
             return jsonArrayWithIndex(root, i, parent, pathBit).get(pathBit)
         }
         else {
-            throw IllegalArgumentException("unexpected path element: " + com.natpryce.snodge.json.JsonPath.Companion.pathBitsToString(steps, i))
+            throw IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i))
         }
     }
     
@@ -49,17 +53,17 @@ data class JsonPath(
         steps.size >= suffix.size
             && suffix.toList() == steps.subList(size() - suffix.size, size())
     
-    fun startsWith(prefix: com.natpryce.snodge.json.JsonPath): Boolean {
+    fun startsWith(prefix: JsonPath): Boolean {
         return size() >= prefix.size() && steps.subList(0, prefix.size()) == prefix.steps
     }
     
-    fun map(json: com.google.gson.JsonElement, f: (com.google.gson.JsonElement) -> com.google.gson.JsonElement) =
+    fun map(json: JsonElement, f: (JsonElement) -> JsonElement) =
         map(json, steps.size, f)
     
-    fun replace(root: com.google.gson.JsonElement, replacement: com.google.gson.JsonElement) =
+    fun replace(root: JsonElement, replacement: JsonElement) =
         map(root) { replacement }
     
-    private fun replaceElement(root: com.google.gson.JsonElement, parent: com.google.gson.JsonElement, i: Int, replacement: com.google.gson.JsonElement): com.google.gson.JsonElement {
+    private fun replaceElement(root: JsonElement, parent: JsonElement, i: Int, replacement: JsonElement): JsonElement {
         val pathBit = steps[i]
         
         if (pathBit is String) {
@@ -75,11 +79,11 @@ data class JsonPath(
             
         }
         else {
-            throw IllegalArgumentException("unexpected path element: " + com.natpryce.snodge.json.JsonPath.Companion.pathBitsToString(steps, i))
+            throw IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i))
         }
     }
     
-    private fun replaceObjectPropertyValue(original: com.google.gson.JsonObject, memberName: String, replacement: com.google.gson.JsonElement): com.google.gson.JsonElement {
+    private fun replaceObjectPropertyValue(original: com.google.gson.JsonObject, memberName: String, replacement: JsonElement): JsonElement {
         val replaced = com.google.gson.JsonObject()
         
         for ((key, value) in original.entrySet()) {
@@ -94,7 +98,7 @@ data class JsonPath(
         return replaced
     }
     
-    private fun replaceArrayElement(original: com.google.gson.JsonArray, index: Int, replacement: com.google.gson.JsonElement): com.google.gson.JsonElement {
+    private fun replaceArrayElement(original: com.google.gson.JsonArray, index: Int, replacement: JsonElement): JsonElement {
         val replaced = com.google.gson.JsonArray()
         
         for (j in 0..index - 1) {
@@ -108,13 +112,13 @@ data class JsonPath(
         return replaced
     }
     
-    fun remove(root: com.google.gson.JsonElement): com.google.gson.JsonElement {
+    fun remove(root: JsonElement): JsonElement {
         val lastIndex = steps.size - 1
         
         return map(root, lastIndex, { input -> removeElement(root, lastIndex, input, steps[lastIndex]) })
     }
     
-    private fun removeElement(root: com.google.gson.JsonElement, i: Int, parent: com.google.gson.JsonElement, pathBit: Any): com.google.gson.JsonElement {
+    private fun removeElement(root: JsonElement, i: Int, parent: JsonElement, pathBit: Any): JsonElement {
         if (pathBit is String) {
             val original = jsonObjectWithProperty(root, i, parent, pathBit)
             return removeObjectProperty(original, pathBit)
@@ -126,19 +130,19 @@ data class JsonPath(
             
         }
         else {
-            throw IllegalArgumentException("unexpected path element: " + com.natpryce.snodge.json.JsonPath.Companion.pathBitsToString(steps, i))
+            throw IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i))
         }
     }
     
-    private fun map(json: com.google.gson.JsonElement, pathLength: Int, f: (com.google.gson.JsonElement) -> com.google.gson.JsonElement): com.google.gson.JsonElement {
-        val parents = arrayOfNulls<com.google.gson.JsonElement>(pathLength + 1)
+    private fun map(json: JsonElement, pathLength: Int, f: (JsonElement) -> JsonElement): JsonElement {
+        val parents = arrayOfNulls<JsonElement>(pathLength + 1)
         parents[0] = json
         
         for (i in 0..pathLength - 1) {
             parents[i + 1] = applyPathElement(json, i, parents[i]!!)
         }
         
-        var replaced: com.google.gson.JsonElement = f.invoke(parents[pathLength]!!)
+        var replaced: JsonElement = f.invoke(parents[pathLength]!!)
         
         for (i in pathLength - 1 downTo 0) {
             replaced = replaceElement(json, parents[i]!!, i, replaced)
@@ -147,43 +151,56 @@ data class JsonPath(
         return replaced
     }
     
-    private fun jsonObjectWithProperty(root: com.google.gson.JsonElement, i: Int, parent: com.google.gson.JsonElement, memberName: String): com.google.gson.JsonObject {
-        com.natpryce.snodge.json.JsonPath.Companion.check(parent.isJsonObject, "expected object", steps, i, root)
+    private fun jsonObjectWithProperty(root: JsonElement, i: Int, parent: JsonElement, memberName: String): com.google.gson.JsonObject {
+        JsonPath.Companion.check(parent.isJsonObject, "expected object", steps, i, root)
         val original = parent.asJsonObject
-        com.natpryce.snodge.json.JsonPath.Companion.check(original.has(memberName), "no such member", steps, i, root)
+        JsonPath.Companion.check(original.has(memberName), "no such member", steps, i, root)
         return original
     }
     
-    private fun jsonArrayWithIndex(root: com.google.gson.JsonElement, i: Int, parent: com.google.gson.JsonElement, index: Int): com.google.gson.JsonArray {
-        com.natpryce.snodge.json.JsonPath.Companion.check(parent.isJsonArray, "expected array", steps, i, root)
+    private fun jsonArrayWithIndex(root: JsonElement, i: Int, parent: JsonElement, index: Int): com.google.gson.JsonArray {
+        JsonPath.Companion.check(parent.isJsonArray, "expected array", steps, i, root)
         val array = parent.asJsonArray
-        com.natpryce.snodge.json.JsonPath.Companion.check(array.size() > index, "index out of bounds", steps, i, root)
+        JsonPath.Companion.check(array.size() > index, "index out of bounds", steps, i, root)
         return array
     }
     
+    private fun removeArrayElement(original: JsonArray, indexToRemove: Int) =
+        JsonArray().apply {
+            addAll(original)
+            remove(indexToRemove)
+        }
+    
+    private fun removeObjectProperty(original: JsonObject, nameToRemove: String) =
+        JsonObject().apply {
+            original.entrySet()
+                .filter { e -> e.key != nameToRemove }
+                .forEach { e -> add(e.key, e.value) }
+        }
+    
     object functions {
         @JvmStatic
-        fun endsWith(vararg suffix: Any): (com.natpryce.snodge.json.JsonPath)->Boolean {
-            return object : (com.natpryce.snodge.json.JsonPath)->Boolean {
-                override fun invoke(path: com.natpryce.snodge.json.JsonPath): Boolean {
+        fun endsWith(vararg suffix: Any): (JsonPath) -> Boolean {
+            return object : (JsonPath) -> Boolean {
+                override fun invoke(path: JsonPath): Boolean {
                     return path.endsWith(*suffix)
                 }
                 
                 override fun toString(): String {
-                    return "endsWith(..." + com.natpryce.snodge.json.JsonPath.Companion.of(*suffix) + ")"
+                    return "endsWith(..." + JsonPath.Companion.of(*suffix) + ")"
                 }
             }
         }
-    
+        
         @JvmStatic
-        fun startsWith(vararg prefix: Any): (com.natpryce.snodge.json.JsonPath)->Boolean {
-            return com.natpryce.snodge.json.JsonPath.functions.startsWith(JsonPath.of(*prefix))
+        fun startsWith(vararg prefix: Any): (JsonPath) -> Boolean {
+            return JsonPath.functions.startsWith(JsonPath.of(*prefix))
         }
-    
+        
         @JvmStatic
-        fun startsWith(prefix: com.natpryce.snodge.json.JsonPath): (com.natpryce.snodge.json.JsonPath)->Boolean {
-            return object : (com.natpryce.snodge.json.JsonPath)->Boolean {
-                override fun invoke(path: com.natpryce.snodge.json.JsonPath): Boolean {
+        fun startsWith(prefix: JsonPath): (JsonPath) -> Boolean {
+            return object : (JsonPath) -> Boolean {
+                override fun invoke(path: JsonPath): Boolean {
                     return path.startsWith(prefix)
                 }
                 
@@ -196,17 +213,17 @@ data class JsonPath(
     
     companion object {
         @JvmField
-        val root = com.natpryce.snodge.json.JsonPath(emptyList())
+        val root = JsonPath(emptyList())
         
         @JvmStatic
-        fun of(vararg path: Any): com.natpryce.snodge.json.JsonPath {
-            return com.natpryce.snodge.json.JsonPath(path.toList())
+        fun of(vararg path: Any): JsonPath {
+            return JsonPath(path.toList())
         }
         
         @JvmStatic
-        private fun check(isOk: Boolean, what: String, pathBits: List<Any>, badOne: Int, json: com.google.gson.JsonElement) {
+        private fun check(isOk: Boolean, what: String, pathBits: List<Any>, badOne: Int, json: JsonElement) {
             if (!isOk) {
-                throw IllegalArgumentException(what + " at " + com.natpryce.snodge.json.JsonPath.Companion.pathBitsToString(pathBits, badOne + 1) + " in " + json)
+                throw IllegalArgumentException(what + " at " + pathBitsToString(pathBits, badOne + 1) + " in " + json)
             }
         }
         
@@ -218,3 +235,4 @@ data class JsonPath(
         }
     }
 }
+

@@ -10,7 +10,7 @@ import org.junit.Test
 class JsonWalkTest {
     @Test
     fun returnsObjectProperties() {
-        assertWalk(obj(withField("a", 1), withField("b", 2)),
+        assertWalk(obj("a" to 1, "b" to 2),
             JsonPath.root,
             JsonPath.of("a"),
             JsonPath.of("b"))
@@ -18,7 +18,7 @@ class JsonWalkTest {
     
     @Test
     fun returnsNestedObjectProperties() {
-        assertWalk(obj(withField("a", 1), withField("b", obj(withField("c", 2)))),
+        assertWalk(obj("a" to 1, "b" to obj("c" to 2)),
             JsonPath.root,
             JsonPath.of("a"),
             JsonPath.of("b"),
@@ -48,11 +48,11 @@ class JsonWalkTest {
     @Test
     fun bigHairyJsonExample() {
         val json = obj(
-            withField("a", obj(
-                withField("b", list(1, 2, 3)))),
-            withField("c", list(
-                obj(withField("d", 1)),
-                obj(withField("d", 2)))))
+            "a" to obj(
+                "b" to list(1, 2, 3)),
+            "c" to list(
+                obj("d" to 1),
+                obj("d" to 2)))
         
         assertWalk(json,
             JsonPath.root,
