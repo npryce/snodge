@@ -12,7 +12,7 @@ import java.nio.charset.Charset
 import java.util.Random
 
 class JsonMutatorTest {
-    internal var random = Random()
+    val random = Random()
     
     private val mutagen = JsonMutagen(
             addObjectProperty(JsonNull.INSTANCE),

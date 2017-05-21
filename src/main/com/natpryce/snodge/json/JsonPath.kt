@@ -9,7 +9,6 @@ data class JsonPath(
 
 ) : (JsonElement) -> JsonElement {
     
-    
     override fun toString(): String {
         return pathBitsToString(steps, steps.size)
     }
@@ -25,27 +24,23 @@ data class JsonPath(
     
     fun extend(vararg morePath: Any) = JsonPath(steps + morePath.toList())
     
-    override fun invoke(json: JsonElement): JsonElement {
-        var result = json
-        
-        for (i in steps.indices) {
-            result = applyPathElement(json, i, result)
+    override fun invoke(root: JsonElement): JsonElement {
+        return steps.foldIndexed(root) { i, result, step ->
+            applyPathElement(root, i, result)
         }
-        
-        return result
     }
     
     private fun applyPathElement(root: JsonElement, i: Int, parent: JsonElement): JsonElement {
         val pathBit = steps[i]
         
-        if (pathBit is String) {
-            return jsonObjectWithProperty(root, i, parent, pathBit).get(pathBit)
+        return if (pathBit is String) {
+            jsonObjectWithProperty(root, i, parent, pathBit).get(pathBit)
         }
         else if (pathBit is Int) {
-            return jsonArrayWithIndex(root, i, parent, pathBit).get(pathBit)
+            jsonArrayWithIndex(root, i, parent, pathBit).get(pathBit)
         }
         else {
-            throw IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i))
+            throw IllegalStateException("unexpected path element: " + pathBitsToString(steps, i))
         }
     }
     
@@ -118,21 +113,16 @@ data class JsonPath(
         return map(root, lastIndex, { input -> removeElement(root, lastIndex, input, steps[lastIndex]) })
     }
     
-    private fun removeElement(root: JsonElement, i: Int, parent: JsonElement, pathBit: Any): JsonElement {
+    private fun removeElement(root: JsonElement, i: Int, parent: JsonElement, pathBit: Any): JsonElement =
         if (pathBit is String) {
-            val original = jsonObjectWithProperty(root, i, parent, pathBit)
-            return removeObjectProperty(original, pathBit)
-            
+            removeObjectProperty(jsonObjectWithProperty(root, i, parent, pathBit), pathBit)
         }
         else if (pathBit is Int) {
-            val original = jsonArrayWithIndex(root, i, parent, pathBit)
-            return removeArrayElement(original, pathBit)
-            
+            removeArrayElement(jsonArrayWithIndex(root, i, parent, pathBit), pathBit)
         }
         else {
             throw IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i))
         }
-    }
     
     private fun map(json: JsonElement, pathLength: Int, f: (JsonElement) -> JsonElement): JsonElement {
         val parents = arrayOfNulls<JsonElement>(pathLength + 1)
