@@ -15,16 +15,15 @@ Examples of things you can test by mutating known good JSON documents:
 
 [Download from Maven Central](http://mvnrepository.com/artifact/com.natpryce/snodge)
 
+- Version 3.x.x.x (kotlin branch) is for Kotlin
 - Version 2.x.x.x (java8 branch) is for Java 8, and uses streams and Java 8 function types
-- Version 1.x.x.x (master branch) is for Java 7 and depends on Guava
+- Version 1.x.x.x (java7 branch) is for Java 7 and depends on Guava
 
 
 In a Nutshell
 -------------
 
 Output 10 random mutations of the JSON document:
-
-Java 7:
 
 ~~~~~~~~~~~~~~~~~~~~~~java
 JsonMutator mutator = new JsonMutator();
@@ -34,17 +33,6 @@ String originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}";
 for (String mutatedJson : mutator.forStrings().mutate(originalJson, 10)) {
     System.out.println(mutatedJson);
 }
-~~~~~~~~~~~~~~~~~~~~~~
-
-Java 8:
-
-~~~~~~~~~~~~~~~~~~~~~~java
-JsonMutator mutator = new JsonMutator();
-
-String originalJson = "{\"x\": \"hello\", \"y\": [1,2,3]}";
-
-mutator.forStrings().mutate(originalJson, 10)
-        .forEach(System.out::println);
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Example output:
@@ -75,5 +63,5 @@ Concepts
 
 To build:
 
-* Java JDK 7 (master branch) or JDK 8 (java8 branch)
+* Java JDK 7 (master branch)
 * GNU Make
