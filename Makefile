@@ -24,10 +24,9 @@ src_main:=$(call srcfiles,$(srcdir_main))
 src_test:=$(call srcfiles,$(srcdir_test))
 
 package_distro = \
+    $(outdir)/$(package)-$(version).pom \
     $(outdir)/$(package)-$(version).jar \
-    $(outdir)/$(package)-$(version)-sources.jar \
-    #$(outdir)/$(package)-$(version)-javadoc.jar \
-    $(outdir)/$(package)-$(version).pom
+    $(outdir)/$(package)-$(version)-sources.jar
 
 standalone_distro = \
     $(package_distro:$(outdir)/$(package)-%=$(outdir)/$(package)-standalone-%)
@@ -63,13 +62,6 @@ $(outdir)/junit-report.txt: $(outdir)/$(package)-$(version)-test.jar $(outdir)/$
 
 $(outdir)/$(package)-$(version)-sources.jar: $(src_main)
 	$(JAR) cf $@ -C $(srcdir_main) .
-
-$(outdir)/$(package)-$(version)-javadoc.jar: $(outdir)/$(package)-$(version)-javadoc/index.html
-	$(JAR) cf $@ -C $(dir $<) .
-
-$(outdir)/$(package)-$(version)-javadoc/index.html: $(src_main) $(libs_main)
-	@mkdir -p $(dir $@)
-	$(JAVADOC) -d $(dir $@) $(classpath) $(src_main)
 
 $(outdir)/$(package)-$(version).pom: main.dependencies $(published_jars)
 	@mkdir -p $(dir $@)
