@@ -58,7 +58,7 @@ $(outdir)/$(package)-$(version)-test.jar: $(src_test) $(outdir)/$(package)-$(ver
 
 $(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.kt,%,$(src_test))))
 $(outdir)/junit-report.txt: $(outdir)/$(package)-$(version)-test.jar $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_test)
-	$(KOTLIN) $(classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
+	$(JAVA) $(classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
 	    org.junit.runner.JUnitCore $(TESTS) | tee $@
 
 $(outdir)/$(package)-$(version)-sources.jar: $(src_main)
