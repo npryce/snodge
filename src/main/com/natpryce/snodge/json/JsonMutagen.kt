@@ -1,3 +1,5 @@
+@file:JvmName("JsonMutagen")
+
 package com.natpryce.snodge.json
 
 import com.google.gson.Gson
@@ -10,6 +12,7 @@ import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.encodedAs
 import com.natpryce.snodge.mapped
 import com.natpryce.snodge.mutants
+import com.natpryce.snodge.reflect.troublesomeClasses
 import java.nio.charset.Charset
 import java.util.Random
 
@@ -33,6 +36,12 @@ fun Mutagen<JsonElement>.forEncodedStrings(encoding: Charset) =
 fun Mutagen<JsonElement>.forEncodedStrings(encodingName: String) =
     this.forEncodedStrings(Charset.forName(encodingName))
 
+
+fun reflectionMutagens(): JsonNodeMutagen =
+    troublesomeClasses()
+        .map { replaceJsonElement(JsonPrimitive(it)).ifElement { it is JsonPrimitive && it.isString} }
+        .let { combine(it) }
+
 /**
  * @return Applies all the JSON mutations implemented in the Snodge library.
  */
@@ -43,7 +52,7 @@ fun allJsonMutagens() =
         forAll(exampleElements, { addObjectProperty(it) }),
         removeJsonElement(),
         reorderObjectProperties(),
-        securityMutagens())
+        reflectionMutagens())
 
 private fun forAll(elements: List<JsonElement>, fn: (JsonElement) -> JsonNodeMutagen) =
     combine(elements.map(fn).toList())
