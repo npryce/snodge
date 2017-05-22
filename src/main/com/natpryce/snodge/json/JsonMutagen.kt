@@ -39,7 +39,7 @@ fun Mutagen<JsonElement>.forEncodedStrings(encodingName: String) =
 
 fun reflectionMutagens(): JsonNodeMutagen =
     troublesomeClasses()
-        .map { replaceJsonElement(JsonPrimitive(it)).ifElement { it is JsonPrimitive && it.isString} }
+        .map { replaceJsonElement(JsonPrimitive(it)).ifElement { it is JsonPrimitive && it.isString } }
         .let { combine(it) }
 
 /**
@@ -47,15 +47,16 @@ fun reflectionMutagens(): JsonNodeMutagen =
  */
 fun allJsonMutagens() =
     JsonMutagen(
-        forAll(exampleElements, { replaceJsonElement(it) }),
-        forAll(exampleElements, { addArrayElement(it) }),
-        forAll(exampleElements, { addObjectProperty(it) }),
+        combine(exampleElements.map { exampleElement ->
+            combine(
+                replaceJsonElement(exampleElement),
+                addArrayElement(exampleElement),
+                addObjectProperty(exampleElement)
+            )
+        }),
         removeJsonElement(),
         reorderObjectProperties(),
         reflectionMutagens())
-
-private fun forAll(elements: List<JsonElement>, fn: (JsonElement) -> JsonNodeMutagen) =
-    combine(elements.map(fn).toList())
 
 private val exampleElements = listOf(
     JsonNull.INSTANCE,
@@ -66,7 +67,3 @@ private val exampleElements = listOf(
     JsonPrimitive("a string"),
     JsonArray(),
     JsonObject())
-
-
-fun <T> Random.mutants(sampleSize: Int, original: JsonElement): List<JsonElement> =
-    mutants(allJsonMutagens(), sampleSize, original)
