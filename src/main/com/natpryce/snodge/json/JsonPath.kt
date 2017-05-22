@@ -25,7 +25,7 @@ data class JsonPath(
     fun extend(vararg morePath: Any) = JsonPath(steps + morePath.toList())
     
     override fun invoke(root: JsonElement): JsonElement {
-        return steps.foldIndexed(root) { i, result, step ->
+        return steps.foldIndexed(root) { i, result, _ ->
             applyPathElement(root, i, result)
         }
     }
