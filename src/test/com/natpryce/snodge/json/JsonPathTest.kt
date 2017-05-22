@@ -11,7 +11,7 @@ import org.junit.Test
 class JsonPathTest {
     @Test
     fun canQueryElementsOfPath() {
-        val path = JsonPath.of("a", 1, "b", 2, "c")
+        val path = JsonPath("a", 1, "b", 2, "c")
         
         assertThat(path.size(), equalTo(5))
         assertThat(path.at(0), equalTo("a" as Any))
@@ -23,7 +23,7 @@ class JsonPathTest {
     
     @Test
     fun negativeElementsIndexFromEndOfPath() {
-        val path = JsonPath.of("a", 1, "b", 2, "c")
+        val path = JsonPath("a", 1, "b", 2, "c")
         
         assertThat(path.at(-5), equalTo("a" as Any))
         assertThat(path.at(-4), equalTo(1 as Any))
@@ -35,7 +35,7 @@ class JsonPathTest {
     @Test
     @Throws(Exception::class)
     fun returnsSameHashCodeForSamePathNoMatterHowItIsConstructed() {
-        val path = JsonPath.of("a", 1, "b", 2, "c")
+        val path = JsonPath("a", 1, "b", 2, "c")
         
         assertThat(path.hashCode(), equalTo(Companion.root.extend("a").extend(1).extend("b").extend(2).extend("c").hashCode()))
         assertThat(path.hashCode(), equalTo(Companion.root.extend("a", 1, "b", 2, "c").hashCode()))
@@ -44,7 +44,7 @@ class JsonPathTest {
     @Test
     @Throws(Exception::class)
     fun pathsAreEqualNoMatterHowTheyAreConstructed() {
-        val path = JsonPath.of("a", 1, "b", 2, "c")
+        val path = JsonPath("a", 1, "b", 2, "c")
         
         assertThat(path, equalTo(Companion.root.extend("a").extend(1).extend("b").extend(2).extend("c")))
         assertThat(path, equalTo(Companion.root.extend("a", 1, "b", 2, "c")))
@@ -63,7 +63,7 @@ class JsonPathTest {
                             "y" to 200)),
             "b" to "bubbles")
         
-        assertReplacement(original, JsonPath.of("a", 1, "x"), JsonPrimitive(-99), obj(
+        assertReplacement(original, JsonPath("a", 1, "x"), JsonPrimitive(-99), obj(
             "a" to list(
                         obj(
                             "x" to 10,
@@ -81,7 +81,7 @@ class JsonPathTest {
     fun canReplaceElementInSingletonArrayAtPath() {
         val original = list(1, 2, 3, list(1))
         
-        assertReplacement(original, JsonPath.of(3, 0), JsonPrimitive(-99),
+        assertReplacement(original, JsonPath(3, 0), JsonPrimitive(-99),
             list(1, 2, 3, list(-99)))
     }
     
@@ -95,7 +95,7 @@ class JsonPathTest {
         
         assertThat(original.toString(), equalTo("{\"a\":1,\"x\":2,\"b\":3,\"y\":4}"))
         
-        val replaced = JsonPath.of("x").replace(original, JsonPrimitive(99)) as JsonObject
+        val replaced = JsonPath("x").replace(original, JsonPrimitive(99)) as JsonObject
         
         assertThat(replaced.toString(), equalTo("{\"a\":1,\"x\":99,\"b\":3,\"y\":4}"))
     }

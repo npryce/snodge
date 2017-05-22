@@ -12,37 +12,37 @@ class JsonWalkTest {
     fun returnsObjectProperties() {
         assertWalk(obj("a" to 1, "b" to 2),
             JsonPath.root,
-            JsonPath.of("a"),
-            JsonPath.of("b"))
+            JsonPath("a"),
+            JsonPath("b"))
     }
     
     @Test
     fun returnsNestedObjectProperties() {
         assertWalk(obj("a" to 1, "b" to obj("c" to 2)),
             JsonPath.root,
-            JsonPath.of("a"),
-            JsonPath.of("b"),
-            JsonPath.of("b", "c"))
+            JsonPath("a"),
+            JsonPath("b"),
+            JsonPath("b", "c"))
     }
     
     @Test
     fun returnsArrayElements() {
         assertWalk(list("a", "b"),
             JsonPath.root,
-            JsonPath.of(0),
-            JsonPath.of(1))
+            JsonPath(0),
+            JsonPath(1))
     }
     
     @Test
     fun returnsNestedArrayElements() {
         assertWalk(list(list(1, 2), list(3, 4)),
             JsonPath.root,
-            JsonPath.of(0),
-            JsonPath.of(0, 0),
-            JsonPath.of(0, 1),
-            JsonPath.of(1),
-            JsonPath.of(1, 0),
-            JsonPath.of(1, 1))
+            JsonPath(0),
+            JsonPath(0, 0),
+            JsonPath(0, 1),
+            JsonPath(1),
+            JsonPath(1, 0),
+            JsonPath(1, 1))
     }
     
     @Test
@@ -56,16 +56,16 @@ class JsonWalkTest {
         
         assertWalk(json,
             JsonPath.root,
-            JsonPath.of("a"),
-            JsonPath.of("a", "b"),
-            JsonPath.of("a", "b", 0),
-            JsonPath.of("a", "b", 1),
-            JsonPath.of("a", "b", 2),
-            JsonPath.of("c"),
-            JsonPath.of("c", 0),
-            JsonPath.of("c", 0, "d"),
-            JsonPath.of("c", 1),
-            JsonPath.of("c", 1, "d"))
+            JsonPath("a"),
+            JsonPath("a", "b"),
+            JsonPath("a", "b", 0),
+            JsonPath("a", "b", 1),
+            JsonPath("a", "b", 2),
+            JsonPath("c"),
+            JsonPath("c", 0),
+            JsonPath("c", 0, "d"),
+            JsonPath("c", 1),
+            JsonPath("c", 1, "d"))
     }
     
     @Test

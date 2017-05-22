@@ -9,6 +9,8 @@ data class JsonPath(
 
 ) : (JsonElement) -> JsonElement {
     
+    constructor(vararg steps: Any) : this(steps.toList())
+    
     override fun toString(): String {
         return pathBitsToString(steps, steps.size)
     }
@@ -78,10 +80,10 @@ data class JsonPath(
         }
     }
     
-    private fun replaceObjectPropertyValue(original: com.google.gson.JsonObject, memberName: String, replacement: JsonElement): JsonElement {
-        val replaced = com.google.gson.JsonObject()
-        
-        for ((key, value) in original.entrySet()) {
+    private fun replaceObjectPropertyValue(original: JsonObject, memberName: String, replacement: JsonElement): JsonElement {
+        val replaced = JsonObject()
+    
+        original.entrySet().forEach { (key, value) ->
             if (key == memberName) {
                 replaced.add(memberName, replacement)
             }
@@ -93,8 +95,8 @@ data class JsonPath(
         return replaced
     }
     
-    private fun replaceArrayElement(original: com.google.gson.JsonArray, index: Int, replacement: JsonElement): JsonElement {
-        val replaced = com.google.gson.JsonArray()
+    private fun replaceArrayElement(original: JsonArray, index: Int, replacement: JsonElement): JsonElement {
+        val replaced = JsonArray()
         
         for (j in 0..index - 1) {
             replaced.add(original.get(j))
@@ -141,17 +143,17 @@ data class JsonPath(
         return replaced
     }
     
-    private fun jsonObjectWithProperty(root: JsonElement, i: Int, parent: JsonElement, memberName: String): com.google.gson.JsonObject {
-        JsonPath.Companion.check(parent.isJsonObject, "expected object", steps, i, root)
+    private fun jsonObjectWithProperty(root: JsonElement, i: Int, parent: JsonElement, memberName: String): JsonObject {
+        JsonPath.check(parent.isJsonObject, "expected object", steps, i, root)
         val original = parent.asJsonObject
-        JsonPath.Companion.check(original.has(memberName), "no such member", steps, i, root)
+        JsonPath.check(original.has(memberName), "no such member", steps, i, root)
         return original
     }
     
-    private fun jsonArrayWithIndex(root: JsonElement, i: Int, parent: JsonElement, index: Int): com.google.gson.JsonArray {
-        JsonPath.Companion.check(parent.isJsonArray, "expected array", steps, i, root)
+    private fun jsonArrayWithIndex(root: JsonElement, i: Int, parent: JsonElement, index: Int): JsonArray {
+        JsonPath.check(parent.isJsonArray, "expected array", steps, i, root)
         val array = parent.asJsonArray
-        JsonPath.Companion.check(array.size() > index, "index out of bounds", steps, i, root)
+        JsonPath.check(array.size() > index, "index out of bounds", steps, i, root)
         return array
     }
     
@@ -177,14 +179,14 @@ data class JsonPath(
                 }
                 
                 override fun toString(): String {
-                    return "endsWith(..." + JsonPath.Companion.of(*suffix) + ")"
+                    return "endsWith(..." + JsonPath(*suffix) + ")"
                 }
             }
         }
         
         @JvmStatic
         fun startsWith(vararg prefix: Any): (JsonPath) -> Boolean {
-            return JsonPath.functions.startsWith(JsonPath.of(*prefix))
+            return JsonPath.functions.startsWith(JsonPath(*prefix))
         }
         
         @JvmStatic
