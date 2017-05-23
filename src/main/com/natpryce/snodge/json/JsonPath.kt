@@ -127,15 +127,18 @@ data class JsonPath(
         }
     
     private fun map(root: JsonElement, pathLength: Int, f: (JsonElement) -> JsonElement): JsonElement {
-        val parents = mutableListOf<JsonElement>()
-        parents.add(root)
-        
-        (0 until pathLength).forEach { i ->
-            parents.add(applyPathElement(root, i, parents[i]))
-        }
+        val parents = elementsOnPath(root, pathLength)
         
         return (pathLength - 1 downTo 0).fold(f(parents.last())) { acc, i ->
             replaceElement(root, parents[i], i, acc)
+        }
+    }
+    
+    private fun elementsOnPath(root: JsonElement, pathLength: Int): List<JsonElement> {
+        return mutableListOf<JsonElement>(root).apply {
+            (0 until pathLength).forEach { i ->
+                add(applyPathElement(root, i, get(i)))
+            }
         }
     }
     
