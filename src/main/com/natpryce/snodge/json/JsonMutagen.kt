@@ -64,11 +64,6 @@ fun combine(mutagens: Iterable<JsonMutagen>): JsonMutagen {
 fun JsonMutagen.atPath(path: JsonPath) = this.atPath { it == path }
 
 /**
- * Constrain a JsonNodeMutagen to apply only to the element at the given path or its children
- */
-fun JsonMutagen.atOrBelowPath(path: JsonPath) = this.atPath { it.startsWith(path) }
-
-/**
  * Constrain a JsonNodeMutagen to apply only to elements at paths that match the given predicate
  */
 fun JsonMutagen.atPath(pathSelector: (JsonPath) -> Boolean) =

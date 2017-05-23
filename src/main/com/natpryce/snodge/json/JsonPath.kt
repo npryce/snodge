@@ -170,56 +170,15 @@ data class JsonPath(
                 .forEach { e -> add(e.key, e.value) }
         }
     
-    object functions {
-        @JvmStatic
-        fun endsWith(vararg suffix: Any): (JsonPath) -> Boolean {
-            return object : (JsonPath) -> Boolean {
-                override fun invoke(path: JsonPath): Boolean {
-                    return path.endsWith(*suffix)
-                }
-                
-                override fun toString(): String {
-                    return "endsWith(..." + JsonPath(*suffix) + ")"
-                }
-            }
-        }
-        
-        @JvmStatic
-        fun startsWith(vararg prefix: Any): (JsonPath) -> Boolean {
-            return JsonPath.functions.startsWith(JsonPath(*prefix))
-        }
-        
-        @JvmStatic
-        fun startsWith(prefix: JsonPath): (JsonPath) -> Boolean {
-            return object : (JsonPath) -> Boolean {
-                override fun invoke(path: JsonPath): Boolean {
-                    return path.startsWith(prefix)
-                }
-                
-                override fun toString(): String {
-                    return "startsWith($prefix)"
-                }
-            }
-        }
-    }
-    
     companion object {
-        @JvmField
         val root = JsonPath(emptyList())
         
-        @JvmStatic
-        fun of(vararg path: Any): JsonPath {
-            return JsonPath(path.toList())
-        }
-        
-        @JvmStatic
         private fun check(isOk: Boolean, what: String, pathBits: List<Any>, badOne: Int, json: JsonElement) {
             if (!isOk) {
                 throw IllegalArgumentException(what + " at " + pathBitsToString(pathBits, badOne + 1) + " in " + json)
             }
         }
         
-        @JvmStatic
         private fun pathBitsToString(pathBits: List<Any>, count: Int): String {
             return pathBits.subList(0, count)
                 .map { it.toString() }
