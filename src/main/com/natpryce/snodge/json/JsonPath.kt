@@ -130,17 +130,13 @@ data class JsonPath(
         val parents = mutableListOf<JsonElement>()
         parents.add(root)
         
-        (0..pathLength - 1).forEach { i ->
+        (0 until pathLength).forEach { i ->
             parents.add(applyPathElement(root, i, parents[i]))
         }
         
-        var replaced: JsonElement = f.invoke(parents.last())
-        
-        (pathLength - 1 downTo 0).forEach { i ->
-            replaced = replaceElement(root, parents[i], i, replaced)
+        return (pathLength - 1 downTo 0).fold(f(parents.last())) { acc, i ->
+            replaceElement(root, parents[i], i, acc)
         }
-        
-        return replaced
     }
     
     private fun jsonObjectWithProperty(root: JsonElement, i: Int, parent: JsonElement, memberName: String): JsonObject {
