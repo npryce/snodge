@@ -11,9 +11,9 @@ import java.nio.charset.Charset
 abstract class JsonMutagen : Mutagen<JsonElement> {
     final override fun invoke(original: JsonElement): Sequence<Lazy<JsonElement>> =
         original.walk()
-            .flatMap { path -> this.invoke(original, path, path(original)) }
+            .flatMap { path -> this.mutationsOfElement(original, path, path(original)) }
     
-    abstract operator fun invoke(
+    abstract fun mutationsOfElement(
         document: JsonElement,
         pathToElement: JsonPath,
         elementToMutate: JsonElement
@@ -53,8 +53,8 @@ fun combine(vararg mutagens: JsonMutagen): JsonMutagen {
  */
 fun combine(mutagens: Iterable<JsonMutagen>): JsonMutagen {
     return object : JsonMutagen() {
-        override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            mutagens.asSequence().flatMap { it.invoke(document, pathToElement, elementToMutate) }
+        override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            mutagens.asSequence().flatMap { it.mutationsOfElement(document, pathToElement, elementToMutate) }
     }
 }
 
@@ -73,14 +73,14 @@ fun JsonMutagen.atOrBelowPath(path: JsonPath) = this.atPath { it.startsWith(path
  */
 fun JsonMutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
     object : JsonMutagen() {
-        override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            if (pathSelector(pathToElement)) this@atPath(document, pathToElement, elementToMutate) else emptySequence()
+        override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            if (pathSelector(pathToElement)) this@atPath.mutationsOfElement(document, pathToElement, elementToMutate) else emptySequence()
     }
 
 
 fun JsonMutagen.ifElement(criteria: (JsonElement) -> Boolean) =
     object : JsonMutagen() {
-        override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            if (criteria(elementToMutate)) this@ifElement(document, pathToElement, elementToMutate) else emptySequence()
+        override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            if (criteria(elementToMutate)) this@ifElement.mutationsOfElement(document, pathToElement, elementToMutate) else emptySequence()
     }
 

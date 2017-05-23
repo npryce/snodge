@@ -11,7 +11,7 @@ import java.util.Collections
 
 
 fun addArrayElement(newElement: JsonElement) = object : JsonMutagen() {
-    override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
+    override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         if (elementToMutate is JsonArray) {
             sequenceOf(lazy {
                 pathToElement.map(document) { array ->
@@ -28,7 +28,7 @@ fun addArrayElement(newElement: JsonElement) = object : JsonMutagen() {
 }
 
 fun addObjectProperty(newElement: JsonElement) = object : JsonMutagen() {
-    override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
+    override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         if (elementToMutate.isJsonObject) {
             sequenceOf(lazy {
                 pathToElement.map(document) {
@@ -51,18 +51,18 @@ fun addObjectProperty(newElement: JsonElement) = object : JsonMutagen() {
 }
 
 fun removeJsonElement() = object : JsonMutagen() {
-    override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
+    override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         if (pathToElement.isRoot) emptySequence() else sequenceOf(lazy { pathToElement.remove(document) })
 }
 
 fun replaceJsonElement(replacement: JsonElement) = object : JsonMutagen() {
-    override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
+    override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         sequenceOf(lazy { pathToElement.replace(document, replacement) })
 }
 
 
 fun reorderObjectProperties() = object : JsonMutagen() {
-    override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
+    override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
         if (elementToMutate.isJsonObject) {
             sequenceOf(lazy {
                 pathToElement.map(document) {
@@ -88,7 +88,6 @@ fun reflectionMutagens(): JsonMutagen =
         .let { combine(it) }
 
 
-
 private val exampleElements = listOf(
     JsonNull.INSTANCE,
     JsonPrimitive(true),
@@ -104,13 +103,14 @@ private val exampleElements = listOf(
  * @return Applies all the JSON mutations implemented in the Snodge library.
  */
 fun allJsonMutagens() =
-    combine(combine(exampleElements.map { exampleElement ->
-        combine(
-            replaceJsonElement(exampleElement),
-            addArrayElement(exampleElement),
-            addObjectProperty(exampleElement)
-        )
-    }),
+    combine(
+        combine(exampleElements.map { exampleElement ->
+            combine(
+                replaceJsonElement(exampleElement),
+                addArrayElement(exampleElement),
+                addObjectProperty(exampleElement)
+            )
+        }),
         removeJsonElement(),
         reorderObjectProperties(),
         reflectionMutagens())
