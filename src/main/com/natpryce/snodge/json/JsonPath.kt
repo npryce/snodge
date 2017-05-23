@@ -126,18 +126,18 @@ data class JsonPath(
             throw IllegalArgumentException("unexpected path element: " + pathBitsToString(steps, i))
         }
     
-    private fun map(json: JsonElement, pathLength: Int, f: (JsonElement) -> JsonElement): JsonElement {
-        val parents = arrayOfNulls<JsonElement>(pathLength + 1)
-        parents[0] = json
+    private fun map(root: JsonElement, pathLength: Int, f: (JsonElement) -> JsonElement): JsonElement {
+        val parents = mutableListOf<JsonElement>()
+        parents.add(root)
         
-        for (i in 0..pathLength - 1) {
-            parents[i + 1] = applyPathElement(json, i, parents[i]!!)
+        (0..pathLength - 1).forEach { i ->
+            parents.add(applyPathElement(root, i, parents[i]))
         }
         
-        var replaced: JsonElement = f.invoke(parents[pathLength]!!)
+        var replaced: JsonElement = f.invoke(parents.last())
         
-        for (i in pathLength - 1 downTo 0) {
-            replaced = replaceElement(json, parents[i]!!, i, replaced)
+        (pathLength - 1 downTo 0).forEach { i ->
+            replaced = replaceElement(root, parents[i], i, replaced)
         }
         
         return replaced
