@@ -144,16 +144,16 @@ data class JsonPath(
     }
     
     private fun jsonObjectWithProperty(root: JsonElement, i: Int, parent: JsonElement, memberName: String): JsonObject {
-        JsonPath.check(parent.isJsonObject, "expected object", steps, i, root)
+        check(parent.isJsonObject, "expected object", steps, i, root)
         val original = parent.asJsonObject
-        JsonPath.check(original.has(memberName), "no such member", steps, i, root)
+        check(original.has(memberName), "no such member", steps, i, root)
         return original
     }
     
     private fun jsonArrayWithIndex(root: JsonElement, i: Int, parent: JsonElement, index: Int): JsonArray {
-        JsonPath.check(parent.isJsonArray, "expected array", steps, i, root)
+        check(parent.isJsonArray, "expected array", steps, i, root)
         val array = parent.asJsonArray
-        JsonPath.check(array.size() > index, "index out of bounds", steps, i, root)
+        check(array.size() > index, "index out of bounds", steps, i, root)
         return array
     }
     
@@ -170,20 +170,20 @@ data class JsonPath(
                 .forEach { e -> add(e.key, e.value) }
         }
     
+    private fun check(isOk: Boolean, what: String, pathBits: List<Any>, badOne: Int, json: JsonElement) {
+        if (!isOk) {
+            throw IllegalArgumentException(what + " at " + pathBitsToString(pathBits, badOne + 1) + " in " + json)
+        }
+    }
+    
+    private fun pathBitsToString(pathBits: List<Any>, count: Int): String {
+        return pathBits.subList(0, count)
+            .map { it.toString() }
+            .joinToString(prefix = "/", separator = "/", postfix = "")
+    }
+    
     companion object {
         val root = JsonPath(emptyList())
-        
-        private fun check(isOk: Boolean, what: String, pathBits: List<Any>, badOne: Int, json: JsonElement) {
-            if (!isOk) {
-                throw IllegalArgumentException(what + " at " + pathBitsToString(pathBits, badOne + 1) + " in " + json)
-            }
-        }
-        
-        private fun pathBitsToString(pathBits: List<Any>, count: Int): String {
-            return pathBits.subList(0, count)
-                .map { it.toString() }
-                .joinToString(prefix = "/", separator = "/", postfix = "")
-        }
     }
 }
 
