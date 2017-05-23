@@ -4,7 +4,6 @@ import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.snodge.json.JsonMutagen
-import com.natpryce.snodge.json.JsonNodeMutagen
 import com.natpryce.snodge.json.addObjectProperty
 import com.natpryce.snodge.json.allJsonMutagens
 import com.natpryce.snodge.json.forStrings
@@ -44,8 +43,8 @@ class JsonEventFormatSnodgeTest {
         assertSerialisationUnaffectedBy(addObjectProperty(JsonPrimitive("new-property-value")))
     }
     
-    private fun assertSerialisationUnaffectedBy(mutagen: JsonNodeMutagen) {
-        Random().mutants(JsonMutagen(mutagen).forStrings(), 1000, format.serialise(originalEvent))
+    private fun assertSerialisationUnaffectedBy(mutagen: JsonMutagen) {
+        Random().mutants(mutagen.forStrings(), 1000, format.serialise(originalEvent))
             .forEach { assertParsedEventEqualToOriginal(it) }
     }
     

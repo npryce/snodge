@@ -4,7 +4,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.snodge.json.JsonPath.Companion
 import com.natpryce.snodge.json.JsonPath.functions
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -12,7 +11,7 @@ import org.junit.Test
 class MutagenAtPathTest {
     @Test
     fun canLimitMutagenToPath() {
-        val mutator = JsonMutagen(replaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath("a", "b")))
+        val mutator = replaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath("a", "b"))
     
         val doc = obj(
             "a" to obj(
@@ -36,7 +35,7 @@ class MutagenAtPathTest {
     @Test
     @Throws(Exception::class)
     fun canLimitMutagenToPathsByPredicate() {
-        val mutator = JsonMutagen(replaceJsonElement(JsonPrimitive("XXX")).atPath(functions.endsWith("b")))
+        val mutator = replaceJsonElement(JsonPrimitive("XXX")).atPath(functions.endsWith("b"))
         
         val doc = obj(
             "a" to obj(

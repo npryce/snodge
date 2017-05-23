@@ -1,29 +1,25 @@
-@file:JvmName("JsonMutagen")
-
 package com.natpryce.snodge.json
 
 import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.google.gson.JsonElement
-import com.google.gson.JsonNull
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.encodedAs
 import com.natpryce.snodge.mapped
-import com.natpryce.snodge.mutants
-import com.natpryce.snodge.reflect.troublesomeClasses
 import java.nio.charset.Charset
-import java.util.Random
 
 
-fun JsonMutagen(vararg nodeMutagens: JsonNodeMutagen) =
-    JsonMutagen(combine(*nodeMutagens))
-
-fun JsonMutagen(nodeMutagen: JsonNodeMutagen) =
-    fun(original: JsonElement) =
+abstract class JsonMutagen : Mutagen<JsonElement> {
+    final override fun invoke(original: JsonElement): Sequence<Lazy<JsonElement>> =
         original.walk()
-            .flatMap { path -> nodeMutagen.invoke(original, path, path(original)) }
+            .flatMap { path -> this.invoke(original, path, path(original)) }
+    
+    abstract operator fun invoke(
+        document: JsonElement,
+        pathToElement: JsonPath,
+        elementToMutate: JsonElement
+    ): Sequence<Lazy<JsonElement>>
+}
+
 
 fun Mutagen<JsonElement>.forStrings(): Mutagen<String> {
     val gson = Gson()
@@ -36,34 +32,55 @@ fun Mutagen<JsonElement>.forEncodedStrings(encoding: Charset) =
 fun Mutagen<JsonElement>.forEncodedStrings(encodingName: String) =
     this.forEncodedStrings(Charset.forName(encodingName))
 
+/**
+ * Combine multiple component JsonNodeMutagen into a single JsonNodeMutagen that generates all the mutations of the components.
+ 
+ * @param mutagens the JsonNodeMutagen to combine
+ * *
+ * @return the combination JsonNodeMutagen
+ */
+fun combine(vararg mutagens: JsonMutagen): JsonMutagen {
+    return combine(mutagens.toList())
+}
 
-fun reflectionMutagens(): JsonNodeMutagen =
-    troublesomeClasses()
-        .map { replaceJsonElement(JsonPrimitive(it)).ifElement { it is JsonPrimitive && it.isString } }
-        .let { combine(it) }
 
 /**
- * @return Applies all the JSON mutations implemented in the Snodge library.
+ * Combine multiple component JsonNodeMutagen into a single JsonNodeMutagen that generates all the mutations of the components.
+ 
+ * @param mutagens the JsonNodeMutagen to combine
+ * *
+ * @return the combination JsonNodeMutagen
  */
-fun allJsonMutagens() =
-    JsonMutagen(
-        combine(exampleElements.map { exampleElement ->
-            combine(
-                replaceJsonElement(exampleElement),
-                addArrayElement(exampleElement),
-                addObjectProperty(exampleElement)
-            )
-        }),
-        removeJsonElement(),
-        reorderObjectProperties(),
-        reflectionMutagens())
+fun combine(mutagens: Iterable<JsonMutagen>): JsonMutagen {
+    return object : JsonMutagen() {
+        override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            mutagens.asSequence().flatMap { it.invoke(document, pathToElement, elementToMutate) }
+    }
+}
 
-private val exampleElements = listOf(
-    JsonNull.INSTANCE,
-    JsonPrimitive(true),
-    JsonPrimitive(false),
-    JsonPrimitive(99),
-    JsonPrimitive(-99),
-    JsonPrimitive("a string"),
-    JsonArray(),
-    JsonObject())
+/**
+ * Constrain a JsonNodeMutagen to apply only to the element at the given path
+ */
+fun JsonMutagen.atPath(path: JsonPath) = this.atPath { it == path }
+
+/**
+ * Constrain a JsonNodeMutagen to apply only to the element at the given path or its children
+ */
+fun JsonMutagen.atOrBelowPath(path: JsonPath) = this.atPath { it.startsWith(path) }
+
+/**
+ * Constrain a JsonNodeMutagen to apply only to elements at paths that match the given predicate
+ */
+fun JsonMutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
+    object : JsonMutagen() {
+        override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            if (pathSelector(pathToElement)) this@atPath(document, pathToElement, elementToMutate) else emptySequence()
+    }
+
+
+fun JsonMutagen.ifElement(criteria: (JsonElement) -> Boolean) =
+    object : JsonMutagen() {
+        override fun invoke(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            if (criteria(elementToMutate)) this@ifElement(document, pathToElement, elementToMutate) else emptySequence()
+    }
+

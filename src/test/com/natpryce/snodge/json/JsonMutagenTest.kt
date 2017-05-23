@@ -11,12 +11,11 @@ import org.junit.Test
 import java.nio.charset.Charset
 import java.util.Random
 
-class JsonMutatorTest {
+class JsonMutagenTest {
     val random = Random()
     
-    private val mutagen = JsonMutagen(
-            addObjectProperty(JsonNull.INSTANCE),
-            addArrayElement(JsonNull.INSTANCE))
+    private val mutagen = combine(addObjectProperty(JsonNull.INSTANCE),
+        addArrayElement(JsonNull.INSTANCE))
     
     @Test
     fun canAddNullObjectProperty() {
