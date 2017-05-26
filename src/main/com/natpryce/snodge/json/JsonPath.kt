@@ -22,7 +22,7 @@ data class JsonPath(
     val isRoot: Boolean
         get() = size() == 0
     
-    fun at(n: Int) = steps[(steps.size + n) % steps.size]
+    operator fun get(n: Int) = steps[(steps.size + n) % steps.size]
     
     fun extend(vararg morePath: Any) = JsonPath(steps + morePath.toList())
     
@@ -169,9 +169,9 @@ data class JsonPath(
                 .forEach { e -> add(e.key, e.value) }
         }
     
-    private fun check(isOk: Boolean, what: String, pathBits: List<Any>, badOne: Int, json: JsonElement) {
+    private fun check(isOk: Boolean, what: String, pathBits: List<Any>, badOne: Int, entireDocument: JsonElement) {
         if (!isOk) {
-            throw IllegalArgumentException(what + " at " + pathBitsToString(pathBits, badOne + 1) + " in " + json)
+            throw IllegalArgumentException(what + " at " + pathBitsToString(pathBits, badOne + 1) + " in " + entireDocument)
         }
     }
     

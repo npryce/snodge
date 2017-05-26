@@ -1,6 +1,6 @@
 package com.natpryce.snodge
 
-import java.util.*
+import java.util.Random
 
 fun <T> Random.sample(maxSampleSize: Int, sequence: Sequence<T>): List<T> = sampleFrom(sequence.iterator(), maxSampleSize, this)
 fun <T> Random.sample(maxSampleSize: Int, sequence: Iterable<T>): List<T> = sampleFrom(sequence.iterator(), maxSampleSize, this)

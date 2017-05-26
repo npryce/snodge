@@ -5,54 +5,51 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.snodge.json.JsonPath.Companion
+import com.natpryce.snodge.json.JsonPath.Companion.root
 import org.junit.Test
 
 class JsonPathTest {
     @Test
-    fun canQueryElementsOfPath() {
+    fun `can query elements of path`() {
         val path = JsonPath("a", 1, "b", 2, "c")
         
         assertThat(path.size(), equalTo(5))
-        assertThat(path.at(0), equalTo("a" as Any))
-        assertThat(path.at(1), equalTo(1 as Any))
-        assertThat(path.at(2), equalTo("b" as Any))
-        assertThat(path.at(3), equalTo(2 as Any))
-        assertThat(path.at(4), equalTo("c" as Any))
+        assertThat(path[0], equalTo("a" as Any))
+        assertThat(path[1], equalTo(1 as Any))
+        assertThat(path[2], equalTo("b" as Any))
+        assertThat(path[3], equalTo(2 as Any))
+        assertThat(path[4], equalTo("c" as Any))
     }
     
     @Test
-    fun negativeElementsIndexFromEndOfPath() {
+    fun `negative indices index from end of path`() {
         val path = JsonPath("a", 1, "b", 2, "c")
         
-        assertThat(path.at(-5), equalTo("a" as Any))
-        assertThat(path.at(-4), equalTo(1 as Any))
-        assertThat(path.at(-3), equalTo("b" as Any))
-        assertThat(path.at(-2), equalTo(2 as Any))
-        assertThat(path.at(-1), equalTo("c" as Any))
+        assertThat(path[-5], equalTo("a" as Any))
+        assertThat(path[-4], equalTo(1 as Any))
+        assertThat(path[-3], equalTo("b" as Any))
+        assertThat(path[-2], equalTo(2 as Any))
+        assertThat(path[-1], equalTo("c" as Any))
     }
     
     @Test
-    @Throws(Exception::class)
-    fun returnsSameHashCodeForSamePathNoMatterHowItIsConstructed() {
+    fun `returns same hash code for same path no matter how it is constructed`() {
         val path = JsonPath("a", 1, "b", 2, "c")
         
-        assertThat(path.hashCode(), equalTo(Companion.root.extend("a").extend(1).extend("b").extend(2).extend("c").hashCode()))
-        assertThat(path.hashCode(), equalTo(Companion.root.extend("a", 1, "b", 2, "c").hashCode()))
+        assertThat(path.hashCode(), equalTo(root.extend("a").extend(1).extend("b").extend(2).extend("c").hashCode()))
+        assertThat(path.hashCode(), equalTo(root.extend("a", 1, "b", 2, "c").hashCode()))
     }
     
     @Test
-    @Throws(Exception::class)
-    fun pathsAreEqualNoMatterHowTheyAreConstructed() {
+    fun `paths are equal no matter how they are constructed`() {
         val path = JsonPath("a", 1, "b", 2, "c")
         
-        assertThat(path, equalTo(Companion.root.extend("a").extend(1).extend("b").extend(2).extend("c")))
-        assertThat(path, equalTo(Companion.root.extend("a", 1, "b", 2, "c")))
+        assertThat(path, equalTo(root.extend("a").extend(1).extend("b").extend(2).extend("c")))
+        assertThat(path, equalTo(root.extend("a", 1, "b", 2, "c")))
     }
     
     @Test
-    @Throws(Exception::class)
-    fun canReplaceElementAtPath() {
+    fun `can replace element at path`() {
         val original = obj(
             "a" to list(
                         obj(
@@ -77,8 +74,7 @@ class JsonPathTest {
     }
     
     @Test
-    @Throws(Exception::class)
-    fun canReplaceElementInSingletonArrayAtPath() {
+    fun `can replace element in singleton array at path`() {
         val original = list(1, 2, 3, list(1))
         
         assertReplacement(original, JsonPath(3, 0), JsonPrimitive(-99),
@@ -86,7 +82,7 @@ class JsonPathTest {
     }
     
     @Test
-    fun replacingAnObjectFieldDoesNotChangeOrderOfElementsWhenSerialised() {
+    fun `replacing an object field does not change order of elements when serialised`() {
         val original = obj(
             "a" to 1,
             "x" to 2,
