@@ -9,7 +9,7 @@ import org.junit.Test
 
 class MutagenAtPathTest {
     @Test
-    fun canLimitMutagenToPath() {
+    fun `can limit mutagen to path`() {
         val mutator = replaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath("a", "b"))
     
         val doc = obj(
@@ -32,8 +32,7 @@ class MutagenAtPathTest {
     }
     
     @Test
-    @Throws(Exception::class)
-    fun canLimitMutagenToPathsByPredicate() {
+    fun `can limit mutagen to paths by predicate`() {
         val mutator = replaceJsonElement(JsonPrimitive("XXX")).atPath {it.endsWith("b")}
         
         val doc = obj(

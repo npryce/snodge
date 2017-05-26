@@ -9,7 +9,7 @@ import org.junit.Test
 
 class JsonWalkTest {
     @Test
-    fun returnsObjectProperties() {
+    fun `returns object properties`() {
         assertWalk(obj("a" to 1, "b" to 2),
             JsonPath.root,
             JsonPath("a"),
@@ -17,7 +17,7 @@ class JsonWalkTest {
     }
     
     @Test
-    fun returnsNestedObjectProperties() {
+    fun `returns nested object properties`() {
         assertWalk(obj("a" to 1, "b" to obj("c" to 2)),
             JsonPath.root,
             JsonPath("a"),
@@ -26,7 +26,7 @@ class JsonWalkTest {
     }
     
     @Test
-    fun returnsArrayElements() {
+    fun `returns array elements`() {
         assertWalk(list("a", "b"),
             JsonPath.root,
             JsonPath(0),
@@ -34,7 +34,7 @@ class JsonWalkTest {
     }
     
     @Test
-    fun returnsNestedArrayElements() {
+    fun `returns nested array elements`() {
         assertWalk(list(list(1, 2), list(3, 4)),
             JsonPath.root,
             JsonPath(0),
@@ -46,7 +46,7 @@ class JsonWalkTest {
     }
     
     @Test
-    fun bigHairyJsonExample() {
+    fun `big hairy json example`() {
         val json = obj(
             "a" to obj(
                 "b" to list(1, 2, 3)),
@@ -69,25 +69,25 @@ class JsonWalkTest {
     }
     
     @Test
-    fun returnsRootForJsonPrimitive() {
+    fun `returns root for json primitive`() {
         assertWalk(JsonPrimitive("bob"),
             JsonPath.root)
     }
     
     @Test
-    fun returnsRootForJsonNull() {
+    fun `returns root for json null`() {
         assertWalk(JsonNull.INSTANCE,
             JsonPath.root)
     }
     
     @Test
-    fun returnsRootForEmptyObject() {
+    fun `returns root for empty object`() {
         assertWalk(obj(),
             JsonPath.root)
     }
     
     @Test
-    fun returnsRootForEmptyArray() {
+    fun `returns root for empty array`() {
         assertWalk(list(),
             JsonPath.root)
     }

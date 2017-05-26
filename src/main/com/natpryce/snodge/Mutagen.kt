@@ -18,8 +18,9 @@ typealias Mutagen<T> = (T) -> Sequence<Lazy<T>>
  */
 fun <T, U> Mutagen<U>.mapped(mapIn: (T) -> U, mapOut: (U) -> T): Mutagen<T> =
     fun(original: T) =
-        this@mapped(mapIn(original)).map { lazy { mapOut(it.value) } }
+        this(mapIn(original)).lazyMap(mapOut)
 
+fun <T, U> Sequence<Lazy<T>>.lazyMap(f: (T) -> U) = map { lazy { f(it.value) } }
 
 /**
  * Transform a Mutagen of strings to a mutagen of byte arrays by using the given character encoding
