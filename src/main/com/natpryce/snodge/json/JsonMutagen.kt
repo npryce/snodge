@@ -6,14 +6,16 @@ import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.encodedAs
 import com.natpryce.snodge.mapped
 import java.nio.charset.Charset
+import java.util.Random
 
 
 abstract class JsonMutagen : Mutagen<JsonElement> {
-    final override fun invoke(original: JsonElement): Sequence<Lazy<JsonElement>> =
+    final override fun invoke(random: Random, original: JsonElement): Sequence<Lazy<JsonElement>> =
         original.walk()
-            .flatMap { path -> this.mutationsOfElement(original, path, path(original)) }
+            .flatMap { path -> this.mutationsOfElement(random, original, path, path(original)) }
     
     abstract fun mutationsOfElement(
+        random: Random,
         document: JsonElement,
         pathToElement: JsonPath,
         elementToMutate: JsonElement
@@ -53,8 +55,8 @@ fun combine(vararg mutagens: JsonMutagen): JsonMutagen {
  */
 fun combine(mutagens: Iterable<JsonMutagen>): JsonMutagen {
     return object : JsonMutagen() {
-        override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            mutagens.asSequence().flatMap { it.mutationsOfElement(document, pathToElement, elementToMutate) }
+        override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            mutagens.asSequence().flatMap { it.mutationsOfElement(random, document, pathToElement, elementToMutate) }
     }
 }
 
@@ -68,14 +70,13 @@ fun JsonMutagen.atPath(path: JsonPath) = this.atPath { it == path }
  */
 fun JsonMutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
     object : JsonMutagen() {
-        override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            if (pathSelector(pathToElement)) this@atPath.mutationsOfElement(document, pathToElement, elementToMutate) else emptySequence()
+        override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            if (pathSelector(pathToElement)) this@atPath.mutationsOfElement(random, document, pathToElement, elementToMutate) else emptySequence()
     }
 
 
 fun JsonMutagen.ifElement(criteria: (JsonElement) -> Boolean) =
     object : JsonMutagen() {
-        override fun mutationsOfElement(document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            if (criteria(elementToMutate)) this@ifElement.mutationsOfElement(document, pathToElement, elementToMutate) else emptySequence()
+        override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
+            if (criteria(elementToMutate)) this@ifElement.mutationsOfElement(random, document, pathToElement, elementToMutate) else emptySequence()
     }
-
