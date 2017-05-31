@@ -11,78 +11,70 @@ import com.natpryce.snodge.filtered
 import com.natpryce.snodge.reflect.troublesomeClasses
 import java.util.ArrayList
 import java.util.Collections
-import java.util.Random
 
 
-fun addArrayElement(newElement: JsonElement) = object : JsonMutagen() {
-    override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
-        if (elementToMutate is JsonArray) {
-            sequenceOf(lazy {
-                pathToElement.map(document) { array ->
-                    JsonArray().apply {
-                        addAll(array.asJsonArray)
-                        add(newElement)
+fun addArrayElement(newElement: JsonElement) = JsonMutagen { _, document, pathToElement, elementToMutate ->
+    if (elementToMutate is JsonArray) {
+        sequenceOf(lazy {
+            pathToElement.map(document) { array ->
+                JsonArray().apply {
+                    addAll(array.asJsonArray)
+                    add(newElement)
+                }
+            }
+        })
+    }
+    else {
+        emptySequence()
+    }
+}
+
+fun addObjectProperty(newElement: JsonElement) = JsonMutagen { _, document, pathToElement, elementToMutate ->
+    if (elementToMutate.isJsonObject) {
+        sequenceOf(lazy {
+            pathToElement.map(document) {
+                JsonObject().apply {
+                    it.asJsonObject.entrySet().forEach { (key, value) -> this.add(key, value) }
+                    this.add(newProperty("x"), newElement)
+                }
+            }
+        })
+    }
+    else {
+        emptySequence()
+    }
+}
+
+private fun JsonObject.newProperty(basename: String) =
+    (sequenceOf(basename) + generateSequence(1, { it + 1 }).map { i -> "${basename}_$i" })
+        .filterNot { has(it) }
+        .first()
+
+fun removeJsonElement() = JsonMutagen { _, document, pathToElement, _ ->
+    if (pathToElement.isRoot) emptySequence() else sequenceOf(lazy { pathToElement.remove(document) })
+}
+
+fun replaceJsonElement(replacement: JsonElement) = JsonMutagen { _, document, pathToElement, _ ->
+    sequenceOf(lazy { pathToElement.replace(document, replacement) })
+}
+
+fun reorderObjectProperties() = JsonMutagen { _, document, pathToElement, elementToMutate ->
+    if (elementToMutate.isJsonObject) {
+        sequenceOf(lazy {
+            pathToElement.map(document) {
+                val objectProperties = ArrayList(it.asJsonObject.entrySet())
+                Collections.shuffle(objectProperties)
+                JsonObject().apply {
+                    for ((key, value) in objectProperties) {
+                        add(key, value)
                     }
                 }
-            })
-        }
-        else {
-            emptySequence()
-        }
-}
-
-fun addObjectProperty(newElement: JsonElement) = object : JsonMutagen() {
-    override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
-        if (elementToMutate.isJsonObject) {
-            sequenceOf(lazy {
-                pathToElement.map(document) {
-                    JsonObject().apply {
-                        it.asJsonObject.entrySet().forEach { (key, value) -> this.add(key, value) }
-                        this.add(this.newProperty("x"), newElement)
-                    }
-                }
-            })
-        }
-        else {
-            emptySequence()
-        }
-    
-    
-    private fun JsonObject.newProperty(basename: String) =
-        (sequenceOf(basename) + generateSequence(1, { it + 1 }).map { i -> "${basename}_$i" })
-            .filterNot { has(it) }
-            .first()
-}
-
-fun removeJsonElement() = object : JsonMutagen() {
-    override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
-        if (pathToElement.isRoot) emptySequence() else sequenceOf(lazy { pathToElement.remove(document) })
-}
-
-fun replaceJsonElement(replacement: JsonElement) = object : JsonMutagen() {
-    override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
-        sequenceOf(lazy { pathToElement.replace(document, replacement) })
-}
-
-
-fun reorderObjectProperties() = object : JsonMutagen() {
-    override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement) =
-        if (elementToMutate.isJsonObject) {
-            sequenceOf(lazy {
-                pathToElement.map(document) {
-                    val objectProperties = ArrayList(it.asJsonObject.entrySet())
-                    Collections.shuffle(objectProperties)
-                    JsonObject().apply {
-                        for ((key, value) in objectProperties) {
-                            add(key, value)
-                        }
-                    }
-                }
-            })
-        }
-        else {
-            emptySequence()
-        }
+            }
+        })
+    }
+    else {
+        emptySequence()
+    }
 }
 
 
