@@ -1,1 +1,1 @@
-script: .travis.sh
+script: ./.travis.sh
