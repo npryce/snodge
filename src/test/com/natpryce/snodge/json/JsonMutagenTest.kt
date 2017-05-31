@@ -5,7 +5,9 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.snodge.combine
 import com.natpryce.snodge.mutants
+import com.natpryce.snodge.plus
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.nio.charset.Charset
@@ -14,8 +16,7 @@ import java.util.Random
 class JsonMutagenTest {
     val random = Random()
     
-    private val mutagen = combine(addObjectProperty(JsonNull.INSTANCE),
-        addArrayElement(JsonNull.INSTANCE))
+    private val mutagen = addObjectProperty(JsonNull.INSTANCE) + addArrayElement(JsonNull.INSTANCE)
     
     @Test
     fun `can add null object property`() {

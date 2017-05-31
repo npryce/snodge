@@ -3,7 +3,7 @@ package com.natpryce.snodge.json
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.natpryce.snodge.Mutagen
-import com.natpryce.snodge.encodedAs
+import com.natpryce.snodge.text.encodedAs
 import com.natpryce.snodge.mapped
 import java.nio.charset.Charset
 import java.util.Random
@@ -31,34 +31,6 @@ fun Mutagen<JsonElement>.forStrings(): Mutagen<String> {
 fun Mutagen<JsonElement>.forEncodedStrings(encoding: Charset) =
     this.forStrings().encodedAs(encoding)
 
-fun Mutagen<JsonElement>.forEncodedStrings(encodingName: String) =
-    this.forEncodedStrings(Charset.forName(encodingName))
-
-/**
- * Combine multiple component JsonNodeMutagen into a single JsonNodeMutagen that generates all the mutations of the components.
- 
- * @param mutagens the JsonNodeMutagen to combine
- * *
- * @return the combination JsonNodeMutagen
- */
-fun combine(vararg mutagens: JsonMutagen): JsonMutagen {
-    return combine(mutagens.toList())
-}
-
-
-/**
- * Combine multiple component JsonNodeMutagen into a single JsonNodeMutagen that generates all the mutations of the components.
- 
- * @param mutagens the JsonNodeMutagen to combine
- * *
- * @return the combination JsonNodeMutagen
- */
-fun combine(mutagens: Iterable<JsonMutagen>): JsonMutagen {
-    return object : JsonMutagen() {
-        override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            mutagens.asSequence().flatMap { it.mutationsOfElement(random, document, pathToElement, elementToMutate) }
-    }
-}
 
 /**
  * Constrain a JsonNodeMutagen to apply only to the element at the given path
