@@ -45,7 +45,7 @@ published_bundle = $(outdir)/$(package)-$(version)-bundle.jar
 all: tested distro
 ci: tested $(published_artefacts)
 tested: $(outdir)/junit-report.txt
-distro: $(published_bundle.jar)
+distro: $(published_bundle)
 
 include libs/main.mk
 include libs/test.mk
