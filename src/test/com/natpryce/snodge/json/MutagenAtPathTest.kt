@@ -14,7 +14,7 @@ class MutagenAtPathTest {
     
     @Test
     fun `can limit mutagen to path`() {
-        val mutagen = replaceJsonElement(JsonPrimitive("XXX")).atPath(JsonPath("a", "b"))
+        val mutagen = replaceJsonElement(JsonPrimitive("XXX")).atPath("a", "b")
     
         val doc = obj(
             "a" to obj(

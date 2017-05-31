@@ -8,7 +8,7 @@ import com.google.gson.JsonObject
 import com.natpryce.snodge.json.JsonPath.Companion
 
 fun JsonElement.walk(): Sequence<JsonPath> =
-    walk(this, Companion.root)
+    walk(this, JsonPath.root)
 
 private fun walk(element: JsonElement, elementPath: JsonPath): Sequence<JsonPath> =
     sequenceOf(elementPath) + walkChildren(element, elementPath)

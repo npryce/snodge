@@ -7,6 +7,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.combine
+import com.natpryce.snodge.filtered
 import com.natpryce.snodge.reflect.troublesomeClasses
 import java.util.ArrayList
 import java.util.Collections
@@ -87,7 +88,7 @@ fun reorderObjectProperties() = object : JsonMutagen() {
 
 fun reflectionMutagens(): Mutagen<JsonElement> =
     troublesomeClasses()
-        .map { replaceJsonElement(JsonPrimitive(it)).ifElement { it is JsonPrimitive && it.isString } }
+        .map { replaceJsonElement(JsonPrimitive(it)).filtered { it is JsonPrimitive && it.isString } }
         .let { combine(it) }
 
 

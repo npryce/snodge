@@ -38,17 +38,22 @@ fun Mutagen<JsonElement>.forEncodedStrings(encoding: Charset) =
 fun JsonMutagen.atPath(path: JsonPath) = this.atPath { it == path }
 
 /**
+ * Constrain a JsonNodeMutagen to apply only to the element at the given path
+ */
+fun JsonMutagen.atPath(vararg steps: Any) = atPath(JsonPath(*steps))
+
+/**
  * Constrain a JsonNodeMutagen to apply only to elements at paths that match the given predicate
  */
-fun JsonMutagen.atPath(pathSelector: (JsonPath) -> Boolean) =
+fun Mutagen<JsonElement>.atPath(pathSelector: (JsonPath) -> Boolean) =
     object : JsonMutagen() {
         override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            if (pathSelector(pathToElement)) this@atPath.mutationsOfElement(random, document, pathToElement, elementToMutate) else emptySequence()
-    }
-
-
-fun JsonMutagen.ifElement(criteria: (JsonElement) -> Boolean) =
-    object : JsonMutagen() {
-        override fun mutationsOfElement(random: Random, document: JsonElement, pathToElement: JsonPath, elementToMutate: JsonElement): Sequence<Lazy<JsonElement>> =
-            if (criteria(elementToMutate)) this@ifElement.mutationsOfElement(random, document, pathToElement, elementToMutate) else emptySequence()
+            if (pathSelector(pathToElement)) {
+                this@atPath(random, elementToMutate).map {
+                    lazy { pathToElement.replace(document, it.value) }
+                }
+            }
+            else {
+                emptySequence()
+            }
     }
