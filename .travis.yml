@@ -13,6 +13,7 @@ before_install:
   - echo "sdkman_auto_answer=true" > ~/.sdkman/etc/config
   - source ~/.sdkman/bin/sdkman-init.sh
   - sdk install kotlin
+  - ls -R $HOME/.sdkman/candidates
 
 script:
   - make ci JAVA=java JAR=jar

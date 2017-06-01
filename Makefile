@@ -7,10 +7,10 @@ srcdir_main=src/main
 srcdir_test=src/test
 
 ifndef JAR
-JAR:=$(shell jenv which jar)
+    JAR:=$(shell jenv which jar)
 endif
 ifndef JAVA
-JAVA:=$(shell jenv which java)
+    JAVA:=$(shell jenv which java)
 endif
 JARJAR=$(JAVA) -jar $(libs_tool)
 
@@ -18,7 +18,9 @@ KOTLIN=kotlin
 KOTLINC=kotlinc
 KOTLINCFLAGS=
 
-KOTLINHOME=$(realpath $(shell which $(KOTLIN))/../..)
+ifndef KOTLINHOME
+    KOTLINHOME:=$(realpath $(shell which $(KOTLIN))/../..)
+endif
 
 DOKKA=dokka
 
