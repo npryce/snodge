@@ -8,7 +8,7 @@ import org.junit.Test
 class MutagenWithProbabilityTest {
     @Test
     fun `mutates with given probability`() {
-        val mutagen = always(replacement = "bob").withProbability(0.25)
+        val mutagen = always("bob").withProbability(0.25)
     
         assertThat(mutagen(randomReturning(0.0), "alice").firstOrNull()?.value, equalTo("bob"))
         assertThat(mutagen(randomReturning(0.1), "alice").firstOrNull()?.value, equalTo("bob"))

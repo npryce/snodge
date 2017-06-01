@@ -3,7 +3,6 @@ package com.natpryce.snodge
 import java.util.Random
 
 
-fun <T> always(replacement: T): Mutagen<T> =
+fun <T> always(vararg replacements: T): Mutagen<T> =
     fun(_: Random, _: T) =
-        sequenceOf(lazy { replacement })
-
+        replacements.asSequence().map { lazyOf(it) }
