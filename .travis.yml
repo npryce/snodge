@@ -1,4 +1,4 @@
-language: kotlin
+language: java
 
 jdk:
   - oraclejdk8
@@ -6,6 +6,13 @@ jdk:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -y xsltproc xmlstarlet
+  - rm -rf ~/.sdkman
+  - curl -s get.sdkman.io > ~/install_sdkman.sh
+  - chmod 775 ~/install_sdkman.sh
+  - "~/install_sdkman.sh"
+  - echo "sdkman_auto_answer=true" > ~/.sdkman/etc/config
+  - source ~/.sdkman/bin/sdkman-init.sh
+  - sdk install kotlin
 
 script:
   - make ci JAVA=java JAR=jar
