@@ -6,8 +6,12 @@ outdir=out
 srcdir_main=src/main
 srcdir_test=src/test
 
+ifndef JAR
 JAR:=$(shell jenv which jar)
+endif
+ifndef JAVA
 JAVA:=$(shell jenv which java)
+endif
 JARJAR=$(JAVA) -jar $(libs_tool)
 
 KOTLIN=kotlin
