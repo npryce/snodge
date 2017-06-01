@@ -137,6 +137,3 @@ tagged:
 endif
 
 .PHONY: all tested clean distclean published tagged distro ci
-
-tst:
-	echo $(KOTLINHOME)
