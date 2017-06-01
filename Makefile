@@ -93,7 +93,10 @@ $(outdir)/$(package)-$(version).pom: main.dependencies $(published_jars)
 	xsltproc tools/pom.xslt $@-tmp | xmllint --format --nsclean - > $@
 
 $(outdir)/$(package)-standalone-$(version).pom: $(outdir)/$(package)-$(version).pom
-	xmlstarlet ed -N m='http://maven.apache.org/POM/4.0.0' --delete '/m:project/m:dependencies/m:dependency' $< > $@
+	xmlstarlet ed -N m='http://maven.apache.org/POM/4.0.0' \
+	    --delete '/m:project/m:dependencies/m:dependency' \
+	    --update '/m:project/m:artifactId' --value "$(package)-standalone" \
+	    $< > $@
 
 $(outdir)/$(package)-standalone-$(version).jar: standalone.jarjar $(outdir)/tmp/$(package)-$(version)-combined.jar
 	@mkdir -p $(dir $@)
