@@ -15,4 +15,4 @@ before_install:
   - sdk install kotlin
 
 script:
-  - make ci JAVA=java JAR=jar KOTLINHOME=~/.sdkman/candidates/kotlin/current
+  - make ci JAVA=java JAR=jar KOTLINHOME=~/.sdkman/candidates/kotlin/current DOKKA=true

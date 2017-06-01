@@ -22,7 +22,9 @@ ifndef KOTLINHOME
     KOTLINHOME:=$(realpath $(shell which $(KOTLIN))/../..)
 endif
 
-DOKKA=dokka
+ifndef DOKKA
+    DOKKA=dokka
+endif
 
 srcfiles=$(shell find "$1" -name '*.java' -o -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
@@ -43,13 +45,13 @@ standalone_distro = \
 
 test_jars = $(outdir)/$(package)-$(version)-test.jar
 
-published_artefacts = $(package_distro) $(standalone_distro)
-published_signatures = $(published_artefacts:%=%.asc)
-published_files = $(published_artefacts) $(published_signatures)
+published_archives = $(package_distro) $(standalone_distro)
+published_signatures = $(published_archives:%=%.asc)
+published_files = $(published_archives) $(published_signatures)
 published_bundle = $(outdir)/$(package)-$(version)-bundle.jar
 
 all: tested distro
-ci: tested $(published_artefacts)
+ci: tested $(published_archives)
 tested: $(outdir)/junit-report.txt
 distro: $(published_bundle)
 
