@@ -96,6 +96,7 @@ $(outdir)/$(package)-standalone-$(version).pom: $(outdir)/$(package)-$(version).
 	xmlstarlet ed -N m='http://maven.apache.org/POM/4.0.0' \
 	    --delete '/m:project/m:dependencies/m:dependency' \
 	    --update '/m:project/m:artifactId' --value "$(package)-standalone" \
+	    --update '/m:project/m:name' --value "$(package)-standalone" \
 	    $< > $@
 
 $(outdir)/$(package)-standalone-$(version).jar: standalone.jarjar $(outdir)/tmp/$(package)-$(version)-combined.jar
