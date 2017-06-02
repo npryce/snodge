@@ -1,7 +1,7 @@
 Snodge
 ======
 
-A small, extensible library to randomly mutate JSON documents. Useful for fuzz testing.
+A small, extensible library to randomly mutate JSON documents, text and binary data. Useful for fuzz testing.
 
 Examples of things you can test by mutating known good JSON documents:
 
@@ -10,7 +10,6 @@ Examples of things you can test by mutating known good JSON documents:
 - your application code does not throw unchecked exceptions when parsing values from JSON strings
 - your application does not instantiate arbitrary classes named in JSON data (a potential security risk)
 - and more!
-
 
 [Download from Maven Central](http://mvnrepository.com/artifact/com.natpryce/snodge)
 
