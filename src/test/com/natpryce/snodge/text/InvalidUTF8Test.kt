@@ -12,7 +12,7 @@ import kotlin.text.Charsets.UTF_8
 
 class InvalidUTF8Test {
     @Test
-    fun `makes text invalid UTF-8`() {
+    fun `mutate encoded text to invalid UTF-8`() {
         val original = "hello, world.".toByteArray(UTF_8)
         
         val decoder = UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
