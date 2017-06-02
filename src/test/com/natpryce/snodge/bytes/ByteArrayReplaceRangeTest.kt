@@ -2,6 +2,7 @@ package com.natpryce.snodge.bytes
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.snodge.internal.replaceRange
 import org.junit.Test
 
 

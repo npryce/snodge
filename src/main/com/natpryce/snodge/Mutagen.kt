@@ -1,5 +1,6 @@
 package com.natpryce.snodge
 
+import com.natpryce.snodge.internal.mapLazy
 import java.nio.charset.Charset
 import java.util.Random
 
@@ -43,7 +44,6 @@ fun <T, U> Mutagen<U>.mapped(mapIn: (T) -> U, mapOut: (U) -> T): Mutagen<T> =
     fun(random: Random, original: T) =
         this(random, mapIn(original)).mapLazy(mapOut)
 
-internal fun <T, U> Sequence<Lazy<T>>.mapLazy(f: (T) -> U) = map { lazy { f(it.value) } }
 
 
 /**
