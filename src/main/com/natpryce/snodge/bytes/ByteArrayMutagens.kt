@@ -10,5 +10,5 @@ fun splice(b: ByteArray): Mutagen<ByteArray> = splice(always(b))
 fun splice(sliceMutagen: Mutagen<ByteArray>): Mutagen<ByteArray> =
     splice(sliceMutagen, {it.size}, ByteArray::sliceArray, ByteArray::replaceRange)
 
-private fun ByteArray.replaceRange(range: IntRange, inserted: ByteArray): ByteArray =
-    sliceArray(0..range.first) + inserted + this.sliceArray(range.last..size)
+internal fun ByteArray.replaceRange(range: IntRange, inserted: ByteArray): ByteArray =
+    sliceArray(0..range.first-1) + inserted + this.sliceArray(range.last+1..size-1)
