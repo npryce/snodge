@@ -1,6 +1,9 @@
 package com.natpryce.snodge.text
 
 import com.natpryce.snodge.Mutagen
+import com.natpryce.snodge.always
+import com.natpryce.snodge.bytes.splice
+import com.natpryce.snodge.combine
 import com.natpryce.snodge.mapped
 import java.nio.charset.Charset
 
@@ -16,3 +19,6 @@ fun Mutagen<String>.encodedAs(encoding: Charset): Mutagen<ByteArray> =
 fun Mutagen<ByteArray>.decodedAs(encoding: Charset): Mutagen<String> =
     mapped({ it.toByteArray(encoding) }, { it.toString(encoding) })
 
+fun invalidUTF8(): Mutagen<ByteArray> = combine(
+    (listOf(192, 193) + (245..255))
+        .map { splice(byteArrayOf(it.toByte())) })
