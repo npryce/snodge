@@ -43,16 +43,14 @@ Example output:
 Other versions
 --------------
 
-When released, this will be version 3.x.x.x.  
+The Kotlin library is version 3.x.x.x.  
 
 Previous versions:
 
 - Version 2.x.x.x (java8 branch) is for Java 8, and uses streams and Java 8 function types
-- Version 1.x.x.x (master branch) is for Java 7 and depends on Guava
+- Version 1.x.x.x (java7 branch) is for Java 7 and depends on Guava
 
 [Download from Maven Central](http://mvnrepository.com/artifact/com.natpryce/snodge)
-
-
 
 To build
 --------
