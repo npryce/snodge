@@ -43,7 +43,7 @@ fun <T, U> Mutagen<U>.mapped(mapIn: (T) -> U, mapOut: (U) -> T): Mutagen<T> =
     fun(random: Random, original: T) =
         this(random, mapIn(original)).mapLazy(mapOut)
 
-private fun <T, U> Sequence<Lazy<T>>.mapLazy(f: (T) -> U) = map { lazy { f(it.value) } }
+internal fun <T, U> Sequence<Lazy<T>>.mapLazy(f: (T) -> U) = map { lazy { f(it.value) } }
 
 
 /**
