@@ -47,6 +47,8 @@ Example output:
 {"x":"hello","y":[99,2,3]}
 ~~~~~~~~~~~~~~~~~~~~~~
 
+For more information, continue reading [the documentation](doc/).
+
 Other versions
 --------------
 
