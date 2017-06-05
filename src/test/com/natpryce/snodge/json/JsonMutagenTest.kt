@@ -6,6 +6,7 @@ import com.google.gson.JsonNull
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.snodge.combine
+import com.natpryce.snodge.mutant
 import com.natpryce.snodge.mutants
 import com.natpryce.snodge.plus
 import org.junit.Assert.assertTrue
@@ -24,24 +25,19 @@ class JsonMutagenTest {
             "alice" to 1,
             "bob" to 2)
         
-        val mutations = random.mutants(mutagen, 1, doc)
-        
-        assertThat("should only be one mutation", mutations.size, equalTo(1))
-        
-        assertThat(mutations.first(), equalTo(obj(
-            "alice" to 1,
-            "bob" to 2,
-            "x" to null) as JsonElement))
+        assertThat(random.mutant(mutagen, doc), equalTo<JsonElement>(
+            obj(
+                "alice" to 1,
+                "bob" to 2,
+                "x" to null)))
     }
     
     @Test
     fun `can add null array property`() {
         val doc = list(1, 2, 3)
         
-        val mutations = random.mutants(mutagen, 1, doc)
-        
-        assertThat("should be one mutation",
-            mutations, equalTo<List<JsonElement>>(listOf(list(1, 2, 3, null))))
+        assertThat(random.mutant(mutagen, doc), equalTo<JsonElement>(
+            list(1, 2, 3, null)))
     }
     
     @Test
@@ -94,11 +90,11 @@ class JsonMutagenTest {
         }
         """
         
-        val mutated = random.mutants(mutagen.forStrings(), 1, original).first()
+        val mutant = random.mutant(mutagen.forStrings(), original)
         
-        assertThat(mutated, !equalTo(original))
+        assertThat(mutant, !equalTo(original))
         
-        gson.canParse(mutated)
+        gson.canParse(mutant)
     }
     
     @Test
@@ -112,7 +108,7 @@ class JsonMutagenTest {
         
         val originalBytes = originalString.toByteArray(charset)
         
-        val mutatedBytes = random.mutants(mutagen.forEncodedStrings(charset), 2, originalBytes).first()
+        val mutatedBytes = random.mutant(mutagen.forEncodedStrings(charset), originalBytes)
         
         assertThat(mutatedBytes, !equalTo(originalBytes))
         

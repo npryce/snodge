@@ -11,3 +11,6 @@ fun <T> Random.mutants(mutagen: Mutagen<T>, sampleSize: Int, original: T): List<
     mutagen(this, original)
         .let { sample(sampleSize, it) }
         .map { it.value }
+
+fun <T> Random.mutant(mutagen: Mutagen<T>, original: T): T =
+    mutants(mutagen, 1, original).first()
