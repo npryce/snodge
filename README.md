@@ -15,6 +15,13 @@ Examples of things you can test by mutating known good JSON documents:
 In a Nutshell
 -------------
 
+Import the library:
+
+~~~~~~~~~~~~~~~~~~~~~~kotlin
+import com.natpryce.snodge.mutants
+import com.natpryce.snodge.json.allJsonMutagens
+~~~~~~~~~~~~~~~~~~~~~~
+
 Output 10 random mutations of the JSON document:
 
 ~~~~~~~~~~~~~~~~~~~~~~kotlin
