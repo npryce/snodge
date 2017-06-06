@@ -1,9 +1,9 @@
 package com.natpryce.snodge.json
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonString
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Random
@@ -14,7 +14,7 @@ class MutagenAtPathTest {
     
     @Test
     fun `can limit mutagen to path`() {
-        val mutagen = replaceJsonElement(JsonPrimitive("XXX")).atPath("a", "b")
+        val mutagen = replaceJsonElement(JsonString("XXX")).atPath("a", "b")
     
         val doc = obj(
             "a" to obj(
@@ -37,7 +37,7 @@ class MutagenAtPathTest {
     
     @Test
     fun `can limit mutagen to paths by predicate`() {
-        val mutagen = replaceJsonElement(JsonPrimitive("XXX")).atPath {it.endsWith("b")}
+        val mutagen = replaceJsonElement(JsonString("XXX")).atPath {it.endsWith("b")}
         
         val doc = obj(
             "a" to obj(

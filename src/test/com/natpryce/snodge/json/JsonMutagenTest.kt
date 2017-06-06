@@ -1,11 +1,11 @@
 package com.natpryce.snodge.json
 
-import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonNull
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.snodge.combine
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonNull
+import com.natpryce.jsonk.toJsonElement
+import com.natpryce.jsonk.toJsonString
 import com.natpryce.snodge.mutant
 import com.natpryce.snodge.mutants
 import com.natpryce.snodge.plus
@@ -17,7 +17,7 @@ import java.util.Random
 class JsonMutagenTest {
     val random = Random()
     
-    private val mutagen = addObjectProperty(JsonNull.INSTANCE) + addArrayElement(JsonNull.INSTANCE)
+    private val mutagen = addObjectProperty(JsonNull) + addArrayElement(JsonNull)
     
     @Test
     fun `can add null object property`() {
@@ -82,7 +82,6 @@ class JsonMutagenTest {
     
     @Test
     fun `can mutate json text`() {
-        val gson = Gson()
         val original = """
         {
             "num": 1,
@@ -94,17 +93,16 @@ class JsonMutagenTest {
         
         assertThat(mutant, !equalTo(original))
         
-        gson.canParse(mutant)
+        canParse(mutant)
     }
     
     @Test
     fun `can mutate encoded json text`() {
         val charset = Charset.forName("UTF-8")
         
-        val gson = Gson()
-        val originalString = gson.toJson(obj(
+        val originalString = obj(
             "num" to 1,
-            "list" to list(1, 2, 3)))
+            "list" to list(1, 2, 3)).toJsonString()
         
         val originalBytes = originalString.toByteArray(charset)
         
@@ -114,11 +112,11 @@ class JsonMutagenTest {
         
         val mutatedString = String(mutatedBytes, charset)
         
-        gson.canParse(mutatedString)
+        canParse(mutatedString)
     }
     
-    private fun Gson.canParse(mutated: String) {
+    private fun canParse(mutated: String) {
         // Does not blow up
-        fromJson(mutated, JsonElement::class.java)
+        mutated.toJsonElement()
     }
 }

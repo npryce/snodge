@@ -1,0 +1,21 @@
+{
+  "foo": "bar",
+  "a_null": null,
+  "space in key": "ok",
+  "truth": true,
+  "beauty": false,
+  "an_array": [
+    1,
+    "2",
+    "3"
+  ],
+  "an_object": {
+    "one": 1,
+    "2": 2,
+    "three": [
+      1,
+      2,
+      3
+    ]
+  }
+}

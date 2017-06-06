@@ -1,7 +1,8 @@
 package com.natpryce.snodge.json
 
-import com.google.gson.Gson
-import com.google.gson.JsonElement
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.toJsonElement
+import com.natpryce.jsonk.toJsonString
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.text.encodedAs
 import com.natpryce.snodge.mapped
@@ -23,10 +24,8 @@ fun JsonMutagen(elementMutagen: JsonElementMutagen): Mutagen<JsonElement> =
         }
 
 
-fun Mutagen<JsonElement>.forStrings(): Mutagen<String> {
-    val gson = Gson()
-    return this@forStrings.mapped({ gson.fromJson(it, JsonElement::class.java) }, { it.toString() })
-}
+fun Mutagen<JsonElement>.forStrings() =
+    mapped({ it.toJsonElement() }, { it.toJsonString() })
 
 fun Mutagen<JsonElement>.forEncodedStrings(encoding: Charset) =
     this.forStrings().encodedAs(encoding)

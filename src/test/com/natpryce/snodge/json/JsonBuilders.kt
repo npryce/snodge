@@ -2,32 +2,29 @@
 
 package com.natpryce.snodge.json
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonNull
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
+import com.natpryce.jsonk.JsonArray
+import com.natpryce.jsonk.JsonBoolean
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonNull
+import com.natpryce.jsonk.JsonNumber
+import com.natpryce.jsonk.JsonObject
+import com.natpryce.jsonk.JsonString
+
 
 fun obj(vararg properties: Pair<String, Any?>) =
-    JsonObject().apply {
-        properties.forEach { (name, value) ->
-            add(name, asJsonElement(value))
-        }
-    }
+    JsonObject(properties.map { (name, value) -> name to value.asJsonElement() }.toMap())
 
 fun list(vararg elements: Any?) =
-    JsonArray().apply {
-        elements.forEach { element -> add(asJsonElement(element)) }
-    }
+    JsonArray(elements.map { it.asJsonElement() })
 
-private fun asJsonElement(element: Any?): JsonElement {
-    when (element) {
-        null -> return JsonNull.INSTANCE
-        is JsonElement -> return element
-        is String -> return JsonPrimitive((element as String?))
-        is Boolean -> return JsonPrimitive((element as Boolean?))
-        is Number -> return JsonPrimitive((element as Number?))
-        is Char -> return JsonPrimitive((element as Char?))
-        else -> throw IllegalArgumentException("cannot turn a " + element.javaClass.name + " to a JsonElement")
+private fun Any?.asJsonElement(): JsonElement {
+    when (this) {
+        null -> return JsonNull
+        is JsonElement -> return this
+        is String -> return JsonString(this)
+        is Boolean -> return JsonBoolean(this)
+        is Number -> return JsonNumber(toString())
+        is Char -> return JsonString(toString())
+        else -> throw IllegalArgumentException("cannot turn a " + this.javaClass.name + " to a JsonElement")
     }
 }

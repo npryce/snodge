@@ -2,10 +2,10 @@
 
 package com.natpryce.snodge.json
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.natpryce.snodge.json.JsonPath.Companion
+import com.natpryce.jsonk.JsonArray
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonObject
+
 
 fun JsonElement.walk(): Sequence<JsonPath> =
     walk(this, JsonPath.root)
@@ -16,7 +16,7 @@ private fun walk(element: JsonElement, elementPath: JsonPath): Sequence<JsonPath
 private fun walkChildren(element: JsonElement, elementPath: JsonPath) =
     when (element) {
         is JsonObject ->
-            walkChildren(elementPath, element.entrySet().map { it.key to it.value })
+            walkChildren(elementPath, objectEntries(element))
         is JsonArray ->
             walkChildren(elementPath, arrayEntries(element))
         else ->
@@ -26,5 +26,8 @@ private fun walkChildren(element: JsonElement, elementPath: JsonPath) =
 private fun <T : Any> walkChildren(parentPath: JsonPath, children: List<Pair<T, JsonElement>>) =
     children.asSequence().flatMap { (key, value) -> walk(value, parentPath.extend(key)) }
 
-private fun arrayEntries(array: JsonArray) =
-    array.mapIndexed(::Pair)
+private fun objectEntries(element: JsonObject) =
+    element.map { it.key to it.value }
+
+private fun arrayEntries(element: JsonArray) =
+    element.mapIndexed(::Pair)

@@ -1,1 +1,2 @@
 mvn:com.google.code.gson:gson:jar|sources:2.8.0
+mvn:org.glassfish:javax.json:jar|sources:1.1

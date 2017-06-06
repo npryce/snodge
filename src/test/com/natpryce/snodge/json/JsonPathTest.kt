@@ -1,10 +1,11 @@
 package com.natpryce.snodge.json
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonNumber
+import com.natpryce.jsonk.JsonObject
+import com.natpryce.jsonk.toJsonString
 import com.natpryce.snodge.json.JsonPath.Companion.root
 import org.junit.Test
 
@@ -60,7 +61,7 @@ class JsonPathTest {
                             "y" to 200)),
             "b" to "bubbles")
         
-        assertReplacement(original, JsonPath("a", 1, "x"), JsonPrimitive(-99), obj(
+        assertReplacement(original, JsonPath("a", 1, "x"), JsonNumber(-99), obj(
             "a" to list(
                         obj(
                             "x" to 10,
@@ -70,14 +71,14 @@ class JsonPathTest {
                             "y" to 200)),
             "b" to "bubbles"))
         
-        assertReplacement(original, JsonPath.root, JsonPrimitive("just this"), JsonPrimitive("just this"))
+        assertReplacement(original, JsonPath.root, JsonNumber("just this"), JsonNumber("just this"))
     }
     
     @Test
     fun `can replace element in singleton array at path`() {
         val original = list(1, 2, 3, list(1))
         
-        assertReplacement(original, JsonPath(3, 0), JsonPrimitive(-99),
+        assertReplacement(original, JsonPath(3, 0), JsonNumber(-99),
             list(1, 2, 3, list(-99)))
     }
     
@@ -89,11 +90,11 @@ class JsonPathTest {
             "b" to 3,
             "y" to 4)
         
-        assertThat(original.toString(), equalTo("{\"a\":1,\"x\":2,\"b\":3,\"y\":4}"))
+        assertThat(original.toJsonString(), equalTo("{\"a\":1,\"x\":2,\"b\":3,\"y\":4}"))
         
-        val replaced = JsonPath("x").replace(original, JsonPrimitive(99)) as JsonObject
+        val replaced = JsonPath("x").replace(original, JsonNumber(99)) as JsonObject
         
-        assertThat(replaced.toString(), equalTo("{\"a\":1,\"x\":99,\"b\":3,\"y\":4}"))
+        assertThat(replaced.toJsonString(), equalTo("{\"a\":1,\"x\":99,\"b\":3,\"y\":4}"))
     }
     
     private fun assertReplacement(original: JsonElement, path: JsonPath, splice: JsonElement, expected: JsonElement) {

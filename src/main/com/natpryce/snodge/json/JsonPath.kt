@@ -1,8 +1,8 @@
 package com.natpryce.snodge.json
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
+import com.natpryce.jsonk.JsonArray
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonObject
 
 data class JsonPath(
     private val steps: List<Any>
@@ -36,7 +36,7 @@ data class JsonPath(
         val pathBit = steps[i]
         
         return if (pathBit is String) {
-            jsonObjectWithProperty(root, i, parent, pathBit).get(pathBit)
+            jsonObjectWithProperty(root, i, parent, pathBit).get(pathBit)!!
         }
         else if (pathBit is Int) {
             jsonArrayWithIndex(root, i, parent, pathBit).get(pathBit)
@@ -67,7 +67,6 @@ data class JsonPath(
             val original = jsonObjectWithProperty(root, i, parent, pathBit)
             
             return replaceObjectPropertyValue(original, pathBit, replacement)
-            
         }
         else if (pathBit is Int) {
             val original = jsonArrayWithIndex(root, i, parent, pathBit)
@@ -81,33 +80,11 @@ data class JsonPath(
     }
     
     private fun replaceObjectPropertyValue(original: JsonObject, memberName: String, replacement: JsonElement): JsonElement {
-        val replaced = JsonObject()
-    
-        original.entrySet().forEach { (key, value) ->
-            if (key == memberName) {
-                replaced.add(memberName, replacement)
-            }
-            else {
-                replaced.add(key, value)
-            }
-        }
-        
-        return replaced
+        return original.copy(properties = original.properties + (memberName to replacement))
     }
     
-    private fun replaceArrayElement(original: JsonArray, index: Int, replacement: JsonElement): JsonElement {
-        val replaced = JsonArray()
-        
-        for (j in 0..index - 1) {
-            replaced.add(original.get(j))
-        }
-        replaced.add(replacement)
-        for (j in index + 1..original.size() - 1) {
-            replaced.add(original.get(j))
-        }
-        
-        return replaced
-    }
+    private fun replaceArrayElement(original: JsonArray, index: Int, replacement: JsonElement) =
+        original.copy(elements = original.elements.toMutableList().also { it[index] = replacement }.toList())
     
     fun remove(root: JsonElement): JsonElement {
         val lastIndex = steps.size - 1
@@ -143,31 +120,24 @@ data class JsonPath(
     }
     
     private fun jsonObjectWithProperty(root: JsonElement, i: Int, parent: JsonElement, memberName: String): JsonObject {
-        check(parent.isJsonObject, "expected object", steps, i, root)
-        val original = parent.asJsonObject
-        check(original.has(memberName), "no such member", steps, i, root)
+        check(parent is JsonObject, "expected object", steps, i, root)
+        val original = parent as JsonObject
+        check(memberName in original, "no such member", steps, i, root)
         return original
     }
     
     private fun jsonArrayWithIndex(root: JsonElement, i: Int, parent: JsonElement, index: Int): JsonArray {
-        check(parent.isJsonArray, "expected array", steps, i, root)
-        val array = parent.asJsonArray
-        check(array.size() > index, "index out of bounds", steps, i, root)
+        check(parent is JsonArray, "expected array", steps, i, root)
+        val array = parent as JsonArray
+        check(array.size > index, "index out of bounds", steps, i, root)
         return array
     }
     
     private fun removeArrayElement(original: JsonArray, indexToRemove: Int) =
-        JsonArray().apply {
-            addAll(original)
-            remove(indexToRemove)
-        }
+        original.copy(elements = original.elements.drop(indexToRemove))
     
     private fun removeObjectProperty(original: JsonObject, nameToRemove: String) =
-        JsonObject().apply {
-            original.entrySet()
-                .filter { e -> e.key != nameToRemove }
-                .forEach { e -> add(e.key, e.value) }
-        }
+        original.copy(properties = original.properties - nameToRemove)
     
     private fun check(isOk: Boolean, what: String, pathBits: List<Any>, badOne: Int, entireDocument: JsonElement) {
         if (!isOk) {

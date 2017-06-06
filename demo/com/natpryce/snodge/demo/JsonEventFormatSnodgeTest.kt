@@ -1,9 +1,9 @@
 package com.natpryce.snodge.demo
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonString
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.json.addObjectProperty
 import com.natpryce.snodge.json.allJsonMutagens
@@ -41,7 +41,7 @@ class JsonEventFormatSnodgeTest {
     
     @Test
     fun ignoresUnrecognisedProperties() {
-        assertSerialisationUnaffectedBy(addObjectProperty(JsonPrimitive("new-property-value")))
+        assertSerialisationUnaffectedBy(addObjectProperty(JsonString("new-property-value")))
     }
     
     private fun assertSerialisationUnaffectedBy(mutagen: Mutagen<JsonElement>) {

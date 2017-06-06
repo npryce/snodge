@@ -1,10 +1,10 @@
 package com.natpryce.snodge.json
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonNull
-import com.google.gson.JsonPrimitive
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonNull
+import com.natpryce.jsonk.JsonString
 import org.junit.Test
 
 class JsonWalkTest {
@@ -70,13 +70,13 @@ class JsonWalkTest {
     
     @Test
     fun `returns root for json primitive`() {
-        assertWalk(JsonPrimitive("bob"),
+        assertWalk(JsonString("bob"),
             JsonPath.root)
     }
     
     @Test
     fun `returns root for json null`() {
-        assertWalk(JsonNull.INSTANCE,
+        assertWalk(JsonNull,
             JsonPath.root)
     }
     

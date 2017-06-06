@@ -1,28 +1,23 @@
 package com.natpryce.snodge.json
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonNull
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
+import com.natpryce.jsonk.JsonArray
+import com.natpryce.jsonk.JsonBoolean
+import com.natpryce.jsonk.JsonElement
+import com.natpryce.jsonk.JsonNull
+import com.natpryce.jsonk.JsonNumber
+import com.natpryce.jsonk.JsonObject
+import com.natpryce.jsonk.JsonString
+import com.natpryce.jsonk.plus
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.combine
 import com.natpryce.snodge.filtered
 import com.natpryce.snodge.reflect.troublesomeClasses
-import java.util.ArrayList
 import java.util.Collections
 
 
 fun addArrayElement(newElement: JsonElement) = JsonMutagen { _, document, pathToElement, elementToMutate ->
     if (elementToMutate is JsonArray) {
-        sequenceOf(lazy {
-            pathToElement.map(document) { array ->
-                JsonArray().apply {
-                    addAll(array.asJsonArray)
-                    add(newElement)
-                }
-            }
-        })
+        sequenceOf(lazy { pathToElement.replace(document, elementToMutate + newElement) })
     }
     else {
         emptySequence()
@@ -30,14 +25,9 @@ fun addArrayElement(newElement: JsonElement) = JsonMutagen { _, document, pathTo
 }
 
 fun addObjectProperty(newElement: JsonElement) = JsonMutagen { _, document, pathToElement, elementToMutate ->
-    if (elementToMutate.isJsonObject) {
+    if (elementToMutate is JsonObject) {
         sequenceOf(lazy {
-            pathToElement.map(document) {
-                JsonObject().apply {
-                    it.asJsonObject.entrySet().forEach { (key, value) -> this.add(key, value) }
-                    this.add(newProperty("x"), newElement)
-                }
-            }
+            pathToElement.replace(document, elementToMutate + (elementToMutate.newProperty("x") to newElement))
         })
     }
     else {
@@ -47,7 +37,7 @@ fun addObjectProperty(newElement: JsonElement) = JsonMutagen { _, document, path
 
 private fun JsonObject.newProperty(basename: String) =
     (sequenceOf(basename) + generateSequence(1, { it + 1 }).map { i -> "${basename}_$i" })
-        .filterNot { has(it) }
+        .filterNot { it in this }
         .first()
 
 fun removeJsonElement() = JsonMutagen { _, document, pathToElement, _ ->
@@ -59,17 +49,11 @@ fun replaceJsonElement(replacement: JsonElement) = JsonMutagen { _, document, pa
 }
 
 fun reorderObjectProperties() = JsonMutagen { _, document, pathToElement, elementToMutate ->
-    if (elementToMutate.isJsonObject) {
+    if (elementToMutate is JsonObject) {
         sequenceOf(lazy {
-            pathToElement.map(document) {
-                val objectProperties = ArrayList(it.asJsonObject.entrySet())
-                Collections.shuffle(objectProperties)
-                JsonObject().apply {
-                    for ((key, value) in objectProperties) {
-                        add(key, value)
-                    }
-                }
-            }
+            val objectProperties = elementToMutate.properties.toList()
+            Collections.shuffle(objectProperties)
+            pathToElement.replace(document, JsonObject(linkedMapOf(*objectProperties.toTypedArray())))
         })
     }
     else {
@@ -80,17 +64,20 @@ fun reorderObjectProperties() = JsonMutagen { _, document, pathToElement, elemen
 
 fun reflectionMutagens(): Mutagen<JsonElement> =
     troublesomeClasses()
-        .map { replaceJsonElement(JsonPrimitive(it)).filtered { it is JsonPrimitive && it.isString } }
+        .map { replaceJsonElement(JsonString(it)).filtered { it is JsonString } }
         .let { combine(it) }
 
 
 private val exampleElements = listOf(
-    JsonNull.INSTANCE,
-    JsonPrimitive(true),
-    JsonPrimitive(false),
-    JsonPrimitive(99),
-    JsonPrimitive(-99),
-    JsonPrimitive("a string"),
+    JsonNull,
+    JsonBoolean(true),
+    JsonBoolean(false),
+    JsonNumber(99),
+    JsonNumber(-99),
+    JsonNumber(0.0),
+    JsonNumber(1.0),
+    JsonNumber(-1.0),
+    JsonString("a string"),
     JsonArray(),
     JsonObject())
 
