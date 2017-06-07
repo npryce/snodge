@@ -60,7 +60,7 @@ Example output:
 {"x":"hello","y":[99,2,3]}
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Snodge can mutate the JSON object models of the [Jackson](https://github.com/FasterXML/jackson), [GSON](https://github.com/google/gson) & [JSR-374 JSONP API](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm) libraries, and JSON serialised as text and binary.
+Snodge can mutate the JSON object models of the [Jackson](https://github.com/FasterXML/jackson), [GSON](https://github.com/google/gson) & [JSR-374 JSONP](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm) APIs, and JSON serialised as text and binary.
 
 For more information, continue reading [the documentation](doc/).
 
