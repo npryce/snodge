@@ -56,6 +56,7 @@ tested: $(outdir)/junit-report.txt
 distro: $(published_bundle)
 
 include libs/main.mk
+include libs/runtime.mk
 include libs/test.mk
 include libs/tool.mk
 
@@ -65,14 +66,14 @@ libs/%.mk: %.dependencies
 	tools/sm-download $< libs/$*
 	echo 'libs_$*=$$(filter-out %-source.jar,$$(wildcard libs/$*/*.jar))' > $@
 
-$(outdir)/$(package)-$(version).jar: $(src_main) $(libs_main)
-$(outdir)/$(package)-$(version)-test.jar: $(src_test) $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_test)
+$(outdir)/$(package)-$(version).jar: $(src_main) $(libs_main) $(libs_runtime)
+$(outdir)/$(package)-$(version)-test.jar: $(src_test) $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
 
 $(outdir)/$(package)-$(version)-bundle.jar: $(published_files)
 	cd $(dir $@) && jar cvf $(notdir $@) $(notdir $^)
 
 $(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.kt,%,$(src_test))))
-$(outdir)/junit-report.txt: $(outdir)/$(package)-$(version)-test.jar $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_test)
+$(outdir)/junit-report.txt: $(outdir)/$(package)-$(version)-test.jar $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
 	$(JAVA) $(classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
 	    org.junit.runner.JUnitCore $(TESTS) | tee $@
 

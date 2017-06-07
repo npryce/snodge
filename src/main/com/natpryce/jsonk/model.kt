@@ -5,9 +5,14 @@ import java.math.BigDecimal
 sealed class JsonElement
 
 data class JsonObject(
-    val properties: Map<String,JsonElement> = emptyMap()
-) : JsonElement(), Map<String,JsonElement> by properties {
-    constructor(vararg properties: Pair<String, JsonElement>): this(linkedMapOf(*properties))
+    val properties: Map<String, JsonElement> = emptyMap()
+) : JsonElement(), Map<String, JsonElement> by properties {
+    
+    constructor(properties: Iterable<Pair<String, JsonElement>>) :
+        this(linkedMapOf<String, JsonElement>().apply { putAll(properties) })
+    
+    constructor(vararg properties: Pair<String, JsonElement>) :
+        this(properties.toList())
 }
 
 operator fun JsonObject.plus(anotherProperty: Pair<String, JsonElement>) =
@@ -19,8 +24,8 @@ fun JsonObject.plus(vararg moreProperties: Pair<String, JsonElement>) =
 
 data class JsonArray(
     val elements: List<JsonElement>
-): JsonElement(), List<JsonElement> by elements {
-    constructor(vararg elements: JsonElement): this(listOf(*elements))
+) : JsonElement(), List<JsonElement> by elements {
+    constructor(vararg elements: JsonElement) : this(listOf(*elements))
 }
 
 operator fun JsonArray.plus(anotherElement: JsonElement) =
@@ -32,10 +37,10 @@ operator fun JsonArray.plus(moreElements: Iterable<JsonElement>) =
 fun JsonArray.plus(vararg moreElements: JsonElement) =
     copy(elements = elements + moreElements)
 
-data class JsonNumber(val valueAsString: String): JsonElement() {
-    constructor(value: Int): this(value.toString())
-    constructor(value: Long): this(value.toString())
-    constructor(value: Double): this(value.toString())
+data class JsonNumber(val valueAsString: String) : JsonElement() {
+    constructor(value: Int) : this(value.toString())
+    constructor(value: Long) : this(value.toString())
+    constructor(value: Double) : this(value.toString())
     
     fun toInt() = valueAsString.toInt()
     fun toLong() = valueAsString.toLong()
@@ -43,8 +48,8 @@ data class JsonNumber(val valueAsString: String): JsonElement() {
     fun toBigDecimal() = BigDecimal(valueAsString)
 }
 
-data class JsonString(val value: String): JsonElement()
+data class JsonString(val value: String) : JsonElement()
 
-data class JsonBoolean(val value: Boolean): JsonElement()
+data class JsonBoolean(val value: Boolean) : JsonElement()
 
-object JsonNull: JsonElement()
+object JsonNull : JsonElement()

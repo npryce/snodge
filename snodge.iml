@@ -12,5 +12,6 @@
     <orderEntry type="library" name="main" level="project" />
     <orderEntry type="library" scope="TEST" name="test" level="project" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="library" name="runtime" level="project" />
   </component>
 </module>
