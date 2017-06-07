@@ -1,3 +1,4 @@
+mvn:org.glassfish:javax.json:jar|sources:1.1
 mvn:com.google.code.gson:gson:jar|sources:2.8.0
 mvn:com.fasterxml.jackson.core:jackson-core:jar|sources:2.8.8
 mvn:com.fasterxml.jackson.core:jackson-databind:jar|sources:2.8.8
