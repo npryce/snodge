@@ -12,8 +12,16 @@ Examples of things you can test by mutating known good JSON documents:
 - your application copes with invalid Unicode encoding of text
 - and much, much more!
 
+
 In a Nutshell
 -------------
+
+Add a dependency on Snodge and  an implementation of the [JSR-374 JSONP API](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm), such as:
+
+~~~~~~~~~~~~~~~~~~~~~~gradle
+compile 'com.natpryce:snodge:3.1.0.1'
+compile 'org.glassfish:javax.json:1.1'
+~~~~~~~~~~~~~~~~~~~~~~
 
 Import the library:
 
@@ -46,6 +54,8 @@ Example output:
 {"y":[1,2,3],"x":"a string"}
 {"x":"hello","y":[99,2,3]}
 ~~~~~~~~~~~~~~~~~~~~~~
+
+Snodge can mutate the JSON object models of the [Jackson](https://github.com/FasterXML/jackson) & [GSON](https://github.com/google/gson) libraries for JSON processing.
 
 For more information, continue reading [the documentation](doc/).
 
