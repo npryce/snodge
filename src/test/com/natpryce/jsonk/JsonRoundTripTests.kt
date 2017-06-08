@@ -5,33 +5,27 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
-import java.io.File
 import java.io.StringWriter
 import javax.json.Json
 
 
 @RunWith(Parameterized::class)
-class JsonRoundTripTests(val exampleResourceName: String) {
+class JsonRoundTripTests(val exampleName: String) {
     companion object {
         @Parameters(name = "{0}") @JvmStatic
-        fun examples(): List<String> =
-            File(JsonRoundTripTests::class.java.getResource(".").path)
-                .listFiles { f -> f.name.endsWith(".json") }
-                .map { it.name }
+        fun examples() = ExampleJsonFiles.list()
     }
     
     @Test
     fun `round trips JSON`() {
         val roundTrippedViaJavaxJson = StringWriter().also { sw ->
             Json.createWriter(sw).write(
-                Json.createReader(exampleResourceReader()).use { r -> r.readValue() })
+                Json.createReader(ExampleJsonFiles.open(exampleName)).use { r -> r.readValue() })
         }.toString()
         
-        val roundTrippedViaJsonK = exampleResourceReader().use { it.readJsonElement() }.toJsonString()
+        val roundTrippedViaJsonK = ExampleJsonFiles.load(exampleName).toJsonString()
         
         assertEquals(roundTrippedViaJavaxJson, roundTrippedViaJsonK)
     }
-    
-    private fun exampleResourceReader() =
-        javaClass.getResourceAsStream(exampleResourceName).reader()
 }
+
