@@ -18,15 +18,17 @@ private fun XMLStreamWriter.writeXml(doc: XmlDocument) {
 
 fun XMLStreamWriter.writeXmlNode(n: XmlNode) {
     when (n) {
-        is XmlElement -> {
-            writeStartElement(n.name.prefix, n.name.localPart, n.name.namespaceURI)
-            n.attributes.forEach { name, value ->
-                writeAttribute(name.prefix, name.namespaceURI, name.localPart, value)
-            }
-            n.children.forEach { writeXmlNode(it) }
-            writeEndElement()
-        }
+        is XmlElement -> writeElement(n)
         is XmlText -> writeCharacters(n.text)
         is XmlCData -> writeCData(n.text)
-    }!!
+    }.let{}
+}
+
+private fun XMLStreamWriter.writeElement(n: XmlElement) {
+    writeStartElement(n.name.prefix, n.name.localPart, n.name.namespaceURI)
+    n.attributes.forEach { name, value ->
+        writeAttribute(name.prefix, name.namespaceURI, name.localPart, value)
+    }
+    n.children.forEach { writeXmlNode(it) }
+    writeEndElement()
 }
