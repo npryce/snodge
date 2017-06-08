@@ -93,9 +93,9 @@ class JsonWalkTest {
     }
     
     private fun assertWalk(json: JsonElement, vararg expected: JsonPath) {
-        val actualAsStrings = json.walk().map { it.toString() }.toSortedSet()
-        val expectedAsStrings = expected.map { it.toString() }.toSortedSet()
+        val actualVisitedElements = json.walk().map { it.first }.toList()
+        val expectedVisitedElements = expected.map { it(json) }
         
-        assertThat(actualAsStrings, equalTo(expectedAsStrings))
+        assertThat(actualVisitedElements, equalTo(expectedVisitedElements))
     }
 }
