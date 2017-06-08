@@ -4,15 +4,14 @@ import java.io.File
 import javax.xml.stream.XMLInputFactory
 
 object ExampleXmlFiles {
+    private val dataDir = File("test-data/xml")
     private val inputFactory: XMLInputFactory = XMLInputFactory.newFactory()
     
     fun list() =
-        File(ExampleXmlFiles::class.java.getResource(".").path)
-            .listFiles { f -> f.name.endsWith(".xml") }
-            .map { it.name }
+        dataDir.list().filter { it.endsWith(".xml") }
     
     fun open(name: String) =
-        javaClass.getResourceAsStream(name).reader()
+        File(dataDir, name).reader()
     
     fun load(name: String) =
         open(name).use { it.readXml(inputFactory) }

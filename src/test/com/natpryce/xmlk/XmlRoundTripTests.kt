@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized.Parameters
 
 
 @RunWith(Parameterized::class)
-class JsonRoundTripTests(val exampleName: String) {
+class XmlRoundTripTests(val exampleName: String) {
     companion object {
         @Parameters(name = "{0}") @JvmStatic
         fun examples() = ExampleXmlFiles.list()
@@ -16,7 +16,7 @@ class JsonRoundTripTests(val exampleName: String) {
     
     @Test
     fun `round trips XML`() {
-        val xmlText = javaClass.getResource(exampleName).readText()
+        val xmlText = ExampleXmlFiles.open(exampleName).use { it.readText() }
         val roundTrippedViaXmlK = xmlText.toXmlDocument().toXmlString()
         
         Assert.assertEquals(xmlText, roundTrippedViaXmlK)

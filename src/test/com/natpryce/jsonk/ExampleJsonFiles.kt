@@ -3,13 +3,13 @@ package com.natpryce.jsonk
 import java.io.File
 
 object ExampleJsonFiles {
+    private val dataDir = File("test-data/json")
+    
     fun list() =
-        File(javaClass.getResource(".").path)
-            .listFiles { f -> f.name.endsWith(".json") }
-            .map { it.name }
+        dataDir.list().filter {it.endsWith(".json") }
     
     fun open(name: String) =
-        javaClass.getResourceAsStream(name).reader()
+        File(dataDir, name).reader()
     
     fun load(name: String) =
         open(name).use { it.readJsonElement() }
