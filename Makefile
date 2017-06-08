@@ -12,7 +12,7 @@ endif
 ifndef JAVA
     JAVA:=$(shell jenv which java)
 endif
-JARJAR=$(JAVA) -jar $(libs_tool)
+
 
 KOTLIN=kotlin
 KOTLINC=kotlinc
@@ -39,13 +39,9 @@ package_distro = \
     $(outdir)/$(package)-$(version)-sources.jar \
     $(outdir)/$(package)-$(version)-javadoc.jar \
 
-
-standalone_distro = \
-    $(package_distro:$(outdir)/$(package)-%=$(outdir)/$(package)-standalone-%)
-
 test_jars = $(outdir)/$(package)-$(version)-test.jar
 
-published_archives = $(package_distro) $(standalone_distro)
+published_archives = $(package_distro)
 published_signatures = $(published_archives:%=%.asc)
 published_files = $(published_archives) $(published_signatures)
 published_bundle = $(outdir)/$(package)-$(version)-bundle.jar
@@ -58,7 +54,6 @@ distro: $(published_bundle)
 include libs/main.mk
 include libs/runtime.mk
 include libs/test.mk
-include libs/tool.mk
 
 libs/%.mk: %.dependencies
 	rm -rf libs/$*
@@ -93,28 +88,8 @@ $(outdir)/$(package)-$(version).pom: main.dependencies $(published_jars)
 	mv $@ $@-tmp
 	xsltproc tools/pom.xslt $@-tmp | xmllint --format --nsclean - > $@
 
-$(outdir)/$(package)-standalone-$(version).pom: $(outdir)/$(package)-$(version).pom
-	xmlstarlet ed -N m='http://maven.apache.org/POM/4.0.0' \
-	    --delete '/m:project/m:dependencies/m:dependency' \
-	    --update '/m:project/m:artifactId' --value "$(package)-standalone" \
-	    --update '/m:project/m:name' --value "$(package)-standalone" \
-	    $< > $@
-
-$(outdir)/$(package)-standalone-$(version).jar: standalone.jarjar $(outdir)/tmp/$(package)-$(version)-combined.jar
-	@mkdir -p $(dir $@)
-	$(JARJAR) process $^ $@
-
-$(outdir)/$(package)-standalone-$(version)-%.jar: $(outdir)/$(package)-$(version)-%.jar
-	cp $< $@
-
-$(outdir)/tmp/$(package)-$(version)-combined.jar: $(libs_main) $(outdir)/$(package)-$(version).jar
-	@mkdir -p $@.contents
-	cd $@.contents && for f in $(abspath $^); do jar xf $$f; done
-	rm -rf $@.contents/META-INF/
-	$(JAR) cf $@ -C $@.contents .
-
 $(outdir)/%.asc: $(outdir)/%
-	gpg --detach-sign --armor $<
+	gpg --yes --detach-sign --armor $<
 
 %.jar:
 	@mkdir -p $(dir $@)
@@ -129,8 +104,7 @@ distclean: clean
 again: clean all
 
 published: $(published_files)
-	publish-to-bintray $(groupid) $(package) $(version) $(filter-out $(outdir)/$(package)-standalone%,$^)
-	publish-to-bintray $(groupid) $(package)-standalone $(version) $(filter $(outdir)/$(package)-standalone%,$^)
+	publish-to-bintray $(groupid) $(package) $(version) $^
 
 ifeq "$(origin version)" "command line"
 tagged:
