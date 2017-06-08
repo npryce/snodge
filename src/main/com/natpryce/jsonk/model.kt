@@ -15,10 +15,10 @@ data class JsonObject(
         this(properties.toList())
 }
 
-operator fun JsonObject.plus(anotherProperty: Pair<String, JsonElement>) =
+fun JsonObject.withProperty(anotherProperty: Pair<String, JsonElement>) =
     copy(properties = this.properties + anotherProperty)
 
-fun JsonObject.plus(vararg moreProperties: Pair<String, JsonElement>) =
+fun JsonObject.withProperties(vararg moreProperties: Pair<String, JsonElement>) =
     copy(properties = this.properties + moreProperties)
 
 
@@ -28,13 +28,13 @@ data class JsonArray(
     constructor(vararg elements: JsonElement) : this(listOf(*elements))
 }
 
-operator fun JsonArray.plus(anotherElement: JsonElement) =
+fun JsonArray.plusElement(anotherElement: JsonElement) =
     copy(elements = elements + anotherElement)
 
-operator fun JsonArray.plus(moreElements: Iterable<JsonElement>) =
+fun JsonArray.plusElements(moreElements: Iterable<JsonElement>) =
     copy(elements = elements + moreElements)
 
-fun JsonArray.plus(vararg moreElements: JsonElement) =
+fun JsonArray.plusElements(vararg moreElements: JsonElement) =
     copy(elements = elements + moreElements)
 
 data class JsonNumber(val valueAsString: String) : JsonElement() {

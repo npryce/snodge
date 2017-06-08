@@ -7,7 +7,8 @@ import com.natpryce.jsonk.JsonNull
 import com.natpryce.jsonk.JsonNumber
 import com.natpryce.jsonk.JsonObject
 import com.natpryce.jsonk.JsonString
-import com.natpryce.jsonk.plus
+import com.natpryce.jsonk.plusElement
+import com.natpryce.jsonk.withProperty
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.combine
 import com.natpryce.snodge.filtered
@@ -17,7 +18,7 @@ import java.util.Collections
 
 fun addArrayElement(newElement: JsonElement) = JsonMutagen { _, document, pathToElement, elementToMutate ->
     if (elementToMutate is JsonArray) {
-        sequenceOf(lazy { pathToElement.replace(document, elementToMutate + newElement) })
+        sequenceOf(lazy { pathToElement.replace(document, elementToMutate.plusElement(newElement)) })
     }
     else {
         emptySequence()
@@ -27,7 +28,7 @@ fun addArrayElement(newElement: JsonElement) = JsonMutagen { _, document, pathTo
 fun addObjectProperty(newElement: JsonElement) = JsonMutagen { _, document, pathToElement, elementToMutate ->
     if (elementToMutate is JsonObject) {
         sequenceOf(lazy {
-            pathToElement.replace(document, elementToMutate + (elementToMutate.newProperty("x") to newElement))
+            pathToElement.replace(document, elementToMutate.withProperty((elementToMutate.newProperty("x") to newElement)))
         })
     }
     else {
