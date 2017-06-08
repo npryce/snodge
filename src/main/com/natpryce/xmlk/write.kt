@@ -13,7 +13,9 @@ fun Writer.writeXml(xmlDocument: XmlDocument, outputFactory: XMLOutputFactory = 
 }
 
 private fun XMLStreamWriter.writeXml(doc: XmlDocument) {
-    writeXmlNode(doc.root)
+    doc.xml?.let { writeStartDocument(it.encoding, it.version) }
+    writeChildren(doc)
+    writeEndDocument()
 }
 
 fun XMLStreamWriter.writeXmlNode(n: XmlNode) {
@@ -29,6 +31,10 @@ private fun XMLStreamWriter.writeElement(n: XmlElement) {
     n.attributes.forEach { name, value ->
         writeAttribute(name.prefix, name.namespaceURI, name.localPart, value)
     }
-    n.children.forEach { writeXmlNode(it) }
+    writeChildren(n)
     writeEndElement()
+}
+
+private fun XMLStreamWriter.writeChildren(parent: HasChildren) {
+    parent.children.forEach { writeXmlNode(it) }
 }

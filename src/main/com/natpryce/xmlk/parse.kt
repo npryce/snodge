@@ -17,13 +17,10 @@ fun Reader.readXml(inputFactory: XMLInputFactory = XMLInputFactory.newFactory())
 fun XMLStreamReader.readXml(): XmlDocument {
     require(START_DOCUMENT, null, null)
     
-    nextTag()
-    val rootElement = readElement()
+    val xml = version?.let { XmlDeclaration(version, characterEncodingScheme) }
+    val children = readChildrenUntil(END_DOCUMENT)
     
-    next()
-    require(END_DOCUMENT, null, null)
-    
-    return XmlDocument(rootElement)
+    return XmlDocument(xml, children)
 }
 
 private fun XMLStreamReader.readElement(): XmlElement {
@@ -32,8 +29,15 @@ private fun XMLStreamReader.readElement(): XmlElement {
         .toMap()
     
     val name = name
+    val children = readChildrenUntil(END_ELEMENT)
+    
+    return XmlElement(name, attributes, children)
+}
+
+private fun XMLStreamReader.readChildrenUntil(end: Int): List<XmlNode> {
     val children = mutableListOf<XmlNode>()
-    while (next() != END_ELEMENT) {
+    
+    while (next() != end) {
         when (eventType) {
             START_ELEMENT -> children += readElement()
             CHARACTERS -> children += XmlText(text)
@@ -41,12 +45,5 @@ private fun XMLStreamReader.readElement(): XmlElement {
         }
     }
     
-    return XmlElement(name, attributes, children)
-}
-
-private inline fun <reified T: XMLEvent> XMLEventReader.expect() {
-    val event = nextEvent()
-    if (event !is T) {
-        throw XMLStreamException("expected ${T::class.simpleName}")
-    }
+    return children.toList()
 }
