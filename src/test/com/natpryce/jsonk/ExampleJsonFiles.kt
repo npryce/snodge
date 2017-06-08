@@ -4,7 +4,7 @@ import java.io.File
 
 object ExampleJsonFiles {
     fun list() =
-        File(ExampleJsonFiles::class.java.getResource(".").path)
+        File(javaClass.getResource(".").path)
             .listFiles { f -> f.name.endsWith(".json") }
             .map { it.name }
     
