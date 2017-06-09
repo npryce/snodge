@@ -23,7 +23,9 @@ fun XMLStreamWriter.writeXmlNode(n: XmlNode) {
         is XmlElement -> writeElement(n)
         is XmlText -> writeCharacters(n.text)
         is XmlCData -> writeCData(n.text)
-    }.let{}
+        is XmlProcessingInstruction -> writeProcessingInstruction(n.target, n.data)
+        is XmlComment -> writeComment(n.text)
+    }.let { /* check exhaustiveness */ }
 }
 
 private fun XMLStreamWriter.writeElement(n: XmlElement) {

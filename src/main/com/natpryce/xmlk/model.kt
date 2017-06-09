@@ -15,7 +15,7 @@ data class XmlDeclaration(val version: String, val encoding: String? = null)
 data class XmlDocument(
     val xml: XmlDeclaration?,
     override val children: List<XmlNode>
-): HasChildren {
+) : HasChildren {
     val root = children.single { it is XmlElement }
 }
 
@@ -31,3 +31,7 @@ data class XmlElement(
     val attributes: Map<QName, String>,
     override val children: List<XmlNode>
 ) : XmlNode(), HasChildren
+
+data class XmlProcessingInstruction(val target: String, val data: String? = null) : XmlNode()
+
+data class XmlComment(override val text: String): XmlNode(), HasText

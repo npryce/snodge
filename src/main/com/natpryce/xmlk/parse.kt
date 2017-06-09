@@ -1,12 +1,16 @@
 package com.natpryce.xmlk
 
 import java.io.Reader
-import javax.xml.stream.XMLEventReader
 import javax.xml.stream.XMLInputFactory
-import javax.xml.stream.XMLStreamConstants.*
-import javax.xml.stream.XMLStreamException
+import javax.xml.stream.XMLStreamConstants.CDATA
+import javax.xml.stream.XMLStreamConstants.CHARACTERS
+import javax.xml.stream.XMLStreamConstants.COMMENT
+import javax.xml.stream.XMLStreamConstants.END_DOCUMENT
+import javax.xml.stream.XMLStreamConstants.END_ELEMENT
+import javax.xml.stream.XMLStreamConstants.PROCESSING_INSTRUCTION
+import javax.xml.stream.XMLStreamConstants.START_DOCUMENT
+import javax.xml.stream.XMLStreamConstants.START_ELEMENT
 import javax.xml.stream.XMLStreamReader
-import javax.xml.stream.events.XMLEvent
 
 fun String.toXmlDocument() = reader().use { it.readXml() }
 
@@ -42,6 +46,8 @@ private fun XMLStreamReader.readChildrenUntil(end: Int): List<XmlNode> {
             START_ELEMENT -> children += readElement()
             CHARACTERS -> children += XmlText(text)
             CDATA -> children += XmlCData(text)
+            PROCESSING_INSTRUCTION -> children += XmlProcessingInstruction(piTarget, piData)
+            COMMENT -> children += XmlComment(text)
         }
     }
     

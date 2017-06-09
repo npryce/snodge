@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<root>
+    <!-- note: the Java XML library writes invalid XML if there is a processing instruction before the root! -->
+    <?alice one two three="bar"?>
+    <child>
+        <?bob?>
+        <?carol a="1"?>
+        <?carol a="2"?>
+    </child>
+    <?dave xxx?>
+</root>
+<?eve?>
