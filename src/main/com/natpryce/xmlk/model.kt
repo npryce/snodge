@@ -32,6 +32,16 @@ data class XmlElement(
     override val children: List<XmlNode> = emptyList()
 ) : XmlNode(), HasChildren
 
+fun XmlElement.withAttribute(attr: Pair<QName, String>) =
+    copy(attributes = attributes + attr)
+fun XmlElement.minusAttribute(attrName: QName) =
+    copy(attributes = attributes - attrName)
+
+fun XmlElement.plusChild(c: XmlNode) =
+    copy(children = children + c)
+fun XmlElement.minusChild(index: Int) =
+    copy(children = children.toMutableList().apply { removeAt(index) }.toList())
+
 data class XmlProcessingInstruction(val target: String, val data: String? = null) : XmlNode()
 
-data class XmlComment(override val text: String): XmlNode(), HasText
+data class XmlComment(override val text: String) : XmlNode(), HasText
