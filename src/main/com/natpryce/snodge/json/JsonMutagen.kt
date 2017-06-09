@@ -11,7 +11,7 @@ import java.nio.charset.Charset
 import java.util.Random
 
 
-typealias JsonElementMutagen = (random: Random, elementToMutate: JsonElement ) -> Sequence<Lazy<JsonElement>>
+typealias JsonElementMutagen = (random: Random, elementToMutate: JsonElement) -> Sequence<Lazy<JsonElement>>
 
 
 fun JsonMutagen(elementMutagen: JsonElementMutagen): Mutagen<JsonElement> =
@@ -22,8 +22,7 @@ fun JsonMutagen(elementMutagen: JsonElementMutagen): Mutagen<JsonElement> =
 
 
 fun Mutagen<JsonElement>.forStrings() =
-    mapped({ it.toJsonElement() }, { it.toJsonString() })
+    mapped(String::toJsonElement, JsonElement::toJsonString)
 
 fun Mutagen<JsonElement>.forEncodedStrings(encoding: Charset) =
-    this.forStrings().encodedAs(encoding)
-
+    forStrings().encodedAs(encoding)

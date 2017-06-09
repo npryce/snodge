@@ -2,13 +2,16 @@ package com.natpryce.snodge.xml
 
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.internal.mapLazy
+import com.natpryce.snodge.mapped
 import com.natpryce.xmlk.XmlDocument
 import com.natpryce.xmlk.XmlNode
+import com.natpryce.xmlk.toXmlDocument
+import com.natpryce.xmlk.toXmlString
 import java.util.Random
 
 typealias XmlNodeMutagen<T> = (random: Random, elementToMutate: T) -> Sequence<Lazy<XmlNode>>
 
-inline fun <reified T: XmlNode> XmlMutagen(noinline elementMutagen: XmlNodeMutagen<T>): Mutagen<XmlDocument> =
+inline fun <reified T : XmlNode> XmlMutagen(noinline elementMutagen: XmlNodeMutagen<T>): Mutagen<XmlDocument> =
     { random: Random, original: XmlDocument ->
         original.walk().flatMap { (node: XmlNode, replaceInDocument) ->
             if (node is T) {
@@ -19,3 +22,6 @@ inline fun <reified T: XmlNode> XmlMutagen(noinline elementMutagen: XmlNodeMutag
             }
         }
     }
+
+
+fun Mutagen<XmlDocument>.forStrings() = mapped(String::toXmlDocument, XmlDocument::toXmlString)
