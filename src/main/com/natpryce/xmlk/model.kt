@@ -28,8 +28,8 @@ data class XmlCData(override val text: String) : XmlNode(), HasText
 
 data class XmlElement(
     val name: QName,
-    val attributes: Map<QName, String>,
-    override val children: List<XmlNode>
+    val attributes: Map<QName, String> = emptyMap(),
+    override val children: List<XmlNode> = emptyList()
 ) : XmlNode(), HasChildren
 
 data class XmlProcessingInstruction(val target: String, val data: String? = null) : XmlNode()
