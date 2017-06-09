@@ -11,14 +11,19 @@ import java.nio.charset.Charset
 import java.util.Random
 
 
-typealias JsonElementMutagen = (random: Random, elementToMutate: JsonElement) -> Sequence<Lazy<JsonElement>>
+typealias JsonElementMutagen<T> = (random: Random, elementToMutate: T) -> Sequence<Lazy<T>>
 
 
-fun JsonMutagen(elementMutagen: JsonElementMutagen): Mutagen<JsonElement> =
-    fun(random: Random, original: JsonElement) =
+inline fun <reified T: JsonElement> JsonMutagen(crossinline elementMutagen: JsonElementMutagen<T>): Mutagen<JsonElement> =
+    { random: Random, original: JsonElement ->
         original.walk().flatMap { (element, replaceInDocument) ->
-            elementMutagen(random, element).mapLazy(replaceInDocument)
+            if (element is T) {
+                elementMutagen(random, element).mapLazy(replaceInDocument)
+            } else {
+                emptySequence()
+            }
         }
+    }
 
 
 fun Mutagen<JsonElement>.forStrings() =

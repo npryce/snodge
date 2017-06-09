@@ -15,28 +15,19 @@ import com.natpryce.jsonk.withProperty
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.combine
 import com.natpryce.snodge.filtered
+import com.natpryce.snodge.plus
 import com.natpryce.snodge.reflect.troublesomeClasses
 import java.util.Collections
 
 
-fun addArrayElement(newElement: JsonElement) = JsonMutagen { _, elementToMutate ->
-    if (elementToMutate is JsonArray) {
-        sequenceOf(lazy { elementToMutate.append(newElement) })
-    }
-    else {
-        emptySequence()
-    }
+fun addArrayElement(newElement: JsonElement) = JsonMutagen { _, elementToMutate: JsonArray ->
+    sequenceOf(lazy { elementToMutate.append(newElement) })
 }
 
-fun addObjectProperty(newElement: JsonElement) = JsonMutagen { _, elementToMutate ->
-    if (elementToMutate is JsonObject) {
-        sequenceOf(lazy {
-            elementToMutate.withProperty((elementToMutate.newProperty("x") to newElement))
-        })
-    }
-    else {
-        emptySequence()
-    }
+fun addObjectProperty(newElement: JsonElement) = JsonMutagen { _, elementToMutate: JsonObject ->
+    sequenceOf(lazy {
+        elementToMutate.withProperty((elementToMutate.newProperty("x") to newElement))
+    })
 }
 
 private fun JsonObject.newProperty(basename: String) =
@@ -44,41 +35,42 @@ private fun JsonObject.newProperty(basename: String) =
         .filterNot { it in this }
         .first()
 
-fun removeJsonElement() = JsonMutagen { _, elementToMutate ->
-    when (elementToMutate) {
-        is JsonObject -> elementToMutate.keys.asSequence().map { key ->
-            lazy { elementToMutate.removeProperty(key) }
-        }
-        is JsonArray -> elementToMutate.indices.asSequence().map { i ->
-            lazy { elementToMutate.remove(i) }
-        }
-        else -> emptySequence()
+fun removeJsonObjectProperty() = JsonMutagen { _, elementToMutate: JsonObject ->
+    elementToMutate.keys.asSequence().map { key ->
+        lazy { elementToMutate.removeProperty(key) }
     }
 }
 
-fun replaceJsonElement(replacement: JsonElement) = JsonMutagen { _, elementToMutate ->
-    when (elementToMutate) {
-        is JsonObject -> elementToMutate.keys.asSequence().map { key ->
-            lazy { elementToMutate.withProperty(key to replacement) }
-        }
-        is JsonArray -> elementToMutate.indices.asSequence().map { i ->
-            lazy { elementToMutate.replace(i, replacement) }
-        }
-        else -> emptySequence()
+fun removeJsonArrayElement() = JsonMutagen { _, elementToMutate: JsonArray ->
+    elementToMutate.indices.asSequence().map { i ->
+        lazy { elementToMutate.remove(i) }
     }
 }
 
-fun reorderObjectProperties() = JsonMutagen { _, elementToMutate ->
-    if (elementToMutate is JsonObject) {
-        sequenceOf(lazy {
-            val objectProperties = elementToMutate.properties.toList()
-            Collections.shuffle(objectProperties)
-            JsonObject(objectProperties)
-        })
+fun removeJsonElement() =
+    removeJsonObjectProperty() + removeJsonArrayElement()
+
+fun replaceJsonObjectProperty(replacement: JsonElement) = JsonMutagen { _, elementToMutate: JsonObject ->
+    elementToMutate.keys.asSequence().map { key ->
+        lazy { elementToMutate.withProperty(key to replacement) }
     }
-    else {
-        emptySequence()
+}
+
+fun replaceJsonArrayElement(replacement: JsonElement) = JsonMutagen { _, elementToMutate: JsonArray ->
+    elementToMutate.indices.asSequence().map { i ->
+        lazy { elementToMutate.replace(i, replacement) }
     }
+}
+
+fun replaceJsonElement(replacement: JsonElement) =
+    replaceJsonObjectProperty(replacement) + replaceJsonArrayElement(replacement)
+
+fun reorderObjectProperties() = JsonMutagen { _, elementToMutate: JsonObject ->
+    sequenceOf(lazy {
+        val objectProperties = elementToMutate.properties.toList()
+        Collections.shuffle(objectProperties)
+        JsonObject(objectProperties)
+    })
 }
 
 

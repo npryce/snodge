@@ -11,7 +11,7 @@ import java.util.Random
 
 typealias XmlNodeMutagen<T> = (random: Random, elementToMutate: T) -> Sequence<Lazy<XmlNode>>
 
-inline fun <reified T : XmlNode> XmlMutagen(noinline elementMutagen: XmlNodeMutagen<T>): Mutagen<XmlDocument> =
+inline fun <reified T : XmlNode> XmlMutagen(crossinline elementMutagen: XmlNodeMutagen<T>): Mutagen<XmlDocument> =
     { random: Random, original: XmlDocument ->
         original.walk().flatMap { (node: XmlNode, replaceInDocument) ->
             if (node is T) {
