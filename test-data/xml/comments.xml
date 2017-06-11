@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- comment before root -->
 <hello>
-    <!-- note: the Java XML library writes invalid XML if there is a comment before the root! -->
+    <!-- comment first element of root -->
     <who><!-- comment -->world<!-- comment --></who>
     <who>your mum</who>
     <who>fancy <!-- comment --> pants</who>

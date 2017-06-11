@@ -1,7 +1,6 @@
 package com.natpryce.snodge
 
 import com.natpryce.snodge.internal.mapLazy
-import java.nio.charset.Charset
 import java.util.Random
 
 

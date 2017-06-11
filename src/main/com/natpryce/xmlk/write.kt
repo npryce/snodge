@@ -3,12 +3,16 @@ package com.natpryce.xmlk
 import java.io.StringWriter
 import java.io.Writer
 import javax.xml.stream.XMLOutputFactory
+import javax.xml.stream.XMLOutputFactory.IS_REPAIRING_NAMESPACES
 import javax.xml.stream.XMLStreamWriter
 
 
 fun XmlDocument.toXmlString() = StringWriter().also { it.writeXml(this) }.toString()
 
-fun Writer.writeXml(xmlDocument: XmlDocument, outputFactory: XMLOutputFactory = XMLOutputFactory.newFactory()) {
+fun Writer.writeXml(
+    xmlDocument: XmlDocument,
+    outputFactory: XMLOutputFactory = XMLOutputFactory.newFactory().apply { setProperty(IS_REPAIRING_NAMESPACES, true) }
+) {
     outputFactory.createXMLStreamWriter(this).writeXml(xmlDocument)
 }
 
@@ -21,8 +25,7 @@ private fun XMLStreamWriter.writeXml(doc: XmlDocument) {
 fun XMLStreamWriter.writeXmlNode(n: XmlNode) {
     when (n) {
         is XmlElement -> writeElement(n)
-        is XmlText -> writeCharacters(n.text)
-        is XmlCData -> writeCData(n.text)
+        is XmlText -> if (n.asCData) writeCData(n.text) else writeCharacters(n.text)
         is XmlProcessingInstruction -> writeProcessingInstruction(n.target, n.data)
         is XmlComment -> writeComment(n.text)
     }.let { /* check exhaustiveness */ }

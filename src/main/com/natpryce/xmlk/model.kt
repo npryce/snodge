@@ -2,10 +2,6 @@ package com.natpryce.xmlk
 
 import javax.xml.namespace.QName
 
-interface HasText {
-    val text: String
-}
-
 interface HasChildren {
     val children: List<XmlNode>
 }
@@ -22,9 +18,7 @@ data class XmlDocument(
 
 sealed class XmlNode
 
-data class XmlText(override val text: String) : XmlNode(), HasText
-
-data class XmlCData(override val text: String) : XmlNode(), HasText
+data class XmlText(val text: String, val asCData: Boolean = false) : XmlNode()
 
 data class XmlElement(
     val name: QName,
@@ -44,4 +38,4 @@ fun XmlElement.minusChild(index: Int) =
 
 data class XmlProcessingInstruction(val target: String, val data: String? = null) : XmlNode()
 
-data class XmlComment(override val text: String) : XmlNode(), HasText
+data class XmlComment(val text: String) : XmlNode()

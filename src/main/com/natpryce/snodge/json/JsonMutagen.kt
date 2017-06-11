@@ -5,8 +5,8 @@ import com.natpryce.jsonk.toJsonElement
 import com.natpryce.jsonk.toJsonString
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.internal.mapLazy
-import com.natpryce.snodge.text.encodedAs
 import com.natpryce.snodge.mapped
+import com.natpryce.snodge.text.encodedAs
 import java.nio.charset.Charset
 import java.util.Random
 
