@@ -1,7 +1,7 @@
 Snodge
 ======
 
-A small, extensible library to randomly mutate JSON documents, text and binary data. Useful for fuzz testing.
+A small, extensible library to randomly mutate JSON documents, text and binary data. Useful for [fuzz testing](https://en.wikipedia.org/wiki/Fuzzing).
 
 Examples of things you can test by mutating known good JSON documents:
 
