@@ -2,7 +2,7 @@
 
 A _Mutagen_ that mutates values of type _T_ is a function of type `(Random, T)->Sequence<Lazy<T>>`.  Any operations that apply to functions can be used with Mutagens.  Snodge also defines convenience operators for composing and modifying Mutagens. 
 
-## Generic Mutagen Operators
+## Generic Mutagens
 
 ### Always
 
@@ -21,6 +21,20 @@ For example:
   ~~~~~~~~kotlin
   always("""{"a": 10}""")
   ~~~~~~~~
+
+### Map
+
+The `map` function returns a mutagen that generates one mutant by applying a function to the original.
+
+For example:
+
+* a mutagen of Strings that reverses the original value:
+
+  ~~~~~~~~kotlin
+  map(String::reversed)
+  ~~~~~~~~
+
+## Mutagen Operators
 
 
 ### Combine
