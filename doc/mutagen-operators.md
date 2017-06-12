@@ -24,7 +24,7 @@ For example:
 
 ### Map
 
-The `map` function returns a mutagen that generates one mutant by applying a function to the original.
+The `map` function returns a mutagen that generates one mutant by applying a function to the original value.
 
 For example:
 
@@ -34,8 +34,10 @@ For example:
   map(String::reversed)
   ~~~~~~~~
 
+
 ## Mutagen Operators
 
+Mutagens can be composed in various ways to build more sophisticated mutagens or perform application-specific mutations.
 
 ### Combine
 
@@ -104,6 +106,7 @@ For example:
 Convenience functions are provided for common use cases:
 
 * `Mutagen<JsonElement>.forStrings()` turns a mutagen of a JSON document object model into a mutagen of JSON serialised as text.
+* `Mutagen<XmlDocument>.forStrings()` turns a mutagen of an XML document object model into a mutagen of XML serialised as text.
 * `Mutagen<String>.encodedAs(charset: Charset): Mutagen<ByteArray>` performs character encoding/decoding.
 * `Mutagen<ByteArray>.decodedAs(charset: Charset): Mutagen<String>` performs the opposite mapping.
 
@@ -124,6 +127,6 @@ For example:
 * a more realistic example, a stream of mutated JSON serialised UTF-8 text, with occasional mutations that contain invalid UTF-8 byte sequences:
 
   ~~~~~~~~kotlin
-  allJsonMutagens().forEncodedString(UTF_8).and(invalidUTF8().withProbability(0.1))
+  defaultJsonMutagens().forEncodedString(UTF_8).and(invalidUTF8().withProbability(0.1))
   ~~~~~~~~
 
