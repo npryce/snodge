@@ -1,14 +1,14 @@
 Snodge
 ======
 
-A small, extensible Kotlin library to randomly mutate JSON documents, text and binary data. Useful for fuzz testing.
+A small, extensible Kotlin library to randomly mutate JSON & XML documents, text and binary data. Useful for fuzz testing.
 
-Examples of things you can test by mutating known good JSON documents:
+Examples of things you can test by mutating known good data:
 
-- unexpected JSON structures will not make your application code throw unchecked exceptions
-- your application code ignores additional fields
-- your application code does not throw unchecked exceptions when parsing values from JSON strings
-- your application does not instantiate arbitrary classes named in JSON data (a potential security risk)
+- unexpected structures will not make your application code throw unchecked exceptions
+- your application code ignores additional properties
+- your application code does not throw unchecked exceptions when parsing values from text properties
+- your application does not instantiate arbitrary classes named in data (a potential security risk)
 - your application copes with invalid Unicode encoding of text
 - and much, much more!
 
