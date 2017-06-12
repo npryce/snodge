@@ -35,6 +35,8 @@ fun XmlElement.plusChild(c: XmlNode) =
     copy(children = children + c)
 fun XmlElement.minusChild(index: Int) =
     copy(children = children.toMutableList().apply { removeAt(index) }.toList())
+fun XmlElement.replaceChild(index: Int, replacement: XmlNode) =
+    copy(children = children.toMutableList().also { it[index] = replacement }.toList())
 
 data class XmlProcessingInstruction(val target: String, val data: String? = null) : XmlNode()
 
