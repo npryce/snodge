@@ -32,7 +32,7 @@ Import the library:
 
 ~~~~~~~~~~~~~~~~~~~~~~kotlin
 import com.natpryce.snodge.mutants
-import com.natpryce.snodge.json.allJsonMutagens
+import com.natpryce.snodge.json.defaultJsonMutagens
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Output 10 random mutations of the JSON document:
