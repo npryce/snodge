@@ -95,9 +95,9 @@ private val exampleElements = listOf(
 
 
 /**
- * @return Applies all the JSON mutations implemented in the Snodge library.
+ * @return Applies a default set of JSON mutations implemented
  */
-fun allJsonMutagens() =
+fun defaultJsonMutagens() =
     combine(
         combine(exampleElements.map { exampleElement ->
             combine(
@@ -109,3 +109,9 @@ fun allJsonMutagens() =
         removeJsonElement(),
         reorderObjectProperties(),
         reflectionMutagens())
+
+
+@Deprecated(
+    message="renamed to defaultJsonMutagens",
+    replaceWith = ReplaceWith("defaultJsonMutagens", "com.natpryce.snodge.json.defaultJsonMutagens"))
+fun allJsonMutagens() = defaultJsonMutagens()

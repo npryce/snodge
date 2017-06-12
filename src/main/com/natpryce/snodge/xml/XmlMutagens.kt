@@ -1,10 +1,7 @@
 package com.natpryce.snodge.xml
 
-import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.combine
 import com.natpryce.xmlk.XmlElement
-import com.natpryce.xmlk.XmlNode
-import com.natpryce.xmlk.XmlText
 import com.natpryce.xmlk.minusAttribute
 import com.natpryce.xmlk.minusChild
 import com.natpryce.xmlk.withAttribute
@@ -27,10 +24,9 @@ fun removeNamespace() = XmlMutagen<XmlElement> { _, element ->
         }
 }
 
-
 private fun QName.withoutNamespace() = QName(localPart)
 
-fun allXmlMutagens() = combine(
+fun defaultXmlMutagens() = combine(
     removeAttribute(),
     removeElement(),
     removeNamespace())

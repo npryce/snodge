@@ -9,7 +9,7 @@ fun main(args: Array<String>) {
     val random = Random()
     val originalXml = ExampleXmlFiles.load("simple-example.xml")
     
-    random.mutants(allXmlMutagens(), 10, originalXml)
+    random.mutants(defaultXmlMutagens(), 10, originalXml)
         .forEach {
             println(it.toXmlString())
             println()

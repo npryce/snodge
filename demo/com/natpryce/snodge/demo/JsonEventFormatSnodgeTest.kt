@@ -6,7 +6,7 @@ import com.natpryce.jsonk.JsonElement
 import com.natpryce.jsonk.JsonString
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.json.addObjectProperty
-import com.natpryce.snodge.json.allJsonMutagens
+import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
 import com.natpryce.snodge.json.reorderObjectProperties
 import com.natpryce.snodge.mutants
@@ -29,7 +29,7 @@ class JsonEventFormatSnodgeTest {
     
     @Test
     fun parsesEventSuccessfullyOrThrowsIOException() {
-        Random().mutants(allJsonMutagens().forStrings(), mutationCount, format.serialise(originalEvent)).forEach { s ->
+        Random().mutants(defaultJsonMutagens().forStrings(), mutationCount, format.serialise(originalEvent)).forEach { s ->
             assertParsesEventSuccessfullyOrThrowsIOException(s)
         }
     }
