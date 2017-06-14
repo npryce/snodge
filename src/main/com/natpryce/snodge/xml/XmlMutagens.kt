@@ -27,15 +27,36 @@ fun removeNamespace() = XmlMutagen<XmlElement> { _, element ->
         }
 }
 
-fun replaceNode(replacement: XmlNode) = XmlMutagen<XmlElement> { _, element ->
-    element.children.indices.map { lazy { element.replaceChild(it, replacement) } }.asSequence()
+inline fun <reified T: XmlNode> replaceNode(replacement: XmlNode) = XmlMutagen<XmlElement> { _, element ->
+    element.children.withIndex().asSequence()
+        .filter { (_, child) -> child is T }
+        .map { (i, _) -> lazy { element.replaceChild(i, replacement) } }
 }
 
 private fun QName.withoutNamespace() = QName(localPart)
+
+private fun textReplacements() = listOf(
+    "1",
+    "-1",
+    "0",
+    "true",
+    "false",
+    "",
+    "1.0",
+    "-1.0",
+    "0.0",
+    "NaN",
+    Long.MAX_VALUE.toString(),
+    Long.MIN_VALUE.toString()
+)
 
 fun defaultXmlMutagens() = combine(
     removeAttribute(),
     removeElement(),
     removeNamespace(),
-    replaceNode(XmlElement(QName("*** replacement ***"))),
-    replaceNode(XmlText("*** replacement ***")))
+    replaceNode<XmlNode>(XmlElement(QName("replacement"))),
+    replaceNode<XmlNode>(XmlText("replacement")),
+    combine(
+        textReplacements().map { replaceNode<XmlText>(XmlText(it)) }
+    )
+)
