@@ -1,6 +1,7 @@
 package com.natpryce.snodge.xml
 
 import com.natpryce.snodge.combine
+import com.natpryce.snodge.reflect.troublesomeClasses
 import com.natpryce.xmlk.XmlElement
 import com.natpryce.xmlk.XmlNode
 import com.natpryce.xmlk.XmlText
@@ -33,6 +34,8 @@ inline fun <reified T: XmlNode> replaceNode(replacement: XmlNode) = XmlMutagen<X
         .map { (i, _) -> lazy { element.replaceChild(i, replacement) } }
 }
 
+fun replaceText(newText: String) = replaceNode<XmlText>(XmlText(newText))
+
 private fun QName.withoutNamespace() = QName(localPart)
 
 private fun textReplacements() = listOf(
@@ -57,6 +60,9 @@ fun defaultXmlMutagens() = combine(
     replaceNode<XmlNode>(XmlElement(QName("replacement"))),
     replaceNode<XmlNode>(XmlText("replacement")),
     combine(
-        textReplacements().map { replaceNode<XmlText>(XmlText(it)) }
+        textReplacements().map(::replaceText)
+    ),
+    combine(
+        troublesomeClasses().map(::replaceText)
     )
 )
