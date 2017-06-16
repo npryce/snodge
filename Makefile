@@ -44,12 +44,11 @@ test_jars = $(outdir)/$(package)-$(version)-test.jar
 published_archives = $(package_distro)
 published_signatures = $(published_archives:%=%.asc)
 published_files = $(published_archives) $(published_signatures)
-published_bundle = $(outdir)/$(package)-$(version)-bundle.jar
 
 all: tested distro
 ci: tested $(published_archives)
 tested: $(outdir)/junit-report.txt
-distro: $(published_bundle)
+distro: $(published_files)
 
 include libs/main.mk
 include libs/runtime.mk
@@ -63,9 +62,6 @@ libs/%.mk: %.dependencies
 
 $(outdir)/$(package)-$(version).jar: $(src_main) $(libs_main) $(libs_runtime)
 $(outdir)/$(package)-$(version)-test.jar: $(src_test) $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
-
-$(outdir)/$(package)-$(version)-bundle.jar: $(published_files)
-	cd $(dir $@) && jar cvf $(notdir $@) $(notdir $^)
 
 $(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.kt,%,$(src_test))))
 $(outdir)/junit-report.txt: $(outdir)/$(package)-$(version)-test.jar $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
