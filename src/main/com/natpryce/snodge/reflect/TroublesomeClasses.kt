@@ -1,5 +1,7 @@
 package com.natpryce.snodge.reflect
 
+import com.natpryce.snodge.Mutagen
+import com.natpryce.snodge.always
 import kotlin.reflect.jvm.jvmName
 
 class CodeExecutionVulnerability(message: String) : Error(message)
@@ -24,3 +26,7 @@ private class PrivateClass {
 fun troublesomeClasses() =
     listOf(ClassCannotBeLoaded::class, ClassCannotBeInstantiated::class, PrivateClass::class)
         .map { it.jvmName }
+
+fun replaceWithTroublesomeClassName(): Mutagen<String> =
+    always(troublesomeClasses())
+

@@ -7,6 +7,12 @@ import java.util.Random
  * Returns a Mutagen that ignores the original value and generates a fixed sequence of values.
  */
 fun <T> always(vararg replacements: T): Mutagen<T> =
+    always(replacements.asIterable())
+
+/**
+ * Returns a Mutagen that ignores the original value and generates a fixed sequence of values.
+ */
+fun <T> always(replacements: Iterable<T>): Mutagen<T> =
     fun(_: Random, _: T) =
         replacements.asSequence().map { lazyOf(it) }
 

@@ -2,6 +2,7 @@ package com.natpryce.snodge.xml
 
 import com.natpryce.snodge.combine
 import com.natpryce.snodge.reflect.troublesomeClasses
+import com.natpryce.snodge.text.possiblyMeaningfulStrings
 import com.natpryce.xmlk.XmlElement
 import com.natpryce.xmlk.XmlNode
 import com.natpryce.xmlk.XmlText
@@ -38,21 +39,6 @@ fun replaceText(newText: String) = replaceNode<XmlText>(XmlText(newText))
 
 private fun QName.withoutNamespace() = QName(localPart)
 
-private fun textReplacements() = listOf(
-    "1",
-    "-1",
-    "0",
-    "true",
-    "false",
-    "",
-    "1.0",
-    "-1.0",
-    "0.0",
-    "NaN",
-    Long.MAX_VALUE.toString(),
-    Long.MIN_VALUE.toString()
-)
-
 fun defaultXmlMutagens() = combine(
     removeAttribute(),
     removeElement(),
@@ -60,7 +46,7 @@ fun defaultXmlMutagens() = combine(
     replaceNode<XmlNode>(XmlElement(QName("replacement"))),
     replaceNode<XmlNode>(XmlText("replacement")),
     combine(
-        textReplacements().map(::replaceText)
+        possiblyMeaningfulStrings().map(::replaceText)
     ),
     combine(
         troublesomeClasses().map(::replaceText)
