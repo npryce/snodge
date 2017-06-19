@@ -15,7 +15,7 @@ import com.google.gson.JsonObject as GsonObject
 import com.google.gson.JsonPrimitive as GsonPrimitive
 
 @RunWith(Parameterized::class)
-class MutagenApiAdaptersTest(exampleName: String) {
+class JsonMutagenApiAdaptersTest(exampleName: String) {
     companion object {
         @Parameters(name = "{0}") @JvmStatic
         fun examples() = ExampleJsonFiles.list()

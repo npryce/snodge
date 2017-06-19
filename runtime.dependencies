@@ -4,3 +4,4 @@ mvn:com.fasterxml.jackson.core:jackson-core:jar|sources:2.8.8
 mvn:com.fasterxml.jackson.core:jackson-databind:jar|sources:2.8.8
 mvn:com.fasterxml.jackson.core:jackson-annotations:jar|sources:2.8.8
 mvn:com.fasterxml.jackson.module:jackson-module-kotlin:jar|sources:2.8.7
+mvn:io.undertow:undertow-core:jar|sources:1.4.16.Final

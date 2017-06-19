@@ -25,12 +25,20 @@ class XWwwFormUrlencodedTest(@Suppress("UNUSED_PARAMETER") name: String, val enc
                 "a=hello+mum&b=hello%20world",
                 form(
                     "a" to "hello mum",
-                    "b" to "hello world")),
+                    "b" to "hello world")
+            ),
             example("encoded keys",
                 "a+b=1&c%20d=2",
                 form(
                     "a b" to "1",
                     "c d" to "2")
+            ),
+            example("empty value",
+                "a=&b=&b=1",
+                form(
+                    "a" to "",
+                    "b" to "",
+                    "b" to "1")
             )
         )
     }
