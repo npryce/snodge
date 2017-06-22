@@ -4,7 +4,7 @@ version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed 
 
 platforms=$(shell cd src/platform &&ls)
 
-outdir=out
+outdir_jvm=out/jvm
 srcdir_main=src/platform/jvm/main
 srcdir_test=src/platform/jvm/test
 
@@ -28,20 +28,20 @@ ifndef DOKKA
     DOKKA=dokka
 endif
 
-srcfiles=$(shell find "$1" -name '*.java' -o -name '*.kt')
+srcfiles=$(shell find "src/platform/$1/$2" "src/platform-independent/$2" -name '*.java' -o -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
 classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(filter %.jar,$^))))
 
-src_main:=$(call srcfiles,$(srcdir_main))
-src_test:=$(call srcfiles,$(srcdir_test))
+src_jvm_main:=$(call srcfiles,jvm,main)
+src_jvm_test:=$(call srcfiles,jvm,test)
 
 package_distro = \
-    $(outdir)/$(package)-$(version).pom \
-    $(outdir)/$(package)-$(version).jar \
-    $(outdir)/$(package)-$(version)-sources.jar \
-    $(outdir)/$(package)-$(version)-javadoc.jar \
+    $(outdir_jvm)/$(package)-$(version).pom \
+    $(outdir_jvm)/$(package)-$(version).jar \
+    $(outdir_jvm)/$(package)-$(version)-sources.jar \
+    $(outdir_jvm)/$(package)-$(version)-javadoc.jar \
 
-test_jars = $(outdir)/$(package)-$(version)-test.jar
+test_jars = $(outdir_jvm)/$(package)-$(version)-test.jar
 
 published_archives = $(package_distro)
 published_signatures = $(published_archives:%=%.asc)
@@ -49,7 +49,7 @@ published_files = $(published_archives) $(published_signatures)
 
 all: tested distro
 ci: tested $(published_archives)
-tested: $(outdir)/junit-report.txt
+tested: $(outdir_jvm)/junit-report.txt
 distro: $(published_files)
 
 include libs/main.mk
@@ -62,31 +62,31 @@ libs/%.mk: %.dependencies
 	tools/sm-download $< libs/$*
 	echo 'libs_$*=$$(filter-out %-source.jar,$$(wildcard libs/$*/*.jar))' > $@
 
-$(outdir)/$(package)-$(version).jar: $(src_main) $(libs_main) $(libs_runtime)
-$(outdir)/$(package)-$(version)-test.jar: $(src_test) $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
+$(outdir_jvm)/$(package)-$(version).jar: $(src_jvm_main) $(libs_main) $(libs_runtime)
+$(outdir_jvm)/$(package)-$(version)-test.jar: $(src_jvm_test) $(outdir_jvm)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
 
-$(outdir)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.kt,%,$(src_test))))
-$(outdir)/junit-report.txt: $(outdir)/$(package)-$(version)-test.jar $(outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
+$(outdir_jvm)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test)/%.kt,%,$(src_jvm_test))))
+$(outdir_jvm)/junit-report.txt: $(outdir_jvm)/$(package)-$(version)-test.jar $(outdir_jvm)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
 	$(JAVA) $(classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
 	    org.junit.runner.JUnitCore $(TESTS) | tee $@
 
-$(outdir)/$(package)-$(version)-sources.jar: $(src_main)
+$(outdir_jvm)/$(package)-$(version)-sources.jar: $(src_jvm_main)
 	$(JAR) cf $@ -C $(srcdir_main) .
 
-$(outdir)/$(package)-$(version)-javadoc.jar: $(outdir)/$(package)-$(version)-javadoc/index.html
+$(outdir_jvm)/$(package)-$(version)-javadoc.jar: $(outdir_jvm)/$(package)-$(version)-javadoc/index.html
 	$(JAR) cf $@ -C $(dir $<) .
 
-$(outdir)/$(package)-$(version)-javadoc/index.html: $(src_main) $(libs_main)
+$(outdir_jvm)/$(package)-$(version)-javadoc/index.html: $(src_jvm_main) $(libs_main)
 	@mkdir -p $(dir $@)
-	$(DOKKA) $(src_main) -format html -output $(dir $@)
+	$(DOKKA) $(src_jvm_main) -format html -output $(dir $@)
 
-$(outdir)/$(package)-$(version).pom: main.dependencies $(published_jars)
+$(outdir_jvm)/$(package)-$(version).pom: main.dependencies $(published_jars)
 	@mkdir -p $(dir $@)
 	tools/sm-pom mvn:$(groupid):$(package):jar:$(version) main.dependencies $(dir $@)
 	mv $@ $@-tmp
 	xsltproc tools/pom.xslt $@-tmp | xmllint --format --nsclean - > $@
 
-$(outdir)/%.asc: $(outdir)/%
+$(outdir_jvm)/%.asc: $(outdir_jvm)/%
 	gpg --yes --detach-sign --armor $<
 
 %.jar:
@@ -94,7 +94,7 @@ $(outdir)/%.asc: $(outdir)/%
 	$(KOTLINC) $(KOTLINCFLAGS) $(filter-out %.jar,$^) $(classpath) -d $@
 
 clean:
-	rm -rf $(outdir)
+	rm -rf out
 
 distclean: clean
 	rm -rf libs/
