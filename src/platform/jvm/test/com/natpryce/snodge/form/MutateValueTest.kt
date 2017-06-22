@@ -2,9 +2,9 @@ package com.natpryce.snodge.form
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.snodge.Random
 import com.natpryce.snodge.always
 import org.junit.Test
-import java.util.Random
 
 
 class MutateValueTest {

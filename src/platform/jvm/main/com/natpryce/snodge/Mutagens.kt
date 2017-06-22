@@ -1,7 +1,5 @@
 package com.natpryce.snodge
 
-import java.util.Random
-
 
 /**
  * Returns a Mutagen that ignores the original value and generates a fixed sequence of values.

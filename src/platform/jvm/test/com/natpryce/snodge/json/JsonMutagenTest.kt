@@ -6,13 +6,13 @@ import com.natpryce.jsonk.JsonElement
 import com.natpryce.jsonk.JsonNull
 import com.natpryce.jsonk.toJsonElement
 import com.natpryce.jsonk.toJsonString
+import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutant
 import com.natpryce.snodge.mutants
 import com.natpryce.snodge.plus
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.nio.charset.Charset
-import java.util.Random
 
 class JsonMutagenTest {
     val random = Random()

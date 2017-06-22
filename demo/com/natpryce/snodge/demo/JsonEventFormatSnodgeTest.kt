@@ -5,6 +5,7 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.jsonk.JsonElement
 import com.natpryce.jsonk.JsonString
 import com.natpryce.snodge.Mutagen
+import com.natpryce.snodge.Random
 import com.natpryce.snodge.json.addObjectProperty
 import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
@@ -13,7 +14,6 @@ import com.natpryce.snodge.mutants
 import org.junit.Test
 import java.io.IOException
 import java.net.URI
-import java.util.Random
 
 class JsonEventFormatSnodgeTest {
     

@@ -1,6 +1,7 @@
 package com.natpryce.snodge.form
 
 import com.natpryce.snodge.Mutagen
+import com.natpryce.snodge.Random
 import com.natpryce.snodge.combine
 import com.natpryce.snodge.internal.mapLazy
 import com.natpryce.snodge.mapped
@@ -8,7 +9,6 @@ import com.natpryce.snodge.reflect.replaceWithTroublesomeClassName
 import com.natpryce.snodge.text.possiblyMeaningfulStrings
 import com.natpryce.snodge.text.replaceWithPossiblyMeaningfulText
 import java.nio.charset.Charset
-import java.util.Random
 
 fun Mutagen<Form>.forStrings(charset: Charset = Charsets.UTF_8): Mutagen<String> =
     mapped({ parseForm(it, charset) }, { it.toXWwwFormUrlencoded(charset) })

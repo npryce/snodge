@@ -1,12 +1,12 @@
 package com.natpryce.snodge.text
 
+import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutants
 import org.junit.Assert.fail
 import org.junit.Test
 import java.nio.ByteBuffer
 import java.nio.charset.CharacterCodingException
 import java.nio.charset.CodingErrorAction
-import java.util.Random
 import kotlin.text.Charsets.UTF_8
 
 class InvalidUTF8Test {

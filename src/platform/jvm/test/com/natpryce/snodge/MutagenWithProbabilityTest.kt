@@ -17,7 +17,7 @@ class MutagenWithProbabilityTest {
         assertThat(mutagen(randomReturning(1.0), "alice").toList(), isEmpty)
     }
     
-    fun randomReturning(value: Double) = object: java.util.Random() {
+    fun randomReturning(value: Double) = object: com.natpryce.snodge.Random() {
         override fun nextDouble() = value
     }
 }

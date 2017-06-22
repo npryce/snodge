@@ -4,7 +4,6 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isEmpty
 import org.junit.Test
-import java.util.Random
 
 class MutagenFilteredTest {
     @Test

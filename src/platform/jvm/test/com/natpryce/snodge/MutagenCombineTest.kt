@@ -3,7 +3,6 @@ package com.natpryce.snodge
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.junit.Test
-import java.util.Random
 
 class MutagenCombineTest {
     @Test

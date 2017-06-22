@@ -4,10 +4,10 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.containsSubstring
 import com.natpryce.hamkrest.isEmpty
 import com.natpryce.snodge.Mutagen
+import com.natpryce.snodge.Random
 import com.natpryce.snodge.repeat
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.Random
 
 class StringSpliceTest {
     @Test

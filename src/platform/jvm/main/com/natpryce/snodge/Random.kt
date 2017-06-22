@@ -1,6 +1,6 @@
 package com.natpryce.snodge
 
-import java.util.Random
+typealias Random = java.util.Random
 
 
 /**
