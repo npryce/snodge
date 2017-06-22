@@ -2,9 +2,11 @@ groupid=com.natpryce
 package=snodge
 version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 
+platforms=$(shell cd src/platform &&ls)
+
 outdir=out
-srcdir_main=src/main
-srcdir_test=src/test
+srcdir_main=src/platform/jvm/main
+srcdir_test=src/platform/jvm/test
 
 ifndef JAR
     JAR:=$(shell jenv which jar)
@@ -111,4 +113,7 @@ tagged:
 	@false
 endif
 
-.PHONY: all tested clean distclean published tagged distro ci
+.PHONY: all tested clean distclean published tagged distro ci tmp
+
+tmp:
+	-echo $(platforms)

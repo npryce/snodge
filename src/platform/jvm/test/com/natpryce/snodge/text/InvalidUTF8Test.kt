@@ -1,6 +1,5 @@
 package com.natpryce.snodge.text
 
-import com.natpryce.hamkrest.should.shouldMatch
 import com.natpryce.snodge.mutants
 import org.junit.Assert.fail
 import org.junit.Test

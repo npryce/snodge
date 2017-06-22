@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/DocumentMutation.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/JsonMutator.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/JsonPath.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/Mutagen.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/Mutagens.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/internal/JsonWalk.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/mutagens/AddArrayElement.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/mutagens/AddObjectProperty.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/mutagens/RemoveJsonElement.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/main/com/natpryce/snodge/mutagens/ReplaceJsonElement.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/test/com/natpryce/snodge/JsonBuilders.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/test/com/natpryce/snodge/JsonMutatorTest.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/test/com/natpryce/snodge/JsonPathTest.kt" charset="ISO-8859-1" />
-    <file url="file://$PROJECT_DIR$/src/test/com/natpryce/snodge/internal/JsonWalkTest.kt" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/platform/jvm/main/com/natpryce/snodge/Mutagen.kt" charset="ISO-8859-1" />
+    <file url="file://$PROJECT_DIR$/src/platform/jvm/main/com/natpryce/snodge/Mutagens.kt" charset="ISO-8859-1" />
   </component>
 </project>

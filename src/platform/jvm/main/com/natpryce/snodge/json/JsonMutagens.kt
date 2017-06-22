@@ -113,5 +113,5 @@ fun defaultJsonMutagens() =
 
 @Deprecated(
     message="renamed to defaultJsonMutagens",
-    replaceWith = ReplaceWith("defaultJsonMutagens()", "com.natpryce.snodge.json.defaultJsonMutagens"))
+    replaceWith = ReplaceWith("defaultJsonMutagens()", "defaultJsonMutagens"))
 fun allJsonMutagens() = defaultJsonMutagens()

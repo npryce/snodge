@@ -1,14 +1,11 @@
 package com.natpryce.xmlk
 
 import java.io.File
-import java.io.StringWriter
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLOutputFactory
 import javax.xml.stream.XMLOutputFactory.IS_REPAIRING_NAMESPACES
 import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stax.StAXResult
 
 
 object ExampleXmlFiles {

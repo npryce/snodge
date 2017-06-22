@@ -1,7 +1,6 @@
 package com.natpryce.snodge.bytes
 
 import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.containsSubstring
 import com.natpryce.hamkrest.isEmpty
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.repeat

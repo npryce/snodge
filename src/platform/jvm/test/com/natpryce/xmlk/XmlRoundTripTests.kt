@@ -6,17 +6,13 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 import org.xml.sax.InputSource
-import java.io.File
 import java.io.StringReader
 import java.io.StringWriter
 import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLOutputFactory
-import javax.xml.stream.XMLStreamWriter
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stax.StAXResult
-import javax.xml.transform.stax.StAXSource
 
 
 @RunWith(Parameterized::class)
