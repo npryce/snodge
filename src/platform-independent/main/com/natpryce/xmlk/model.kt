@@ -1,7 +1,5 @@
 package com.natpryce.xmlk
 
-import javax.xml.namespace.QName
-
 interface HasChildren {
     val children: List<XmlNode>
 }
@@ -19,6 +17,12 @@ data class XmlDocument(
 sealed class XmlNode
 
 data class XmlText(val text: String, val asCData: Boolean = false) : XmlNode()
+
+data class QName(
+    val localPart: String,
+    val namespaceURI: String? = null,
+    val prefix: String? = null
+)
 
 data class XmlElement(
     val name: QName,

@@ -32,9 +32,9 @@ fun XMLStreamWriter.writeXmlNode(n: XmlNode) {
 }
 
 private fun XMLStreamWriter.writeElement(n: XmlElement) {
-    writeStartElement(n.name.prefix, n.name.localPart, n.name.namespaceURI)
+    writeStartElement(n.name.prefix ?: "", n.name.localPart, n.name.namespaceURI ?: "")
     n.attributes.forEach { name, value ->
-        writeAttribute(name.prefix, name.namespaceURI, name.localPart, value)
+        writeAttribute(name.prefix ?: "", name.namespaceURI ?: "", name.localPart, value)
     }
     writeChildren(n)
     writeEndElement()

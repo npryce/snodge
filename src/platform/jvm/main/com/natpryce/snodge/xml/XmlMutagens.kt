@@ -3,6 +3,7 @@ package com.natpryce.snodge.xml
 import com.natpryce.snodge.combine
 import com.natpryce.snodge.reflect.troublesomeClasses
 import com.natpryce.snodge.text.possiblyMeaningfulStrings
+import com.natpryce.xmlk.QName
 import com.natpryce.xmlk.XmlElement
 import com.natpryce.xmlk.XmlNode
 import com.natpryce.xmlk.XmlText
@@ -10,7 +11,6 @@ import com.natpryce.xmlk.minusAttribute
 import com.natpryce.xmlk.minusChild
 import com.natpryce.xmlk.replaceChild
 import com.natpryce.xmlk.withAttribute
-import javax.xml.namespace.QName
 
 
 fun removeAttribute() = XmlMutagen<XmlElement> { _, element ->

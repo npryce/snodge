@@ -1,7 +1,6 @@
 package com.natpryce.xmlk
 
 import java.io.Reader
-import javax.xml.namespace.QName
 import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLStreamConstants.CDATA
 import javax.xml.stream.XMLStreamConstants.CHARACTERS
@@ -45,17 +44,23 @@ private fun XMLStreamReader.readChildrenUntil(end: Int): List<XmlNode> {
 }
 
 private fun XMLStreamReader.readElement(): XmlElement {
-    val name = name
     val attributes = (0 until attributeCount)
-        .map {i ->
-            val attributeName: QName = getAttributeName(i)
-            val attributeValue: String = getAttributeValue(i)
-            
-            attributeName to attributeValue
-        }
+        .map { attributeQName(it) to getAttributeValue(it) }
         .toMap()
     
     val children = readChildrenUntil(END_ELEMENT)
     
-    return XmlElement(name, attributes, children)
+    return XmlElement(elementQName(), attributes, children)
 }
+
+private fun XMLStreamReader.elementQName() =
+    QName(
+        localPart = localName,
+        namespaceURI = namespaceURI?.takeUnless { it.isEmpty() },
+        prefix = prefix?.takeUnless { it.isEmpty() })
+
+private fun XMLStreamReader.attributeQName(i: Int) =
+    QName(
+        localPart = getAttributeLocalName(i),
+        namespaceURI = getAttributeNamespace(i)?.takeUnless { it.isEmpty() },
+        prefix = getAttributePrefix(i)?.takeUnless { it.isEmpty() })
