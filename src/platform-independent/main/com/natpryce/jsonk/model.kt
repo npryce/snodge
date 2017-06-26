@@ -1,7 +1,5 @@
 package com.natpryce.jsonk
 
-import java.math.BigDecimal
-
 sealed class JsonElement
 
 data class JsonObject(
@@ -51,11 +49,11 @@ data class JsonNumber(val valueAsString: String) : JsonElement() {
     constructor(value: Long) : this(value.toString())
     constructor(value: Double) : this(value.toString())
     
-    fun toInt() = valueAsString.toInt()
-    fun toLong() = valueAsString.toLong()
-    fun toDouble() = valueAsString.toDouble()
-    fun toBigDecimal() = BigDecimal(valueAsString)
 }
+
+fun JsonNumber.toDouble() = valueAsString.toDouble()
+fun JsonNumber.toLong() = valueAsString.toLong()
+fun JsonNumber.toInt() = valueAsString.toInt()
 
 data class JsonString(val value: String) : JsonElement()
 

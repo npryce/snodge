@@ -7,6 +7,7 @@ import com.natpryce.jsonk.JsonNull
 import com.natpryce.jsonk.JsonNumber
 import com.natpryce.jsonk.JsonObject
 import com.natpryce.jsonk.JsonString
+import com.natpryce.jsonk.toBigDecimal
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.mapped
 import javax.json.Json
