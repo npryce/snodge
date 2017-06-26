@@ -1,0 +1,18 @@
+
+
+outdir_js=out/js
+
+src_js_main:=$(call srcfiles,js,main)
+src_js_test:=$(call srcfiles,js,test)
+
+output=$(outdir_js)/snodge.js
+
+KOTLINC_JS=kotlinc-js
+KOTLINC_JS_FLAGS=
+
+
+all: $(output)
+
+$(output): $(src_js_main)
+	$(KOTLINC_JS) $(KOTLINC_JS_FLAGS) -output $(output) $^
+
