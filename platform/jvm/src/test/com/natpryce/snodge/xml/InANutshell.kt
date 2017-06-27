@@ -1,0 +1,15 @@
+package com.natpryce.snodge.xml
+
+import com.natpryce.snodge.Random
+import com.natpryce.xmlk.ExampleXmlFiles
+
+fun main(args: Array<String>) {
+    val random = Random()
+    val originalXml = ExampleXmlFiles.load("simple-example.xml")
+    
+    random.mutants(defaultXmlMutagens(), 10, originalXml)
+        .forEach {
+            println(it.toXmlString())
+            println()
+        }
+}

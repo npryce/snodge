@@ -3,8 +3,8 @@ package=snodge
 version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 
 outdir_jvm=out/jvm
-srcdir_main_jvm=src/platform/jvm/main
-srcdir_test_jvm=src/platform/jvm/test
+srcdir_main_jvm=platform/jvm/src/main
+srcdir_test_jvm=platform/jvm/src/test
 
 ifndef JAR
     JAR:=$(shell jenv which jar)
@@ -13,8 +13,8 @@ ifndef JAVA
     JAVA:=$(shell jenv which java)
 endif
 
-KOTLINC=kotlinc
-KOTLINCFLAGS=
+KOTLINC=kotlinc-jvm
+KOTLINCFLAGS=-Xmulti-platform
 
 topath=$(subst $(eval) ,:,$1)
 classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(filter %.jar,$^))))
@@ -39,15 +39,15 @@ ci: tested $(published_archives)
 tested: $(outdir_jvm)/junit-report.txt
 distro: $(published_files)
 
-include libs/main.mk
-include libs/runtime.mk
-include libs/test.mk
+include platform/jvm/libs/main.mk
+include platform/jvm/libs/runtime.mk
+include platform/jvm/libs/test.mk
 
-libs/%.mk: %.dependencies
-	rm -rf libs/$*
-	mkdir -p libs/$*
-	tools/sm-download $< libs/$*
-	echo 'libs_$*=$$(filter-out %-source.jar,$$(wildcard libs/$*/*.jar))' > $@
+platform/jvm/libs/%.mk: %.dependencies
+	rm -rf platform/jvm/libs/$*
+	mkdir -p platform/jvm/libs/$*
+	tools/sm-download $< platform/jvm/libs/$*
+	echo 'libs_$*=$$(filter-out %-source.jar,$$(wildcard platform/jvm/libs/$*/*.jar))' > $@
 
 $(outdir_jvm)/$(package)-$(version).jar: $(src_jvm_main) $(libs_main) $(libs_runtime)
 $(outdir_jvm)/$(package)-$(version)-test.jar: $(src_jvm_test) $(outdir_jvm)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)

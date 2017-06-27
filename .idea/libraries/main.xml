@@ -1,15 +1,13 @@
 <component name="libraryTable">
   <library name="main">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/libs/main" />
-      <root url="file://$PROJECT_DIR$/libs/main" />
+      <root url="file://$PROJECT_DIR$/platform/jvm/libs/main" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/libs/main" />
+      <root url="file://$PROJECT_DIR$/platform/jvm/libs/main" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/libs/main" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/libs/main" recursive="false" />
-    <jarDirectory url="file://$PROJECT_DIR$/libs/main" recursive="false" type="SOURCES" />
+    <jarDirectory url="file://$PROJECT_DIR$/platform/jvm/libs/main" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/platform/jvm/libs/main" recursive="false" type="SOURCES" />
   </library>
 </component>

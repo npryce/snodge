@@ -10,7 +10,7 @@ ifndef DOKKA
     DOKKA=dokka
 endif
 
-srcfiles=$(shell find -f "src/platform/$1/$2" "src/platform-independent/$2" -name '*.kt')
+srcfiles=$(shell find -f "platform/$1/src/$2" "common/src/$2" -name '*.kt')
 
 include Makefile_$(platform)
 
@@ -18,7 +18,7 @@ clean:
 	rm -rf out
 
 distclean: clean
-	rm -rf libs/
+	rm -rf platform/jvm/libs/
 
 again: clean all
 

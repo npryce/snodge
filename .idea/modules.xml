@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/snodge/common.iml" filepath="$PROJECT_DIR$/snodge/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platform/js/js.iml" filepath="$PROJECT_DIR$/platform/js/js.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platform/jvm/jvm.iml" filepath="$PROJECT_DIR$/platform/jvm/jvm.iml" />
       <module fileurl="file://$PROJECT_DIR$/snodge.iml" filepath="$PROJECT_DIR$/snodge.iml" />
     </modules>
   </component>
 </project>
-
