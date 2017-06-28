@@ -7,7 +7,7 @@ import javax.xml.stream.XMLOutputFactory.IS_REPAIRING_NAMESPACES
 import javax.xml.stream.XMLStreamWriter
 
 
-impl fun XmlDocument.toXmlString(): String =
+fun XmlDocument.toXmlString(): String =
     StringWriter().also { it.writeXml(this) }.toString()
 
 fun Writer.writeXml(

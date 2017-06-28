@@ -6,7 +6,7 @@ import javax.json.Json
 import javax.json.stream.JsonGenerator
 
 
-impl fun JsonElement.toJsonString(): String =
+fun JsonElement.toJsonString(): String =
     StringWriter().also { it.writeJsonElement(this) }.toString()
 
 fun Writer.writeJsonElement(e: JsonElement) {

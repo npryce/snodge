@@ -12,7 +12,7 @@ import javax.xml.stream.XMLStreamConstants.START_DOCUMENT
 import javax.xml.stream.XMLStreamConstants.START_ELEMENT
 import javax.xml.stream.XMLStreamReader
 
-impl fun String.toXmlDocument(): XmlDocument =
+fun String.toXmlDocument(): XmlDocument =
     reader().use { it.readXml() }
 
 fun Reader.readXml(inputFactory: XMLInputFactory = XMLInputFactory.newFactory()): XmlDocument =

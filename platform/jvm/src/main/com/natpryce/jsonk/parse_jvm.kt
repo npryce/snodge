@@ -16,7 +16,7 @@ import javax.json.stream.JsonParser.Event.VALUE_TRUE
 import javax.json.stream.JsonParsingException
 
 
-impl fun String.toJsonElement(): JsonElement = this.reader().readJsonElement()
+fun String.toJsonElement(): JsonElement = this.reader().readJsonElement()
 
 fun Reader.readJsonElement(): JsonElement = Json.createParser(this).readJsonElement()
 

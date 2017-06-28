@@ -1,19 +1,13 @@
 package com.natpryce.xmlk
 
+import com.natpryce.testing.projectFile
 import java.io.File
-import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.stream.XMLInputFactory
-import javax.xml.stream.XMLOutputFactory
-import javax.xml.stream.XMLOutputFactory.IS_REPAIRING_NAMESPACES
-import javax.xml.transform.TransformerFactory
 
 
 object ExampleXmlFiles {
-    private val dataDir = File("test-data/xml")
+    private val dataDir = projectFile("test-data/xml")
     private val inputFactory: XMLInputFactory = XMLInputFactory.newFactory()
-    private val outputFactory = XMLOutputFactory.newFactory().apply { setProperty(IS_REPAIRING_NAMESPACES, true) }
-    private var documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-    private val transformer = TransformerFactory.newInstance().newTransformer()
     
     fun list() =
         dataDir.list().filter { it.endsWith(".xml") }

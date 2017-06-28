@@ -1,6 +1,7 @@
 package com.natpryce.snodge.json
 
 import com.natpryce.snodge.Random
+import com.natpryce.snodge.mutants
 
 fun main(args: Array<String>) {
     val random = Random()

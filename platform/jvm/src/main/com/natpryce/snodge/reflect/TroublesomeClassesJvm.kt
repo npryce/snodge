@@ -21,7 +21,7 @@ class ClassCannotBeInstantiated {
 private class PrivateClass {
 }
 
-impl fun troublesomeClasses() =
+fun troublesomeClasses() =
     listOf(ClassCannotBeLoaded::class, ClassCannotBeInstantiated::class, PrivateClass::class)
         .map { it.jvmName }
 

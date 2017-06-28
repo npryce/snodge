@@ -10,7 +10,7 @@ ifndef DOKKA
     DOKKA=dokka
 endif
 
-srcfiles=$(shell find -f "platform/$1/src/$2" "common/src/$2" -name '*.kt')
+srcfiles=$(shell find platform/$1/{common-src,src}/$2 -name '*.kt')
 
 include Makefile_$(platform)
 
