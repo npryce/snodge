@@ -16,7 +16,7 @@ import javax.xml.transform.stax.StAXResult
 
 
 @RunWith(Parameterized::class)
-class XmlRoundTripTests(val exampleName: String) {
+class XmlRoundTripTest(val exampleName: String) {
     @Test
     fun `round trips XML`() {
         val originalXml = ExampleXmlFiles.loadText(exampleName)

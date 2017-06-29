@@ -10,7 +10,7 @@ import javax.json.Json
 
 
 @RunWith(Parameterized::class)
-class JsonRoundTripTests(val exampleName: String) {
+class JsonRoundTripTest(val exampleName: String) {
     companion object {
         @Parameters(name = "{0}") @JvmStatic
         fun examples() = ExampleJsonFiles.list()

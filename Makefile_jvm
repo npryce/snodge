@@ -22,6 +22,8 @@ classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(f
 src_jvm_main:=$(call srcfiles,jvm,main)
 src_jvm_test:=$(call srcfiles,jvm,test)
 
+jvm_tests=$(shell echo $(src_jvm_test) | tr [:space:] "\n" | grep -F Test.kt | sed -E 's:.*/[^/]*src/test/(.+)\.kt:\1:' | tr / .)
+
 package_distro += \
     $(outdir_jvm)/$(package)-$(version).pom \
     $(outdir_jvm)/$(package)-$(version).jar \
@@ -52,10 +54,9 @@ platform/jvm/libs/%.mk: %.dependencies
 $(outdir_jvm)/$(package)-$(version).jar: $(src_jvm_main) $(libs_main) $(libs_runtime)
 $(outdir_jvm)/$(package)-$(version)-test.jar: $(src_jvm_test) $(outdir_jvm)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
 
-$(outdir_jvm)/junit-report.txt: TESTS=$(subst /,.,$(filter %Test,$(patsubst $(srcdir_test_jvm)/%.kt,%,$(src_jvm_test))))
 $(outdir_jvm)/junit-report.txt: $(outdir_jvm)/$(package)-$(version)-test.jar $(outdir_jvm)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
 	$(JAVA) $(classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
-	    org.junit.runner.JUnitCore $(TESTS) | tee $@
+	    org.junit.runner.JUnitCore $(jvm_tests) | tee $@
 
 $(outdir_jvm)/$(package)-$(version)-sources.jar: $(src_jvm_main)
 	$(JAR) cf $@ -C $(srcdir_main_jvm) .
