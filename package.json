@@ -1,0 +1,25 @@
+{
+  "name": "snodge",
+  "version": "0.0.0",
+  "description": "Snodge ======",
+  "main": "snodge.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-personal:npryce/snodge.git"
+  },
+  "keywords": [
+    "fuzz",
+    "testing"
+  ],
+  "author": "Nat Pryce",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "qunit": "^1.0.0"
+  }
+}
