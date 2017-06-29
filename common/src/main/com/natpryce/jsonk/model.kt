@@ -7,11 +7,10 @@ data class JsonObject(
 ) : JsonElement(), Map<String, JsonElement> by properties {
     
     constructor(properties: Iterable<Pair<String, JsonElement>>) :
-        this(mutableMapOf<String, JsonElement>().apply { putAll(properties) })
-        // TODO  - on JVM this should be a linked hashmap, or replace with a list of properties & linear search
+        this(linkedMapOf<String,JsonElement>().apply { putAll(properties) })
     
     constructor(vararg properties: Pair<String, JsonElement>) :
-        this(properties.toList())
+        this(linkedMapOf(*properties))
 }
 
 fun JsonObject.withProperty(anotherProperty: Pair<String, JsonElement>) =
