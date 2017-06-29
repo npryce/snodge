@@ -14,6 +14,9 @@ srcfiles=$(shell find platform/$1/{common-src,src}/$2 -name '*.kt')
 
 include Makefile_$(platform)
 
+print-%:
+	@echo "$* ($(flavor $*)) = $($*)"
+
 clean:
 	rm -rf out
 
