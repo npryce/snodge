@@ -1,16 +1,36 @@
 
 outdir_js=out/js
 
-src_js_main:=$(call srcfiles,js,main)
-src_js_test:=$(call srcfiles,js,test)
-
-output=$(outdir_js)/snodge.js
+js_src_main:=$(call srcfiles,js,main)
+js_src_test:=$(call srcfiles,js,test)
 
 KOTLINC_JS=kotlinc-js
-KOTLINC_JS_FLAGS=-Xmulti-platform
+KOTLINC_JS_FLAGS=-meta-info -source-map -target v5 -module-kind umd -language-version 1.1 -api-version 1.1
+
+JS_LIB_SCRIPTS=$(outdir_js)/lib/kotlin.js $(outdir_js)/lib/kotlin-test.js
+.PRECIOUS: $(JS_LIB_SCRIPTS)
 
 
-all: $(output)
+all: $(outdir_js)/$(package).js $(outdir_js)/$(package)-test.js
 
-$(output): $(src_js_main)
-	$(KOTLINC_JS) $(KOTLINC_JS_FLAGS) -output $(output) $^
+$(outdir_js)/$(package).js: $(js_src_main)
+	@mkdir -p $(dir $@)
+	$(KOTLINC_JS) $(KOTLINC_JS_FLAGS) -output $@ $^
+
+$(outdir_js)/$(package)-test.js: $(js_src_test)
+	@mkdir -p $(dir $@)
+	$(KOTLINC_JS) $(KOTLINC_JS_FLAGS) -output $@ $^ -libraries $(KOTLINHOME)/lib/kotlin-test-js.jar
+
+
+out/js/test-report.txt: $(outdir_js)/$(package).js $(outdir_js)/$(package)-test.js $(JS_LIB_SCRIPTS)
+	@mkdir -p $(dir $@)
+	touch $@
+
+out/js/lib/kotlin.js: $(KOTLINHOME)/lib/kotlin-stdlib-js.jar
+out/js/lib/kotlin-test.js: $(KOTLINHOME)/lib/kotlin-test-js.jar
+
+out/js/lib/%.js:
+	@mkdir -p $(dir $@)
+	cd $(dir $@) && $(JAR) xf $(abspath $<) $(notdir $@)
+	touch $@
+

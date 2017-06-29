@@ -19,7 +19,7 @@
   ],
   "author": "Nat Pryce",
   "license": "Apache-2.0",
-  "dependencies": {
-    "qunit": "^1.0.0"
+  "devDependencies": {
+    "qunitjs": "1.23.1"
   }
 }

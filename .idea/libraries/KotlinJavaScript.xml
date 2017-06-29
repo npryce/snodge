@@ -2,6 +2,7 @@
   <library name="KotlinJavaScript">
     <CLASSES>
       <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-stdlib-js.jar!/" />
+      <root url="jar://$KOTLIN_BUNDLED$/lib/kotlin-test-js.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

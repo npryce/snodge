@@ -1,17 +1,8 @@
 groupid=com.natpryce
-package=snodge
-version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 
 outdir_jvm=out/jvm
 srcdir_main_jvm=platform/jvm/src/main
 srcdir_test_jvm=platform/jvm/src/test
-
-ifndef JAR
-    JAR:=$(shell jenv which jar)
-endif
-ifndef JAVA
-    JAVA:=$(shell jenv which java)
-endif
 
 KOTLINC=kotlinc-jvm
 KOTLINCFLAGS=-Xmulti-platform

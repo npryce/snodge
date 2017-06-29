@@ -3,3 +3,4 @@ out/
 libs/
 .idea/workspace.xml
 .idea/uiDesigner.xml
+node_modules/

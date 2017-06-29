@@ -1,7 +1,18 @@
+package=snodge
+version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 
 platform?=jvm
 
+ifndef JAR
+    JAR:=$(shell jenv which jar)
+endif
+
+ifndef JAVA
+    JAVA:=$(shell jenv which java)
+endif
+
 KOTLIN=kotlin
+
 ifndef KOTLINHOME
     KOTLINHOME:=$(realpath $(shell which $(KOTLIN))/../..)
 endif
