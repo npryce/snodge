@@ -22,9 +22,9 @@ $(outdir_js)/$(package)-test.js: $(js_src_test)
 	$(KOTLINC_JS) $(KOTLINC_JS_FLAGS) -output $@ $^ -libraries $(KOTLINHOME)/lib/kotlin-test-js.jar
 
 
-out/js/test-report.txt: $(outdir_js)/$(package).js $(outdir_js)/$(package)-test.js $(JS_LIB_SCRIPTS)
+out/js/test-report.txt: $(outdir_js)/$(package).js $(outdir_js)/$(package)-test.js $(JS_LIB_SCRIPTS) test-js.html
 	@mkdir -p $(dir $@)
-	touch $@
+	./node_modules/.bin/node-qunit-phantomjs test-js.html --verbose | tee $@
 
 out/js/lib/kotlin.js: $(KOTLINHOME)/lib/kotlin-stdlib-js.jar
 out/js/lib/kotlin-test.js: $(KOTLINHOME)/lib/kotlin-test-js.jar
