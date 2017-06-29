@@ -1,2 +1,0 @@
-zap javax.annotation.**
-rule com.google.** com.natpryce.snodge.thirdparty.google.@1
