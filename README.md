@@ -1,7 +1,7 @@
 Snodge
 ======
 
-[![Kotlin](https://img.shields.io/badge/kotlin-1.1.2-blue.svg)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.1.3-blue.svg)](http://kotlinlang.org)
 [![Build Status](https://travis-ci.org/npryce/snodge.svg?branch=kotlin)](https://travis-ci.org/npryce/snodge)
 [![Maven Central](https://img.shields.io/maven-central/v/com.natpryce/snodge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.natpryce%22%20AND%20a%3A%22snodge%22)
 
