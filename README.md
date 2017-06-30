@@ -13,6 +13,6 @@ Examples of things you can test by mutating known good JSON documents:
 
 [Download from Maven Central](http://mvnrepository.com/artifact/com.natpryce/snodge)
 
-- Version 3.x.x.x (kotlin branch) is for Kotlin
-- Version 2.x.x.x (java8 branch) is for Java 8, and uses streams and Java 8 function types
-- Version 1.x.x.x (java7 branch) is for Java 7 and depends on Guava
+- Version 3.x.x.x ([kotlin branch](tree/kotlin)) is for Kotlin
+- Version 2.x.x.x ([java8 branch](tree/java8)) is for Java 8, and uses streams and Java 8 function types
+- Version 1.x.x.x ([java7 branch](tree/java7)) is for Java 7 and depends on Guava
