@@ -25,11 +25,10 @@ endif
 srcfiles=$(shell find platform/$1/common-src/$2 platform/$1/src/$2 -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
 
+$(info platforms: $(platforms))
+
 all: $(platforms)
 include $(platforms:%=Makefile_%)
-
-print-%:
-	@echo "$* ($(flavor $*)) = $($*)"
 
 clean:
 	rm -rf out
@@ -39,7 +38,7 @@ distclean: clean
 
 again: clean all
 
-ci: jvm-ci
+ci: $(platforms:%=%-ci)
 
 tested: jvm-tested
 
@@ -53,5 +52,8 @@ tagged:
 endif
 
 published: jvm-published
+
+print-%:
+	@echo "$* ($(flavor $*)) = $($*)"
 
 .PHONY: all clean distclean tested tagged ci published

@@ -26,7 +26,7 @@ jvm_published_files = $(jvm_published_archives) $(jvm_published_signatures)
 
 jvm: jvm-tested jvm-distro
 jvm-ci: jvm-tested $(jvm_published_archives)
-jvm-tested: $(jvm_outdir)/junit-report.txt
+jvm-tested: $(jvm_outdir)/test-report.txt
 jvm-distro: $(jvm_published_files)
 
 include platform/jvm/libs/main.mk
@@ -44,7 +44,7 @@ $(jvm_outdir)/$(package)-$(version)-test.jar: $(src_jvm_test) $(jvm_outdir)/$(pa
     $(libs_main) $(libs_runtime) $(libs_test) \
     $(KOTLINHOME)/lib/kotlin-test.jar
 
-$(jvm_outdir)/junit-report.txt: $(jvm_outdir)/$(package)-$(version)-test.jar $(jvm_outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
+$(jvm_outdir)/test-report.txt: $(jvm_outdir)/$(package)-$(version)-test.jar $(jvm_outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
 	$(JAVA) $(jvm_classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
 	    org.junit.runner.JUnitCore $(jvm_tests) | tee $@
 
