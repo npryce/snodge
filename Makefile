@@ -22,7 +22,7 @@ ifndef DOKKA
     DOKKA=dokka
 endif
 
-srcfiles=$(shell find platform/$1/{common-src,src}/$2 -name '*.kt')
+srcfiles=$(shell find platform/$1/common-src/$2 platform/$1/src/$2 -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
 
 all: $(platforms)
