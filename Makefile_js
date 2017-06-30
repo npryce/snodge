@@ -1,36 +1,40 @@
 
-outdir_js=out/js
+js_outdir=out/js
 
 js_src_main:=$(call srcfiles,js,main)
 js_src_test:=$(call srcfiles,js,test)
 
-KOTLINC_JS=kotlinc-js
-KOTLINC_JS_FLAGS=-meta-info -source-map -target v5 -module-kind umd -language-version 1.1 -api-version 1.1
+JS_KOTLINC=kotlinc-js
+JS_KOTLINC_FLAGS=-meta-info -target v5 -module-kind umd -language-version 1.1 -api-version 1.1
 
-JS_LIB_SCRIPTS=$(outdir_js)/lib/kotlin.js $(outdir_js)/lib/kotlin-test.js
+JS_LIB_SCRIPTS=$(js_outdir)/lib/kotlin.js $(js_outdir)/lib/kotlin-test.js
 .PRECIOUS: $(JS_LIB_SCRIPTS)
 
 
-all: $(outdir_js)/$(package).js $(outdir_js)/$(package)-test.js
+js: $(js_outdir)/test-report.txt $(js_outdir)/$(package)-js.jar $(js_outdir)/$(package)-test-js.jar
 
-$(outdir_js)/$(package).js: $(js_src_main)
+$(js_outdir)/%-js.jar: $(js_outdir)/%.js
+	cd $(dir $@) && $(JAR) cf $(abspath $@) $*.js $*.meta.js $*/
+
+$(js_outdir)/$(package).js: $(js_src_main)
 	@mkdir -p $(dir $@)
-	$(KOTLINC_JS) $(KOTLINC_JS_FLAGS) -output $@ $^
+	$(JS_KOTLINC) $(JS_KOTLINC_FLAGS) -output $@ $^
 
-$(outdir_js)/$(package)-test.js: $(js_src_test)
+$(js_outdir)/$(package)-test.js: $(js_src_test) $(js_outdir)/$(package)-js.jar
 	@mkdir -p $(dir $@)
-	$(KOTLINC_JS) $(KOTLINC_JS_FLAGS) -output $@ $^ -libraries $(KOTLINHOME)/lib/kotlin-test-js.jar
+	$(JS_KOTLINC) $(JS_KOTLINC_FLAGS) -output $@ $(filter %.kt,$^) -libraries $(js_outdir)/$(package)-js.jar:$(KOTLINHOME)/lib/kotlin-test-js.jar
 
 
-out/js/test-report.txt: $(outdir_js)/$(package).js $(outdir_js)/$(package)-test.js $(JS_LIB_SCRIPTS) test-js.html
+$(js_outdir)/test-report.txt: $(js_outdir)/$(package).js $(js_outdir)/$(package)-test.js $(JS_LIB_SCRIPTS) test-js.html
 	@mkdir -p $(dir $@)
-	./node_modules/.bin/node-qunit-phantomjs test-js.html --verbose | tee $@
+	./node_modules/.bin/node-qunit-phantomjs test-js.html | tee $@
 
-out/js/lib/kotlin.js: $(KOTLINHOME)/lib/kotlin-stdlib-js.jar
-out/js/lib/kotlin-test.js: $(KOTLINHOME)/lib/kotlin-test-js.jar
+$(js_outdir)/lib/kotlin.js: $(KOTLINHOME)/lib/kotlin-stdlib-js.jar
+$(js_outdir)/lib/kotlin-test.js: $(KOTLINHOME)/lib/kotlin-test-js.jar
 
-out/js/lib/%.js:
+$(js_outdir)/lib/%.js:
 	@mkdir -p $(dir $@)
 	cd $(dir $@) && $(JAR) xf $(abspath $<) $(notdir $@)
 	touch $@
 
+.PHONY: js
