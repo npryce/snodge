@@ -1,7 +1,8 @@
 package=snodge
+
 version:=$(shell git describe --tags --always --dirty=-local --match='r*' | sed -e 's/^r//')
 
-platform?=jvm
+platforms:=$(notdir $(wildcard platform/*))
 
 ifndef JAR
     JAR:=$(shell jenv which jar)
@@ -24,8 +25,8 @@ endif
 srcfiles=$(shell find platform/$1/{common-src,src}/$2 -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
 
-all: jvm
-include Makefile_$(platform)
+all: $(platforms)
+include $(platforms:%=Makefile_%)
 
 print-%:
 	@echo "$* ($(flavor $*)) = $($*)"
