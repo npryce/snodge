@@ -1,33 +1,28 @@
 package com.natpryce.snodge.form
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import com.natpryce.snodge.Random
 import org.junit.Test
+import kotlin.test.assertEquals
 
 
 class AddUniqueFieldTest {
     @Test
-    fun `adds field with new value from those given`() {
+    fun adds_field_with_new_value_from_those_given() {
         val original = form("a" to "1")
         val mutagen = addUniqueField(listOf("10", "11", "12"), basename = "x")
         
         val mutants = mutagen.invoke(Random(), original).map { it.value }.toSet()
         
-        assertThat(mutants, equalTo(setOf(
-            form("a" to "1", "x" to "10", "x" to "11", "x" to "12")
-        )))
+        assertEquals(setOf(form("a" to "1", "x" to "10", "x" to "11", "x" to "12")), mutants)
     }
     
     @Test
-    fun `ensures new field name is different from any existing fields`() {
+    fun ensures_new_field_name_is_different_from_any_existing_fields() {
         val original = form("x" to "1")
         val mutagen = addUniqueField(listOf("10", "11"), basename = "x")
         
         val mutants = mutagen.invoke(Random(), original).map { it.value }.toSet()
         
-        assertThat(mutants, equalTo(setOf(
-            form("x" to "1", "x_1" to "10", "x_1" to "11")
-        )))
+        assertEquals(setOf(form("x" to "1", "x_1" to "10", "x_1" to "11")), mutants)
     }
 }
