@@ -5,7 +5,7 @@ js_src_main:=$(call srcfiles,js,main)
 js_src_test:=$(call srcfiles,js,test)
 
 JS_KOTLINC=kotlinc-js
-JS_KOTLINC_FLAGS=-meta-info -target v5 -module-kind umd -language-version 1.1 -api-version 1.1
+JS_KOTLINC_FLAGS=-meta-info -source-map -target v5 -module-kind umd -language-version 1.1 -api-version 1.1
 
 JS_LIB_SCRIPTS=$(js_outdir)/lib/kotlin.js $(js_outdir)/lib/kotlin-test.js
 .PRECIOUS: $(JS_LIB_SCRIPTS)
@@ -29,7 +29,7 @@ $(js_outdir)/$(package)-test.js: $(js_src_test) $(js_outdir)/$(package)-js.jar
 
 $(js_outdir)/test-report.txt: $(js_outdir)/$(package).js $(js_outdir)/$(package)-test.js $(JS_LIB_SCRIPTS) test-js.html
 	@mkdir -p $(dir $@)
-	./node_modules/.bin/node-qunit-phantomjs test-js.html | tee $@
+	./node_modules/.bin/node-qunit-phantomjs test-js.html $(QUNIT_FLAGS) | tee $@
 
 $(js_outdir)/lib/kotlin.js: $(KOTLINHOME)/lib/kotlin-stdlib-js.jar
 $(js_outdir)/lib/kotlin-test.js: $(KOTLINHOME)/lib/kotlin-test-js.jar
