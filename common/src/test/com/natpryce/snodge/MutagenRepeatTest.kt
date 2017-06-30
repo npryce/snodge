@@ -1,16 +1,15 @@
 package com.natpryce.snodge
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class MutagenRepeatTest {
     @Test
-    fun `applies a mutagen multiple times`() {
+    fun applies_a_mutagen_multiple_times() {
         val mutagen = repeat(3, always("a", "b"))
         
         val mutants = mutagen(Random(), "original").map { it.value }.toList()
         
-        assertThat(mutants, equalTo(listOf("a", "b", "a", "b", "a", "b")))
+        assertEquals(listOf("a", "b", "a", "b", "a", "b"), mutants)
     }
 }

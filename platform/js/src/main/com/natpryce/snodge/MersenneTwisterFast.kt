@@ -214,7 +214,7 @@ import kotlin.js.Math
 // on the code, I strongly suggest looking at MersenneTwister.java first.
 // -- Sean
 
-class MersenneTwisterFast {
+open class MersenneTwisterFast {
     
     private var mt: IntArray? = null // the array for the state vector
     private var mti: Int = 0 // mti==N+1 means mt[N] is not initialized
@@ -340,7 +340,7 @@ class MersenneTwisterFast {
     }
     
     
-    fun nextInt(): Int {
+    open fun nextInt(): Int {
         var y: Int
         
         if (mti >= N)
@@ -377,7 +377,7 @@ class MersenneTwisterFast {
     }
     
     
-    fun nextShort(): Short {
+    open fun nextShort(): Short {
         var y: Int
         
         if (mti >= N)
@@ -414,7 +414,7 @@ class MersenneTwisterFast {
     }
     
     
-    fun nextChar(): Char {
+    open fun nextChar(): Char {
         var y: Int
         
         if (mti >= N)
@@ -451,7 +451,7 @@ class MersenneTwisterFast {
     }
     
     
-    fun nextBoolean(): Boolean {
+    open fun nextBoolean(): Boolean {
         var y: Int
         
         if (mti >= N)
@@ -494,7 +494,7 @@ class MersenneTwisterFast {
      * event as nextBoolean(double), but twice as fast. To explicitly
      * use this, remember you may need to cast to float first.  */
     
-    fun nextBoolean(probability: Float): Boolean {
+    open fun nextBoolean(probability: Float): Boolean {
         var y: Int
         
         if (probability < 0.0f || probability > 1.0f)
@@ -540,7 +540,7 @@ class MersenneTwisterFast {
      * of returning true, else returning false.  <tt>probability</tt> must
      * be between 0.0 and 1.0, inclusive.  */
     
-    fun nextBoolean(probability: Double): Boolean {
+    open fun nextBoolean(probability: Double): Boolean {
         var y: Int
         var z: Int
         
@@ -614,7 +614,7 @@ class MersenneTwisterFast {
     }
     
     
-    fun nextByte(): Byte {
+    open fun nextByte(): Byte {
         var y: Int
         
         if (mti >= N)
@@ -651,7 +651,7 @@ class MersenneTwisterFast {
     }
     
     
-    fun nextBytes(bytes: ByteArray) {
+    open fun nextBytes(bytes: ByteArray) {
         var y: Int
         
         for (x in bytes.indices) {
@@ -763,7 +763,7 @@ class MersenneTwisterFast {
     
     /** Returns a long drawn uniformly from 0 to n-1.  Suffice it to say,
      * n must be &gt; 0, or an IllegalArgumentException is raised.  */
-    fun nextLong(n: Long): Long {
+    open fun nextLong(n: Long): Long {
         if (n <= 0)
             throw IllegalArgumentException("n must be positive, got: " + n)
         
@@ -842,7 +842,7 @@ class MersenneTwisterFast {
     
     /** Returns a random double in the half-open range from [0.0,1.0).  Thus 0.0 is a valid
      * result but 1.0 is not.  */
-    fun nextDouble(): Double {
+    open fun nextDouble(): Double {
         var y: Int
         var z: Int
         
@@ -925,7 +925,7 @@ class MersenneTwisterFast {
      *
      * This version preserves all possible random values in the double range.
      */
-    fun nextDouble(includeZero: Boolean, includeOne: Boolean): Double {
+    open fun nextDouble(includeZero: Boolean, includeOne: Boolean): Double {
         var d : Double
         do {
             d = nextDouble()                           // grab a value, initially from half-open [0.0, 1.0)
@@ -947,7 +947,7 @@ class MersenneTwisterFast {
     }
     
     
-    fun nextGaussian(): Double {
+    open fun nextGaussian(): Double {
         if (__haveNextNextGaussian) {
             __haveNextNextGaussian = false
             return __nextNextGaussian
@@ -1098,7 +1098,7 @@ class MersenneTwisterFast {
     
     /** Returns a random float in the half-open range from [0.0f,1.0f).  Thus 0.0f is a valid
      * result but 1.0f is not.  */
-    fun nextFloat(): Float {
+    open fun nextFloat(): Float {
         var y: Int
         
         if (mti >= N)
@@ -1149,7 +1149,7 @@ class MersenneTwisterFast {
      *
      * This version preserves all possible random values in the float range.
      */
-    fun nextFloat(includeZero: Boolean, includeOne: Boolean): Float {
+    open fun nextFloat(includeZero: Boolean, includeOne: Boolean): Float {
         var d: Float
         do {
             d = nextFloat()                            // grab a value, initially from half-open [0.0f, 1.0f)
@@ -1163,7 +1163,7 @@ class MersenneTwisterFast {
     
     /** Returns an integer drawn uniformly from 0 to n-1.  Suffice it to say,
      * n must be &gt; 0, or an IllegalArgumentException is raised.  */
-    fun nextInt(n: Int): Int {
+    open fun nextInt(n: Int): Int {
         if (n <= 0)
             throw IllegalArgumentException("n must be positive, got: " + n)
         

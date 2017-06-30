@@ -22,7 +22,9 @@ ifndef DOKKA
 endif
 
 srcfiles=$(shell find platform/$1/{common-src,src}/$2 -name '*.kt')
+topath=$(subst $(eval) ,:,$1)
 
+all: jvm
 include Makefile_$(platform)
 
 print-%:
@@ -36,4 +38,19 @@ distclean: clean
 
 again: clean all
 
-.PHONY: all clean distclean
+ci: jvm-ci
+
+tested: jvm-tested
+
+ifeq "$(origin version)" "command line"
+tagged:
+	git tag -s r$(version) -m "tagging version $(version)"
+else
+tagged:
+	@echo set the version to tag on the command line
+	@false
+endif
+
+published: jvm-published
+
+.PHONY: all clean distclean tested tagged ci published
