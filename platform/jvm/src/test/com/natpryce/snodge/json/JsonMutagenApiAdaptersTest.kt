@@ -24,17 +24,17 @@ class JsonMutagenApiAdaptersTest(exampleName: String) {
     val original: JsonElement = ExampleJsonFiles.load(exampleName)
     
     @Test
-    fun `can apply mutagen to Gson tree`() {
+    fun can_apply_mutagen_to_Gson_tree() {
         assertThat(original.toGson().toJsonk(), equalTo(original))
     }
     
     @Test
-    fun `can apply mutagen to Jackson tree`() {
+    fun can_apply_mutagen_to_Jackson_tree() {
         assertThat(original.toJackson().toJsonk(), equalTo(original))
     }
     
     @Test
-    fun `can apply mutagen to JSONP tree`() {
+    fun can_apply_mutagen_to_JSONP_tree() {
         assertThat(original.toJsonp().toJsonk(), equalTo(original))
     }
 }

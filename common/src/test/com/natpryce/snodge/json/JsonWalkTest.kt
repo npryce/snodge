@@ -1,15 +1,14 @@
 package com.natpryce.snodge.json
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import com.natpryce.jsonk.JsonElement
 import com.natpryce.jsonk.JsonNull
 import com.natpryce.jsonk.JsonString
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class JsonWalkTest {
     @Test
-    fun `returns object properties`() {
+    fun returns_object_properties() {
         assertWalk(obj("a" to 1, "b" to 2),
             JsonPath.root,
             JsonPath("a"),
@@ -17,7 +16,7 @@ class JsonWalkTest {
     }
     
     @Test
-    fun `returns nested object properties`() {
+    fun returns_nested_object_properties() {
         assertWalk(obj("a" to 1, "b" to obj("c" to 2)),
             JsonPath.root,
             JsonPath("a"),
@@ -26,7 +25,7 @@ class JsonWalkTest {
     }
     
     @Test
-    fun `returns array elements`() {
+    fun returns_array_elements() {
         assertWalk(list("a", "b"),
             JsonPath.root,
             JsonPath(0),
@@ -34,7 +33,7 @@ class JsonWalkTest {
     }
     
     @Test
-    fun `returns nested array elements`() {
+    fun returns_nested_array_elements() {
         assertWalk(list(list(1, 2), list(3, 4)),
             JsonPath.root,
             JsonPath(0),
@@ -46,7 +45,7 @@ class JsonWalkTest {
     }
     
     @Test
-    fun `big hairy json example`() {
+    fun big_hairy_json_example() {
         val json = obj(
             "a" to obj(
                 "b" to list(1, 2, 3)),
@@ -69,25 +68,25 @@ class JsonWalkTest {
     }
     
     @Test
-    fun `returns root for json primitive`() {
+    fun returns_root_for_json_primitive() {
         assertWalk(JsonString("bob"),
             JsonPath.root)
     }
     
     @Test
-    fun `returns root for json null`() {
+    fun returns_root_for_json_null() {
         assertWalk(JsonNull,
             JsonPath.root)
     }
     
     @Test
-    fun `returns root for empty object`() {
+    fun returns_root_for_empty_object() {
         assertWalk(obj(),
             JsonPath.root)
     }
     
     @Test
-    fun `returns root for empty array`() {
+    fun returns_root_for_empty_array() {
         assertWalk(list(),
             JsonPath.root)
     }
@@ -96,6 +95,6 @@ class JsonWalkTest {
         val actualVisitedElements = json.walk().map { it.first }.toList()
         val expectedVisitedElements = expected.map { it(json) }
         
-        assertThat(actualVisitedElements, equalTo(expectedVisitedElements))
+        assertEquals(expectedVisitedElements, actualVisitedElements)
     }
 }

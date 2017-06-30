@@ -4,18 +4,14 @@ import com.natpryce.jsonk.JsonArray
 import com.natpryce.jsonk.JsonElement
 import com.natpryce.jsonk.JsonObject
 
-data class JsonPath(
-    private val steps: List<Any>
-
-) : (JsonElement) -> JsonElement {
-    
+data class JsonPath(private val steps: List<Any> ) {
     constructor(vararg steps: Any) : this(steps.toList())
     
     override fun toString(): String {
         return pathBitsToString(steps, steps.size)
     }
     
-    override fun invoke(root: JsonElement): JsonElement {
+    operator fun invoke(root: JsonElement): JsonElement {
         return steps.foldIndexed(root) { i, result, _ ->
             applyPathElement(root, i, result)
         }

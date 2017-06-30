@@ -1,33 +1,30 @@
 package com.natpryce.snodge.text
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.containsSubstring
-import com.natpryce.hamkrest.isEmpty
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.Random
 import com.natpryce.snodge.repeat
-import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.test.assertTrue
 
 class StringSpliceTest {
     @Test
-    fun `splices text into string`() {
+    fun splices_text_into_string() {
         val mutagen = repeat(100, splice("foo"))
         val original = "alice"
         
         val spliceLocations = mutableSetOf<Int>()
         
         mutagen(Random(), original).map { it.value }.forEach {
-            assertThat("original: $original, mutant: $it", it, containsSubstring("foo"))
+            assertTrue("original: $original, mutant: $it") {it.contains("foo")}
             
             spliceLocations += it.indexOf("foo")
         }
         
-        assertThat("text should be spliced into string at different locations", spliceLocations, !isEmpty)
+        assertTrue("text should be spliced into string at different locations") {spliceLocations.isNotEmpty()}
     }
     
     @Test
-    fun `can mutate the replaced substring`() {
+    fun can_mutate_the_replaced_substring() {
         val toUpperCase: Mutagen<String> = fun(_: Random, original: String) =
             sequenceOf(lazy { original.toUpperCase() })
         
@@ -35,7 +32,7 @@ class StringSpliceTest {
         val original = "alice"
         
         mutagen(Random(), original).map { it.value }.forEach { mutant ->
-            assertTrue("original: $original, mutant: $mutant", mutant.find { it.isUpperCase() } != null)
+            assertTrue("original: $original, mutant: $mutant") {mutant.any { it == it.toUpperCase() }}
         }
     }
 }

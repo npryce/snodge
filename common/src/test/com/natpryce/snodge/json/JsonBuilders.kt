@@ -1,5 +1,3 @@
-@file:JvmName("JsonBuilders")
-
 package com.natpryce.snodge.json
 
 import com.natpryce.jsonk.JsonArray
@@ -25,6 +23,6 @@ private fun Any?.asJsonElement(): JsonElement {
         is Boolean -> return JsonBoolean(this)
         is Number -> return JsonNumber(toString())
         is Char -> return JsonString(toString())
-        else -> throw IllegalArgumentException("cannot turn a " + this.javaClass.name + " to a JsonElement")
+        else -> throw IllegalArgumentException("cannot turn a " + this::class.simpleName + " to a JsonElement")
     }
 }
