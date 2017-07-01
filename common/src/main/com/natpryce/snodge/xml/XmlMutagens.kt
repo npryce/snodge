@@ -30,9 +30,11 @@ fun removeNamespace() = XmlMutagen<XmlElement> { _, element ->
             }
 }
 
-inline fun <reified T: XmlNode> replaceNode(replacement: XmlNode) = XmlMutagen<XmlElement> { _, element ->
+inline fun <reified T: XmlNode> replaceNode(replacement: XmlNode) = replaceNodeIf({it is T}, replacement)
+
+fun replaceNodeIf(p: (XmlNode)->Boolean, replacement: XmlNode) = XmlMutagen<XmlElement> { _, element ->
     element.children.withIndex().asSequence()
-        .filter { (_, child) -> child is T }
+        .filter { (_, child) -> p(child) }
         .map { (i, _) -> lazy { element.replaceChild(i, replacement) } }
 }
 
