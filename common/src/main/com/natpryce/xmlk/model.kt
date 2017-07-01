@@ -10,7 +10,7 @@ data class XmlDocument(
     val xml: XmlDeclaration?,
     override val children: List<XmlNode>
 ) : HasChildren {
-    val root = children.single { it is XmlElement }
+    val root = children.filterIsInstance<XmlElement>().single()
 }
 
 
