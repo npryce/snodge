@@ -1,22 +1,22 @@
 {
   "name": "snodge",
-  "version": "0.0.0",
-  "description": "Snodge ======",
+  "description": "A mutation-based fuzzer for JSON, XML, HTML forms, text and binary data",
   "main": "snodge.js",
   "directories": {
     "doc": "doc"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github-personal:npryce/snodge.git"
+    "test": "make js-tested"
   },
   "keywords": [
     "fuzz",
     "testing"
   ],
+  "homepage": "https://github.com/npryce/snodge",
+  "bugs": {
+    "url": "https://github.com/npryce/snodge"
+  },
+  "repository": "git@github.com:npryce/snodge.git",
   "author": "Nat Pryce",
   "license": "Apache-2.0",
   "devDependencies": {
