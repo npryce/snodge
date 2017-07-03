@@ -4,3 +4,4 @@ libs/
 .idea/workspace.xml
 .idea/uiDesigner.xml
 node_modules/
+.idea/shelf/
