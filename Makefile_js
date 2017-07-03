@@ -1,4 +1,7 @@
 
+js_npm_package=$(package)-$(firstword $(subst ., ,$(version)))
+js_npm_version=$(subst $(eval) ,.,$(wordlist 2,4,$(subst ., ,$(version))))
+
 js_outdir=out/js
 
 js_src_main:=$(call srcfiles,js,main)
@@ -13,7 +16,7 @@ JS_LIB_SCRIPTS=$(js_outdir)/lib/kotlin.js $(js_outdir)/lib/kotlin-test.js
 
 js: $(js_outdir)/test-report.txt $(js_outdir)/$(package)-js.jar $(js_outdir)/$(package)-test-js.jar
 js-tested: $(js_outdir)/test-report.txt
-js-distro: $(js_outdir)/package.json
+js-distro: $(js_outdir)/package.json $(js_outdir)/$(package).js
 js-ci: js
 
 $(js_outdir)/%-js.jar: $(js_outdir)/%.js
@@ -47,6 +50,11 @@ $(js_outdir)/lib/%.js:
 	touch $@
 
 $(js_outdir)/package.json: package.json
-	jq '.version="$(version)"' $< > $@
+	@mkdir -p $(dir $@)
+	jq '. + {name: "$(js_npm_package)", version:"$(js_npm_version)", files:["$(package).js", "$(package)-js.jar", "../../README.md", "../../LICENSE"], main: "$(package).js", devDependencies:{}}' \
+	$< > $@
 
-.PHONY: js js-ci
+js-published:
+
+
+.PHONY: js js-ci js-distro js-published js-tested
