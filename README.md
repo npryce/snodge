@@ -66,7 +66,12 @@ Example output:
 {"x":"hello","y":[99,2,3]}
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Snodge can mutate the JSON object models of the [Jackson](https://github.com/FasterXML/jackson), [GSON](https://github.com/google/gson) & [JSR-374 JSONP](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm) APIs, and JSON serialised as text and binary.
+API Adapters
+------------
+
+On the JVM, Snodge can mutate the JSON object models of the [Jackson](https://github.com/FasterXML/jackson), [GSON](https://github.com/google/gson) & [JSR-374 JSONP](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm) APIs, and JSON and XML serialised as text and binary. 
+
+On JavaScript, Snodge can mutate XML as DOM Documents, and XML and JSON as text.
 
 For more information, continue reading [the documentation](doc/).
 
@@ -81,10 +86,5 @@ Previous versions:
 - Version 1.x.x.x (java7 branch) is for Java 7 and depends on Guava
 
 [Download from Maven Central](http://mvnrepository.com/artifact/com.natpryce/snodge)
+[Download from NPM](https://www.npmjs.com/package/snodge-3)
 
-To build
---------
-
-* JDK 8
-* Kotlin 1.1
-* GNU Make
