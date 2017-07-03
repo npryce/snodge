@@ -3,11 +3,11 @@ package com.natpryce.jsonk
 import kotlin.js.json
 
 fun JsonElement.toJsonString(): String {
-    return JSON.stringify(this.toJavaScriptObject())
+    return JSON.stringify(this.toJavaScriptObject(), { _, node -> node }, space = 2)
 }
 
 private fun JsonElement.toJavaScriptObject(): Any? {
-    return when(this) {
+    return when (this) {
         is JsonObject -> json(*this.map { it.key to it.value.toJavaScriptObject() }.toTypedArray())
         is JsonArray -> this.map { it.toJavaScriptObject() }
         is JsonString -> this.value
