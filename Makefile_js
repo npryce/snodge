@@ -53,10 +53,14 @@ $(js_outdir)/lib/%.js:
 
 $(js_outdir)/package.json: package.json
 	@mkdir -p $(dir $@)
-	jq '. + {name: "$(js_npm_package)", version:"$(js_npm_version)", files:["$(package).js", "$(package)-js.jar", "../../README.md", "../../LICENSE"], main: "$(package).js", devDependencies:{}}' \
+	jq '. + {name: "$(js_npm_package)", version:"$(js_npm_version)", files:["$(package).js", "$(package)-js.jar", "README.md", "LICENSE"], main: "$(package).js", devDependencies:{}}' \
 	$< > $@
 
-js-published: $(js_outdir)/package.json $(js_outdir)/$(package).js $(js_outdir)/test-report.txt
+$(js_outdir)/%: %
+	@mkdir -p $(dir $@)
+	cp $< $@
+
+js-published: $(js_outdir)/package.json $(js_outdir)/$(package).js $(js_outdir)/test-report.txt $(js_outdir)/README.md $(js_outdir)/LICENSE
 	npm publish $(js_outdir)
 
 .PHONY: js js-ci js-distro js-published js-tested
