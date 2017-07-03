@@ -35,7 +35,9 @@ $(js_outdir)/test-report.txt: ./node_modules/.bin/node-qunit-phantomjs
 $(js_outdir)/test-report.txt: $(JS_LIB_SCRIPTS) test-js.html
 $(js_outdir)/test-report.txt: $(js_outdir)/$(package).js $(js_outdir)/$(package)-test.js
 	@mkdir -p $(dir $@)
+	@echo
 	./node_modules/.bin/node-qunit-phantomjs test-js.html $(QUNIT_FLAGS) | tee $@
+	@echo
 
 $(js_outdir)/lib/kotlin.js: $(KOTLINHOME)/lib/kotlin-stdlib-js.jar
 $(js_outdir)/lib/kotlin-test.js: $(KOTLINHOME)/lib/kotlin-test-js.jar
@@ -54,7 +56,7 @@ $(js_outdir)/package.json: package.json
 	jq '. + {name: "$(js_npm_package)", version:"$(js_npm_version)", files:["$(package).js", "$(package)-js.jar", "../../README.md", "../../LICENSE"], main: "$(package).js", devDependencies:{}}' \
 	$< > $@
 
-js-published:
-
+js-published: $(js_outdir)/package.json $(js_outdir)/$(package).js $(js_outdir)/test-report.txt
+	npm publish $(js_outdir)
 
 .PHONY: js js-ci js-distro js-published js-tested

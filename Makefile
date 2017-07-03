@@ -25,8 +25,6 @@ endif
 srcfiles=$(shell find platform/$1/common-src/$2 platform/$1/src/$2 -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
 
-$(info platforms: $(platforms))
-
 all: $(platforms)
 include $(platforms:%=Makefile_%)
 
@@ -40,7 +38,7 @@ again: clean all
 
 ci: $(platforms:%=%-ci)
 
-tested: jvm-tested
+tested: $(platforms:%=%-tested)
 
 ifeq "$(origin version)" "command line"
 tagged:
@@ -51,7 +49,7 @@ tagged:
 	@false
 endif
 
-published: jvm-published
+published: $(platforms:%=%-published)
 
 print-%:
 	@echo "$* ($(flavor $*)) = $($*)"
