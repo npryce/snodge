@@ -27,7 +27,7 @@ Add a dependency on Snodge:
 compile 'com.natpryce:snodge:3.3.0.1'
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Add an implementation of the [JSR-374 JSONP API](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm), such as:
+For the JVM platform, add an implementation of the [JSR-374 JSONP API](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm), such as:
 
 ~~~~~~~~~~~~~~~~~~~~~~gradle
 compile 'org.glassfish:javax.json:1.1'

@@ -51,7 +51,7 @@ $(js_outdir)/lib/%.js:
 	npm install
 	touch $@
 
-$(js_outdir)/package.json: package.json
+$(js_outdir)/package.json: package.json Makefile
 	@mkdir -p $(dir $@)
 	jq '. + {name: "$(js_npm_package)", version:"$(js_npm_version)", files:["$(package).js", "$(package)-js.jar", "README.md", "LICENSE"], main: "$(package).js", devDependencies:{}}' \
 	$< > $@
