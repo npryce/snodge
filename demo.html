@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Snodge Demo</title>
+    <style type="text/css">
+        body {
+            font-family: Lato, sans-serif;
+        }
+        #panes {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        #panes textarea {
+            flex-shrink: 1;
+            flex-grow: 1;
+            resize: vertical;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        #panes button {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin: 0.5em;
+            font-size: 40px;
+            padding: 0.25em;
+            text-align: center;
+        }
+        #error {
+            color: red;
+            border: 2px solid red;
+            border-radius: 4px;
+            padding: 1em;
+            margin-top: 0.5em;
+            background: #FFDDDD;
+            display: none;
+        }
+        #error.active {
+            display: block;
+        }
+    </style>
+    <script type="application/javascript" src="out/js/lib/kotlin.js"></script>
+    <script type="application/javascript" src="out/js/snodge.js"></script>
+</head>
+<body>
+    <h1>Snodge it!</h1>
+    <div id="panes">
+        <textarea id="original" title="Original" placeholder="Enter some JSON here"></textarea>
+        <button id="mutate" title="Mutate">➟</button>
+        <textarea id="mutant" title="Mutant" readonly></textarea>
+    </div>
+    <div id="error"></div>
+    <script type="application/javascript" src="out/js/snodge-demo.js"></script>
+</body>
+</html>
