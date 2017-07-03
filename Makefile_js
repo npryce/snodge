@@ -53,7 +53,7 @@ $(js_outdir)/lib/%.js:
 
 $(js_outdir)/package.json: package.json Makefile
 	@mkdir -p $(dir $@)
-	jq '. + {name: "$(js_npm_package)", version:"$(js_npm_version)", files:["$(package).js", "$(package)-js.jar", "README.md", "LICENSE"], main: "$(package).js", devDependencies:{}}' \
+	jq '. + {name: "$(js_npm_package)", version:"$(js_npm_version)", files:["$(package).js", "$(package)-js.jar", "README.md", "LICENSE"], main: "$(package).js", dependencies: {kotlin: "^1.1.3"}, devDependencies:{}}' \
 	$< > $@
 
 $(js_outdir)/%: %
