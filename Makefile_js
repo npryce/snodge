@@ -19,7 +19,7 @@ js: $(js_outdir)/test-report.txt $(js_outdir)/$(package)-js.jar $(js_outdir)/$(p
 js-tested: $(js_outdir)/test-report.txt
 js-distro: $(js_outdir)/package.json $(js_outdir)/$(package).js
 js-ci: js
-js-demo: $(js_outdir)/$(package)-demo.js $(js_outdir)/lib/kotlin.js
+js-demo: $(js_outdir)/$(package)-demo.js $(js_outdir)/lib/kotlin.js $(js_outdir)/demo.html
 
 $(js_outdir)/%-js.jar: $(js_outdir)/%.js
 	cd $(dir $@) && $(JAR) cf $(abspath $@) $*.js $*.meta.js $*/
@@ -61,6 +61,10 @@ $(js_outdir)/package.json: package.json Makefile
 	@mkdir -p $(dir $@)
 	jq '. + {name: "$(js_npm_package)", version:"$(js_npm_version)", files:["$(package).js", "$(package)-js.jar", "README.md", "LICENSE"], main: "$(package).js", dependencies: {kotlin: "^1.1.0"}, devDependencies:{}}' \
 	$< > $@
+
+$(js_outdir)/demo.html: live-demo/demo.html
+	@mkdir -p $(dir $@)
+	cp $< $@
 
 $(js_outdir)/%: %
 	@mkdir -p $(dir $@)
