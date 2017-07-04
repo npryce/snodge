@@ -8,30 +8,47 @@ import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
+import kotlin.browser.window
 import kotlin.dom.addClass
 import kotlin.dom.removeClass
 
-external class SyntaxError: Throwable
+external class SyntaxError : Throwable
+
+val random = Random()
+val originalTextArea = document.getElementById("original") as HTMLTextAreaElement
+val mutantTextArea = document.getElementById("mutant") as HTMLTextAreaElement
 
 fun main(args: Array<String>) {
-    val random = Random()
-    
     val mutateButton = document.getElementById("mutate") as HTMLButtonElement
-    val originalTextArea = document.getElementById("original") as HTMLTextAreaElement
-    val mutantTextArea = document.getElementById("mutant") as HTMLTextAreaElement
     
-    mutateButton.onclick = { onClickEvent ->
-        val originalText = originalTextArea.value
-        try {
-            val mutantText = random.mutant(defaultJsonMutagens().forStrings(), originalText)
-            mutantTextArea.value = mutantText
-            clearError()
-        }
-        catch (e: SyntaxError) {
-            e.message?.let(::reportError)
-        }
-        
-        onClickEvent.preventDefault()
+    var timer: Int? = null
+    
+    fun timerTick() {
+        mutate()
+        timer = window.setTimeout(timeout = 150, handler = ::timerTick)
+    }
+    
+    mutateButton.onmousedown = { event ->
+        timer = window.setTimeout(timeout = 500, handler = ::timerTick)
+        event.preventDefault()
+    }
+    
+    mutateButton.onmouseup = { event ->
+        timer?.let { window.clearTimeout(it) }
+        mutate()
+        event.preventDefault()
+    }
+}
+
+private fun mutate() {
+    val originalText = originalTextArea.value
+    try {
+        val mutantText = random.mutant(defaultJsonMutagens().forStrings(), originalText)
+        mutantTextArea.value = mutantText
+        clearError()
+    }
+    catch (e: SyntaxError) {
+        e.message?.let(::reportError)
     }
 }
 
