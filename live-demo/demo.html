@@ -60,10 +60,24 @@
         .row button {
             flex-grow: 0;
             flex-shrink: 0;
-            margin: 0.5em;
-            font-size: 40px;
-            padding: 0.25em;
+            padding: 0;
+            margin: 1em;
+        }
+        button .icon {
+            display: block;
             text-align: center;
+            font-size: 40px;
+        }
+        button .text {
+            display: block;
+            font-size: 12px;
+            margin: 0.5em;
+            text-align: center;
+        }
+        #type {
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
         }
         #error {
             position: absolute;
@@ -92,18 +106,24 @@
     <h1>Snodge it!</h1>
     <section class="row">
         <div class="textarea-plus-feedback">
+          <select id="type">
+              <option value="json" selected>JSON</option>
+              <option value="xml">XML</option>
+              <option value="text">Plain Text</option>
+          </select>
           <textarea id="original" title="Original" placeholder="Enter some JSON here">{
   "instructions": [
     {"1": "press the button in the middle to mutate this JSON"},
     {"2": "a random mutation will appear in the right pane"},
     {"3": "press the button again to get another mutant"},
     {"4": "hold the button to repeatedly mutate this JSON"},
-    {"5": "you can replace this with your own JSON"}
+    {"5": "you can replace this with your own JSON"},
+    {"6": "or mutate a different data format"}
   ]
 }</textarea>
           <div id="error"></div>
         </div>
-        <button id="mutate" title="Mutate">➟</button>
+        <button id="mutate" title="Mutate"><div class="icon">➟</div><div class="text">Mutate</div></button>
         <textarea id="mutant" title="Mutant" readonly></textarea>
     </section>
 
