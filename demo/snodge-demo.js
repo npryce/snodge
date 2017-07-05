@@ -15,14 +15,20 @@
 }(this, function (_, Kotlin, $module$snodge) {
   'use strict';
   var MersenneTwisterFast_init = $module$snodge.com.natpryce.snodge.MersenneTwisterFast_init;
+  var replaceWithPossiblyMeaningfulText = $module$snodge.com.natpryce.snodge.text.replaceWithPossiblyMeaningfulText;
+  var splice = $module$snodge.com.natpryce.snodge.text.splice_72gdtb$;
   var defaultJsonMutagens = $module$snodge.com.natpryce.snodge.json.defaultJsonMutagens;
   var forStrings = $module$snodge.com.natpryce.snodge.json.forStrings_403vme$;
+  var defaultXmlMutagens = $module$snodge.com.natpryce.snodge.xml.defaultXmlMutagens;
+  var forStrings_0 = $module$snodge.com.natpryce.snodge.xml.forStrings_1pa5su$;
+  var IllegalStateException = Kotlin.kotlin.IllegalStateException;
   var mutant = $module$snodge.com.natpryce.snodge.mutant_vq1p9g$;
   var addClass = Kotlin.kotlin.dom.addClass_hhb33f$;
   var removeClass = Kotlin.kotlin.dom.removeClass_hhb33f$;
   var random;
   var originalTextArea;
   var mutantTextArea;
+  var inputTypeSelector;
   function main$timerTick(closure$timer) {
     return function closure$timerTick() {
       var tmp$;
@@ -61,19 +67,33 @@
     mutateButton.onmousedown = main$lambda(timerTick, timer);
     mutateButton.onmouseup = main$lambda_0(timer);
   }
+  function selectedMutagen() {
+    var it = inputTypeSelector.value;
+    var block$result;
+    if (Kotlin.equals(it, 'text')) {
+      block$result = splice(replaceWithPossiblyMeaningfulText());
+    }
+     else if (Kotlin.equals(it, 'json')) {
+      block$result = forStrings(defaultJsonMutagens());
+    }
+     else if (Kotlin.equals(it, 'xml')) {
+      block$result = forStrings_0(defaultXmlMutagens());
+    }
+     else
+      throw new IllegalStateException('unrecognised input type: ' + it);
+    return block$result;
+  }
   function mutate() {
     var tmp$;
     var originalText = originalTextArea.value;
     try {
-      var mutantText = mutant(random, forStrings(defaultJsonMutagens()), originalText);
+      var mutantText = mutant(random, selectedMutagen(), originalText);
       mutantTextArea.value = mutantText;
       clearError();
     }
      catch (e) {
       if (Kotlin.isType(e, SyntaxError)) {
-        if ((tmp$ = e.message) != null) {
-          reportError(tmp$);
-        }
+        reportError((tmp$ = e.message) != null ? tmp$ : 'could not parse input');
       }
        else
         throw e;
@@ -112,13 +132,20 @@
       return mutantTextArea;
     }
   });
+  Object.defineProperty(package$demo, 'inputTypeSelector', {
+    get: function () {
+      return inputTypeSelector;
+    }
+  });
   package$demo.main_kand9s$ = main;
+  package$demo.selectedMutagen = selectedMutagen;
   package$demo.reportError_61zpoe$ = reportError;
   package$demo.clearError = clearError;
   random = MersenneTwisterFast_init();
-  var tmp$, tmp$_0;
+  var tmp$, tmp$_0, tmp$_1;
   originalTextArea = Kotlin.isType(tmp$ = document.getElementById('original'), HTMLTextAreaElement) ? tmp$ : Kotlin.throwCCE();
   mutantTextArea = Kotlin.isType(tmp$_0 = document.getElementById('mutant'), HTMLTextAreaElement) ? tmp$_0 : Kotlin.throwCCE();
+  inputTypeSelector = Kotlin.isType(tmp$_1 = document.getElementById('type'), HTMLSelectElement) ? tmp$_1 : Kotlin.throwCCE();
   main([]);
   Kotlin.defineModule('snodge-demo', _);
   return _;
