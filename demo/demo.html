@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Snodge Demo</title>
+    <style type="text/css">
+        html {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        body {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            font-family: Lato, sans-serif;
+            margin: 0;
+            border: 0;
+            padding: 1em;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            resize: both;
+            align-items: stretch;
+        }
+        h1 {
+            border: 0;
+            padding: 0;
+            margin: 0;
+            margin-bottom: 1em;
+        }
+        textarea {
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            flex-grow: 1;
+            flex-shrink: 1;
+            resize: vertical;
+        }
+        .row textarea, .row div {
+            flex-shrink: 1;
+            flex-grow: 1;
+            resize: none;
+        }
+        .row div {
+            display: flex;
+            position: relative;
+        }
+        .row button {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin: 0.5em;
+            font-size: 40px;
+            padding: 0.25em;
+            text-align: center;
+        }
+        #error {
+            position: absolute;
+            bottom: 0.5em;
+            left: 0.5em;
+            right: 0.5em;
+            color: red;
+            opacity: 0.75;
+            border: 2px solid red;
+            border-radius: 4px;
+            padding: 1em;
+            background: #FFDDDD;
+            display: none;
+        }
+        #error.active {
+            display: block;
+        }
+        div.textarea-plus-feedback {
+            position: relative;
+        }
+    </style>
+    <script type="application/javascript" src="lib/kotlin.js"></script>
+    <script type="application/javascript" src="snodge.js"></script>
+</head>
+<body>
+    <h1>Snodge it!</h1>
+    <section class="row">
+        <div class="textarea-plus-feedback">
+          <textarea id="original" title="Original" placeholder="Enter some JSON here">{
+  "instructions": [
+    {"1": "press the button in the middle to mutate this JSON"},
+    {"2": "a random mutation will appear in the right pane"},
+    {"3": "press the button again to get another mutant"},
+    {"4": "hold the button to repeatedly mutate this JSON"},
+    {"5": "you can replace this with your own JSON"}
+  ]
+}</textarea>
+          <div id="error"></div>
+        </div>
+        <button id="mutate" title="Mutate">➟</button>
+        <textarea id="mutant" title="Mutant" readonly></textarea>
+    </section>
+
+    <script type="application/javascript" src="snodge-demo.js"></script>
+</body>
+</html>
