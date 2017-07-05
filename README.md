@@ -18,6 +18,9 @@ Examples of things you can test by mutating known good data:
 - your application copes with invalid Unicode encoding of text
 - and much, much more!
 
+See an [interactive demonstration](https://npryce.github.io/snodge/demo/demo.html).
+
+
 
 In a Nutshell
 -------------
