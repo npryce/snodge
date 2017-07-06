@@ -53,11 +53,11 @@ val jsonExample = """{
 //language=XML
 val xmlExample = """<demo>
   <instructions>
-    <step n="1">press the button in the middle to mutate this JSON</step>
+    <step n="1">press the button in the middle to mutate this XML</step>
     <step n="2">a random mutation will appear in the right pane</step>
     <step n="3">press the button again to get another mutant</step>
-    <step n="4">hold the button to repeatedly mutate this JSON</step>
-    <step n="5">you can replace this with your own JSON</step>
+    <step n="4">hold the button to repeatedly mutate this XML</step>
+    <step n="5">you can replace this with your own XML</step>
     <step n="6">or mutate a different data format</step>
   </instructions>
   <uses>
@@ -74,11 +74,11 @@ Demo
 
 Instructions:
 
-1. press the button in the middle to mutate this JSON.
+1. press the button in the middle to mutate this text.
 2. a random mutation will appear in the right pane.
 3. press the button again to get another mutant.
-4. hold the button to repeatedly mutate this JSON.
-5. you can replace this with your own JSON.
+4. hold the button to repeatedly mutate this text.
+5. you can replace this with your own text.
 6. or mutate a different data format.
 
 Uses:
