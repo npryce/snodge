@@ -14,6 +14,7 @@
             padding: 0;
             border: 0;
         }
+
         body {
             position: absolute;
             top: 0;
@@ -30,16 +31,19 @@
             resize: both;
             align-items: stretch;
         }
+
         h1 {
             border: 0;
             padding: 0;
             margin: 0;
             margin-bottom: 1em;
         }
+
         textarea {
             font-family: monospace;
             font-size: 14px;
         }
+
         .row {
             display: flex;
             flex-direction: row;
@@ -48,37 +52,44 @@
             flex-shrink: 1;
             resize: vertical;
         }
+
         .row textarea, .row div {
             flex-shrink: 1;
             flex-grow: 1;
             resize: none;
         }
+
         .row div {
             display: flex;
             position: relative;
         }
+
         .row button {
             flex-grow: 0;
             flex-shrink: 0;
             padding: 0;
             margin: 1em;
         }
+
         button .icon {
             display: block;
             text-align: center;
             font-size: 40px;
         }
+
         button .text {
             display: block;
             font-size: 12px;
             margin: 0.5em;
             text-align: center;
         }
+
         #type {
             position: absolute;
             top: 0.5em;
             right: 0.5em;
         }
+
         #error {
             position: absolute;
             bottom: 0.5em;
@@ -92,9 +103,11 @@
             background: #FFDDDD;
             display: none;
         }
+
         #error.active {
             display: block;
         }
+
         div.textarea-plus-feedback {
             position: relative;
         }
@@ -103,30 +116,24 @@
     <script type="application/javascript" src="snodge.js"></script>
 </head>
 <body>
-    <h1>Snodge it!</h1>
-    <section class="row">
-        <div class="textarea-plus-feedback">
-          <select id="type">
-              <option value="json" selected>JSON</option>
-              <option value="xml">XML</option>
-              <option value="text">Plain Text</option>
-          </select>
-          <textarea id="original" title="Original" placeholder="Enter some JSON here">{
-  "instructions": [
-    {"1": "press the button in the middle to mutate this JSON"},
-    {"2": "a random mutation will appear in the right pane"},
-    {"3": "press the button again to get another mutant"},
-    {"4": "hold the button to repeatedly mutate this JSON"},
-    {"5": "you can replace this with your own JSON"},
-    {"6": "or mutate a different data format"}
-  ]
-}</textarea>
-          <div id="error"></div>
-        </div>
-        <button id="mutate" title="Mutate"><div class="icon">➟</div><div class="text">Mutate</div></button>
-        <textarea id="mutant" title="Mutant" readonly></textarea>
-    </section>
+<h1>Snodge it!</h1>
+<section class="row">
+    <div class="textarea-plus-feedback">
+        <select id="type">
+            <option value="json" selected>JSON</option>
+            <option value="xml">XML</option>
+            <option value="text">Plain Text</option>
+        </select>
+        <textarea id="original" title="Original" placeholder="Enter some JSON, XML or plain text here"></textarea>
+        <div id="error"></div>
+    </div>
+    <button id="mutate" title="Mutate">
+        <div class="icon">➟</div>
+        <div class="text">Mutate</div>
+    </button>
+    <textarea id="mutant" title="Mutant" readonly></textarea>
+</section>
 
-    <script type="application/javascript" src="snodge-demo.js"></script>
+<script type="application/javascript" src="snodge-demo.js"></script>
 </body>
 </html>

@@ -25,6 +25,83 @@ val originalTextArea = document.getElementById("original") as HTMLTextAreaElemen
 val mutantTextArea = document.getElementById("mutant") as HTMLTextAreaElement
 val inputTypeSelector = document.getElementById("type") as HTMLSelectElement
 
+data class Format(
+    val example: String,
+    val mutagen: () -> Mutagen<String>
+)
+
+//language=JSON
+val jsonExample = """{
+    "demo": {
+        "instructions": {
+            "1": "press the button in the middle to mutate this JSON",
+            "2": "a random mutation will appear in the right pane",
+            "3": "press the button again to get another mutant",
+            "4": "hold the button to repeatedly mutate this JSON",
+            "5": "you can replace this with your own JSON",
+            "6": "or mutate a different data format"
+        },
+        "uses": [
+            "Robustness testing",
+            "Security testing",
+            "Negative testing",
+            "Property-based testing"
+        ]
+    }
+}"""
+
+//language=XML
+val xmlExample = """<demo>
+  <instructions>
+    <step n="1">press the button in the middle to mutate this JSON</step>
+    <step n="2">a random mutation will appear in the right pane</step>
+    <step n="3">press the button again to get another mutant</step>
+    <step n="4">hold the button to repeatedly mutate this JSON</step>
+    <step n="5">you can replace this with your own JSON</step>
+    <step n="6">or mutate a different data format</step>
+  </instructions>
+  <uses>
+    <use>Robustness testing</use>
+    <use>Security testing</use>
+    <use>Negative testing</use>
+    <use>Property-based testing</use>
+  </uses>
+</demo>"""
+
+val textExample = """
+Demo
+====
+
+Instructions:
+
+1. press the button in the middle to mutate this JSON.
+2. a random mutation will appear in the right pane.
+3. press the button again to get another mutant.
+4. hold the button to repeatedly mutate this JSON.
+5. you can replace this with your own JSON.
+6. or mutate a different data format.
+
+Uses:
+
+* Robustness testing
+* Security testing
+* Negative testing
+* Property-based testing
+"""
+
+val dataTypes = mapOf(
+    "text" to Format(
+        example = textExample,
+        mutagen = { splice(replaceWithPossiblyMeaningfulText()) }),
+    "xml" to Format(
+        example = xmlExample,
+        mutagen = { defaultXmlMutagens().forStrings() }),
+    "json" to Format(
+        example = jsonExample,
+        mutagen = { defaultJsonMutagens().forStrings() })
+)
+
+
 fun main(args: Array<String>) {
     val mutateButton = document.getElementById("mutate") as HTMLButtonElement
     
@@ -45,21 +122,29 @@ fun main(args: Array<String>) {
         mutate()
         event.preventDefault()
     }
+    
+    showExampleOfSelectedType()
+    inputTypeSelector.onchange = { _ ->
+        showExampleOfSelectedType()
+    }
 }
 
-fun selectedMutagen(): Mutagen<String> = inputTypeSelector.value.let {
-    when(it) {
+fun  showExampleOfSelectedType() {
+    originalTextArea.value = dataTypes[inputTypeSelector.value]?.example ?: ""
+}
+
+fun selectedMutagen(code: String): Mutagen<String> =
+    when (code) {
         "text" -> splice(replaceWithPossiblyMeaningfulText())
         "json" -> defaultJsonMutagens().forStrings()
         "xml" -> defaultXmlMutagens().forStrings()
-        else -> throw IllegalStateException("unrecognised input type: $it")
+        else -> throw IllegalStateException("unrecognised input type: $code")
     }
-}
 
 private fun mutate() {
     val originalText = originalTextArea.value
     try {
-        val mutantText = random.mutant(selectedMutagen(), originalText)
+        val mutantText = random.mutant(selectedMutagen(inputTypeSelector.value), originalText)
         mutantTextArea.value = mutantText
         clearError()
     }
