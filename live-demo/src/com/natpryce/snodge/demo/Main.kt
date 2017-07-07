@@ -32,22 +32,22 @@ data class Format(
 
 //language=JSON
 val jsonExample = """{
-    "demo": {
-        "instructions": {
-            "1": "press the button in the middle to mutate this JSON",
-            "2": "a random mutation will appear in the right pane",
-            "3": "press the button again to get another mutant",
-            "4": "hold the button to repeatedly mutate this JSON",
-            "5": "you can replace this with your own JSON",
-            "6": "or mutate a different data format"
-        },
-        "uses": [
-            "Robustness testing",
-            "Security testing",
-            "Negative testing",
-            "Property-based testing"
-        ]
-    }
+  "demo": {
+    "instructions": {
+      "1": "press the button in the middle to mutate this JSON",
+      "2": "a random mutation will appear in the right pane",
+      "3": "press the button again to get another mutant",
+      "4": "hold the button to repeatedly mutate this JSON",
+      "5": "you can replace this with your own JSON",
+      "6": "or mutate a different data format"
+    },
+    "uses": [
+       "Robustness testing",
+       "Security testing",
+       "Negative testing",
+       "Property-based testing"
+    ]
+  }
 }"""
 
 //language=XML
