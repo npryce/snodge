@@ -20,11 +20,6 @@ import kotlin.dom.removeClass
 
 external class SyntaxError : Throwable
 
-val random = Random()
-val originalTextArea = document.getElementById("original") as HTMLTextAreaElement
-val mutantTextArea = document.getElementById("mutant") as HTMLTextAreaElement
-val inputTypeSelector = document.getElementById("type") as HTMLSelectElement
-
 data class Format(
     val example: String,
     val mutagen: () -> Mutagen<String>
@@ -101,6 +96,10 @@ val dataTypes = mapOf(
         mutagen = { defaultJsonMutagens().forStrings() })
 )
 
+val random = Random()
+val originalTextArea = document.getElementById("original") as HTMLTextAreaElement
+val mutantTextArea = document.getElementById("mutant") as HTMLTextAreaElement
+val inputTypeSelector = document.getElementById("type") as HTMLSelectElement
 
 fun main(args: Array<String>) {
     val mutateButton = document.getElementById("mutate") as HTMLButtonElement
