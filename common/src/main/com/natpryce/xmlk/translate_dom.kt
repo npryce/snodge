@@ -2,18 +2,13 @@ package com.natpryce.xmlk
 
 import org.w3c.dom.CDATASection
 import org.w3c.dom.Comment
+import org.w3c.dom.DOMImplementation
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 import org.w3c.dom.ProcessingInstruction
 import org.w3c.dom.Text
-import org.w3c.dom.get
-import org.w3c.dom.parsing.DOMParser
-
-
-fun String.toXmlDocument(): XmlDocument =
-    DOMParser().parseFromString(this, "application/xml").toXmlDocument()
 
 fun Document.toXmlDocument(): XmlDocument =
     XmlDocument(null, childNodes.map {node -> node.toXmlNode()})
@@ -36,4 +31,33 @@ private fun Element.toXmlElement(): XmlElement {
 }
 
 private fun NodeList.map(f: (Node)->XmlNode): List<XmlNode> =
-    (0 until length).map { f(get(it)!!) }
+    (0 until length).map { f(this.item(it)!!) }
+
+
+fun XmlDocument.toDOM(implementation: DOMImplementation): Document {
+    return implementation.createDocument("", "", null)
+        .also { doc: Document ->
+            children.forEach { child ->
+                doc.appendChild(child.toDOM(doc))
+            }
+        }
+}
+
+private fun XmlNode.toDOM(doc: Document): Node =
+    when (this) {
+        is XmlText -> if (asCData) doc.createCDATASection(text) else doc.createTextNode(text)
+        is XmlElement -> doc.createElementNS(name.namespaceURI, name.toDOM()).also { element ->
+            attributes.forEach { (attrName, attrValue) ->
+                element.setAttributeNS(attrName.namespaceURI, attrName.toDOM(), attrValue)
+            }
+            children.forEach { child ->
+                element.appendChild(child.toDOM(doc))
+            }
+        }
+        is XmlComment -> doc.createComment(text)
+        is XmlProcessingInstruction -> {
+            doc.createProcessingInstruction(target, data ?: "")
+        }
+    }
+
+private fun QName.toDOM() = (prefix?.plus(":") ?: "") + localPart
