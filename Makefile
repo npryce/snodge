@@ -54,4 +54,4 @@ published: $(platforms:%=%-published)
 print-%:
 	@echo "$* ($(flavor $*)) = $($*)"
 
-.PHONY: all clean distclean tested tagged ci published
+.PHONY: all clean distclean tested tagged ci published $(platforms)
