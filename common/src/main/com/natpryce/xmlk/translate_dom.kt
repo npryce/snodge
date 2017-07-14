@@ -33,8 +33,7 @@ private fun Element.toXmlElement(): XmlElement {
 private fun NodeList.map(f: (Node)->XmlNode): List<XmlNode> =
     (0 until length).map { f(this.item(it)!!) }
 
-
-fun XmlDocument.toDOM(implementation: DOMImplementation): Document {
+fun XmlDocument.toDOM(implementation: DOMImplementation = defaultDOMImplementation()): Document {
     return implementation.createDocument("", "", null)
         .also { doc: Document ->
             children.forEach { child ->

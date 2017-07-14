@@ -9,5 +9,6 @@ import kotlin.browser.document
 fun String.toXmlDocument(): XmlDocument =
     DOMParser().parseFromString(this, "application/xml").toXmlDocument()
 
-fun XmlDocument.toXmlString(implementation: DOMImplementation = document.implementation): String =
+fun XmlDocument.toXmlString(implementation: DOMImplementation = defaultDOMImplementation()): String =
     XMLSerializer().serializeToString(toDOM(implementation))
+
