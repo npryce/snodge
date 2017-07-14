@@ -9,10 +9,10 @@ JVM_KOTLINCFLAGS=-Xmulti-platform
 
 jvm_classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(filter %.jar,$^))))
 
-src_jvm_main:=$(call srcfiles,jvm,main)
-src_jvm_test:=$(call srcfiles,jvm,test)
+jvm_src_main:=$(call srcfiles,jvm,main)
+jvm_src_test:=$(call srcfiles,jvm,test)
 
-jvm_tests=$(shell echo $(src_jvm_test) | tr [:space:] "\n" | grep -F Test.kt | sed -E 's:.*/[^/]*src/test/(.+)\.kt:\1:' | tr / .)
+jvm_tests=$(shell echo $(jvm_src_test) | tr [:space:] "\n" | grep -F Test.kt | sed -E 's:.*/[^/]*src/test/(.+)\.kt:\1:' | tr / .)
 
 jvm_package_distro += \
     $(jvm_outdir)/$(package)-$(version).pom \
@@ -39,8 +39,8 @@ platform/jvm/libs/%.mk: %.dependencies
 	tools/sm-download $< platform/jvm/libs/$*
 	echo 'libs_$*=$$(filter-out %-source.jar,$$(wildcard platform/jvm/libs/$*/*.jar))' > $@
 
-$(jvm_outdir)/$(package)-$(version).jar: $(src_jvm_main) $(libs_main) $(libs_runtime)
-$(jvm_outdir)/$(package)-$(version)-test.jar: $(src_jvm_test) $(jvm_outdir)/$(package)-$(version).jar \
+$(jvm_outdir)/$(package)-$(version).jar: $(jvm_src_main) $(libs_main) $(libs_runtime)
+$(jvm_outdir)/$(package)-$(version)-test.jar: $(jvm_src_test) $(jvm_outdir)/$(package)-$(version).jar \
     $(libs_main) $(libs_runtime) $(libs_test) \
     $(KOTLINHOME)/lib/kotlin-test.jar
 
@@ -48,15 +48,15 @@ $(jvm_outdir)/test-report.txt: $(jvm_outdir)/$(package)-$(version)-test.jar $(jv
 	$(JAVA) $(jvm_classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
 	    org.junit.runner.JUnitCore $(jvm_tests) | tee $@
 
-$(jvm_outdir)/$(package)-$(version)-sources.jar: $(src_jvm_main)
+$(jvm_outdir)/$(package)-$(version)-sources.jar: $(jvm_src_main)
 	$(JAR) cf $@ -C $(jvm_srcdir_main) .
 
 $(jvm_outdir)/$(package)-$(version)-javadoc.jar: $(jvm_outdir)/$(package)-$(version)-javadoc/index.html
 	$(JAR) cf $@ -C $(dir $<) .
 
-$(jvm_outdir)/$(package)-$(version)-javadoc/index.html: $(src_jvm_main) $(libs_main)
+$(jvm_outdir)/$(package)-$(version)-javadoc/index.html: $(jvm_src_main) $(libs_main)
 	@mkdir -p $(dir $@)
-	$(DOKKA) $(src_jvm_main) -format html -output $(dir $@)
+	$(DOKKA) $(jvm_src_main) -format html -output $(dir $@)
 
 $(jvm_outdir)/$(package)-$(version).pom: main.dependencies $(published_jars)
 	@mkdir -p $(dir $@)
