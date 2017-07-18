@@ -15,26 +15,30 @@ import com.google.gson.JsonObject as GsonObject
 import com.google.gson.JsonPrimitive as GsonPrimitive
 
 @RunWith(Parameterized::class)
-class JsonMutagenApiAdaptersTest(exampleName: String) {
+class JsonMutagenApiAdaptersTest(val exampleName: String) {
     companion object {
         @Parameters(name = "{0}") @JvmStatic
         fun examples() = ExampleJsonFiles.list()
     }
     
-    val original: JsonElement = ExampleJsonFiles.load(exampleName)
-    
     @Test
     fun can_apply_mutagen_to_Gson_tree() {
-        assertThat(original.toGson().toJsonk(), equalTo(original))
+        ExampleJsonFiles.load(exampleName) { original ->
+            assertThat(original.toGson().toJsonk(), equalTo(original))
+        }
     }
     
     @Test
     fun can_apply_mutagen_to_Jackson_tree() {
-        assertThat(original.toJackson().toJsonk(), equalTo(original))
+        ExampleJsonFiles.load(exampleName) { original ->
+            assertThat(original.toJackson().toJsonk(), equalTo(original))
+        }
     }
     
     @Test
     fun can_apply_mutagen_to_JSONP_tree() {
-        assertThat(original.toJsonp().toJsonk(), equalTo(original))
+        ExampleJsonFiles.load(exampleName) { original ->
+            assertThat(original.toJsonp().toJsonk(), equalTo(original))
+        }
     }
 }

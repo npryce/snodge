@@ -17,15 +17,9 @@ class JsonRoundTripTest(val exampleName: String) {
     }
     
     @Test
-    fun round_trips_JSON() {
-        val roundTrippedViaJavaxJson = StringWriter().also { sw ->
-            Json.createWriter(sw).write(
-                Json.createReader(ExampleJsonFiles.open(exampleName)).use { r -> r.readValue() })
-        }.toString()
-        
-        val roundTrippedViaJsonK = ExampleJsonFiles.load(exampleName).toJsonString()
-        
-        assertEquals(roundTrippedViaJavaxJson, roundTrippedViaJsonK)
-    }
+    fun round_trips_JSON() =
+        ExampleJsonFiles.load(exampleName) { original ->
+            assertEquals(original, original.toJsonString().toJsonElement())
+        }
 }
 

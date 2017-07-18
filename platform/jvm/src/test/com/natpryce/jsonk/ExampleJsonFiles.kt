@@ -1,18 +1,16 @@
 package com.natpryce.jsonk
 
-import com.natpryce.testing.projectFile
-import org.junit.Assert.fail
-import java.io.File
+import com.natpryce.testing.loadTestData
 
 object ExampleJsonFiles {
-    private val dataDir = projectFile("test-data/json")
+    private val dataDir = "test-data/json"
     
     fun list() =
-        dataDir.list()?.filter {it.endsWith(".json") } ?: fail("test-data/json directory not found")
+        listOf(
+            "array-example.json",
+            "object-example.json"
+        )
     
-    fun open(name: String) =
-        File(dataDir, name).reader()
-    
-    fun load(name: String) =
-        open(name).use { it.readJsonElement() }
+    fun <T> load(name: String, block: (JsonElement) -> T) =
+        loadTestData(dataDir + "/" + name) {it.toJsonElement().let(block)}
 }
