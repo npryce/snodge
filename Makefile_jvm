@@ -46,7 +46,8 @@ $(jvm_outdir)/$(package)-$(version)-test.jar: $(jvm_src_test) $(jvm_outdir)/$(pa
 
 $(jvm_outdir)/test-report.txt: $(jvm_outdir)/$(package)-$(version)-test.jar $(jvm_outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
 	$(JAVA) $(jvm_classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
-	    org.junit.runner.JUnitCore $(jvm_tests) | tee $@
+	    org.junit.runner.JUnitCore $(jvm_tests) | tee "$@"
+	@tail -n 2 "$@" | head -n 1 | grep -E --quiet '^OK'
 
 $(jvm_outdir)/$(package)-$(version)-sources.jar: $(jvm_src_main)
 	$(JAR) cf $@ -C $(jvm_srcdir_main) .
