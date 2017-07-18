@@ -1,5 +1,6 @@
 package com.natpryce.xmlk
 
+import org.w3c.dom.Attr
 import org.w3c.dom.CDATASection
 import org.w3c.dom.Comment
 import org.w3c.dom.DOMImplementation
@@ -10,14 +11,15 @@ import org.w3c.dom.NodeList
 import org.w3c.dom.ProcessingInstruction
 import org.w3c.dom.Text
 
+
 fun Document.toXmlDocument(): XmlDocument =
-    XmlDocument(null, childNodes.map {node -> node.toXmlNode()})
+    XmlDocument(childNodes.map { node -> node.toXmlNode()})
 
 private fun Node.toXmlNode(): XmlNode =
     when(this) {
         is Element -> this.toXmlElement()
-        is Text -> XmlText(wholeText, asCData = false)
-        is CDATASection -> XmlText(wholeText, asCData = true)
+        is Text -> XmlText(data, asCData = false)
+        is CDATASection -> XmlText(data, asCData = true)
         is ProcessingInstruction -> XmlProcessingInstruction(target, data.takeIf { it.isNotEmpty() })
         is Comment -> XmlComment(textContent ?: "")
         else -> throw IllegalArgumentException("cannot convert ${this::class.simpleName} to XmlNode")
@@ -26,7 +28,9 @@ private fun Node.toXmlNode(): XmlNode =
 private fun Element.toXmlElement(): XmlElement {
     return XmlElement(
         name = QName(localName, namespaceURI, prefix),
-        attributes = emptyMap(), // TODO parse attributes
+        attributes = (0 until attributes.length)
+            .map { i -> attributes.item(i) as Attr }
+            .associate{ QName(it.localName, it.namespaceURI, it.prefix) to it.value },
         children = childNodes.map { it.toXmlNode() })
 }
 
@@ -34,7 +38,7 @@ private fun NodeList.map(f: (Node)->XmlNode): List<XmlNode> =
     (0 until length).map { f(this.item(it)!!) }
 
 fun XmlDocument.toDOM(implementation: DOMImplementation = defaultDOMImplementation()): Document {
-    return implementation.createDocument("", "", null)
+    return implementation.createEmptyDocument()
         .also { doc: Document ->
             children.forEach { child ->
                 doc.appendChild(child.toDOM(doc))

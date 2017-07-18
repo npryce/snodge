@@ -12,7 +12,6 @@ class XmlWalkTest {
     @Test
     fun returns_all_elements() {
         val doc = XmlDocument(
-            xml = null,
             children = listOf(
                 XmlComment("example xml"),
                 XmlElement(name = QName("alice"), attributes = mapOf(QName("a") to "b"), children = listOf(

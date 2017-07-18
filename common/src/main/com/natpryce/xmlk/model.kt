@@ -4,10 +4,7 @@ interface HasChildren {
     val children: List<XmlNode>
 }
 
-data class XmlDeclaration(val version: String, val encoding: String? = null)
-
 data class XmlDocument(
-    val xml: XmlDeclaration?,
     override val children: List<XmlNode>
 ) : HasChildren {
     val root = children.filterIsInstance<XmlElement>().single()
