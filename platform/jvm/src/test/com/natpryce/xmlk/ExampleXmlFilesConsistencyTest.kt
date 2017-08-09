@@ -9,6 +9,6 @@ class ExampleXmlFilesConsistencyTest {
     
     @Test
     fun `all files are listed`() {
-        assertEquals(expected = dataDir.list().filter { it.endsWith(".xml") }, actual = ExampleXmlFiles.list())
+        assertEquals(expected = dataDir.list().filter { it.endsWith(".xml") }.toSet(), actual = ExampleXmlFiles.list())
     }
 }

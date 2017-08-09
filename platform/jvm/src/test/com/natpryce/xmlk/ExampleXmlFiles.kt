@@ -9,7 +9,7 @@ object ExampleXmlFiles {
     private val dataDir = "test-data/xml"
     
     fun list() =
-        listOf(
+        setOf(
             "attributes.xml",
             "comments.xml",
             "entities.xml",
