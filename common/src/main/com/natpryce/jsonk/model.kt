@@ -59,4 +59,6 @@ data class JsonString(val value: String) : JsonElement()
 
 data class JsonBoolean(val value: Boolean) : JsonElement()
 
-object JsonNull : JsonElement()
+object JsonNull : JsonElement() {
+    override fun toString() = "JsonNull"
+}
