@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<x:hello xmlns:x="http://example.com/x">
-    <x:who a:what="zzz" xmlns:a="http://example.com/a">world</x:who>
-    <y:who xmlns:y="http://example.com/y">your mum</y:who>
-    <who>your mum</who>
-</x:hello>

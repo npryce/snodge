@@ -20,10 +20,13 @@ private fun Node.toXmlNode(): XmlNode =
         is Element -> this.toXmlElement()
         is Text -> XmlText(data, asCData = false)
         is CDATASection -> XmlText(data, asCData = true)
-        is ProcessingInstruction -> XmlProcessingInstruction(target, data.takeIf { it.isNotEmpty() })
+        is ProcessingInstruction -> this.toXmlProcessingInstruction()
         is Comment -> XmlComment(textContent ?: "")
         else -> throw IllegalArgumentException("cannot convert ${this::class.simpleName} to XmlNode")
     }
+
+private fun ProcessingInstruction.toXmlProcessingInstruction() =
+    XmlProcessingInstruction(target, data?.takeIf { it.isNotEmpty() })
 
 private fun Element.toXmlElement(): XmlElement {
     return XmlElement(

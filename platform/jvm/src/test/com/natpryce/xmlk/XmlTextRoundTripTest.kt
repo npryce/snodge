@@ -1,10 +1,6 @@
 package com.natpryce.xmlk
 
-import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
-import org.junit.runners.Parameterized.Parameters
 import org.xml.sax.InputSource
 import java.io.StringReader
 import java.io.StringWriter
@@ -13,24 +9,21 @@ import javax.xml.stream.XMLOutputFactory
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stax.StAXResult
+import kotlin.test.assertEquals
 
 
-@RunWith(Parameterized::class)
-class XmlTextRoundTripTest(val exampleName: String) {
+class XmlTextRoundTripTest {
     @Test
-    fun `round trips XML`() {
-        ExampleXmlFiles.loadText(exampleName) { originalXml ->
+    fun `round_trips_XML`() {
+        ExampleXmlFiles.forEachText { exampleName, originalXml ->
             val original = originalXml.toXmlDocument()
             val roundTrippedXml = original.toXmlString()
             
-            assertEquals(normaliseXmlText(originalXml), normaliseXmlText(roundTrippedXml))
+            assertEquals(normaliseXmlText(xmlText = originalXml), normaliseXmlText(roundTrippedXml), message=exampleName)
         }
     }
     
     companion object {
-        @Parameters(name = "{0}") @JvmStatic
-        fun examples() = ExampleXmlFiles.list()
-        
         private val outputFactory = XMLOutputFactory.newFactory().apply { setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true) }
         private var documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
         private val transformer = TransformerFactory.newInstance().newTransformer()

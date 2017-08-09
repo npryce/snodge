@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- comment before root -->
-<hello>
-    <!-- comment first element of root -->
-    <who><!-- comment -->world<!-- comment --></who>
-    <who>your mum</who>
-    <who>fancy <!-- comment --> pants</who>
-</hello>
-<!-- comment after the document element -->
