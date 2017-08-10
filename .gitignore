@@ -5,3 +5,4 @@ libs/
 .idea/uiDesigner.xml
 node_modules/
 .idea/shelf/
+platform/*/common-src/
