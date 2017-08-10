@@ -8,7 +8,7 @@ class JsonRoundTripTest() {
     @Test
     fun round_trips_JSON() {
         ExampleJsonFiles.forEach { exampleName, original ->
-            assertEquals(original, original.toJsonString().toJsonElement(), exampleName)
+            assertEquals(expected = original, actual = original.toJsonString().toJsonElement(), message = exampleName)
         }
     }
 }
