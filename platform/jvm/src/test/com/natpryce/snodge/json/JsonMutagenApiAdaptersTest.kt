@@ -3,7 +3,6 @@ package com.natpryce.snodge.json
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.jsonk.ExampleJsonFiles
-import com.natpryce.jsonk.JsonElement
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -21,24 +20,20 @@ class JsonMutagenApiAdaptersTest(val exampleName: String) {
         fun examples() = ExampleJsonFiles.list()
     }
     
+    val original = ExampleJsonFiles[exampleName]
+    
     @Test
     fun can_apply_mutagen_to_Gson_tree() {
-        ExampleJsonFiles.load(exampleName) { original ->
-            assertThat(original.toGson().toJsonk(), equalTo(original))
-        }
+        assertThat(original.toGson().toJsonk(), equalTo(original))
     }
     
     @Test
     fun can_apply_mutagen_to_Jackson_tree() {
-        ExampleJsonFiles.load(exampleName) { original ->
-            assertThat(original.toJackson().toJsonk(), equalTo(original))
-        }
+        assertThat(original.toJackson().toJsonk(), equalTo(original))
     }
     
     @Test
     fun can_apply_mutagen_to_JSONP_tree() {
-        ExampleJsonFiles.load(exampleName) { original ->
-            assertThat(original.toJsonp().toJsonk(), equalTo(original))
-        }
+        assertThat(original.toJsonp().toJsonk(), equalTo(original))
     }
 }

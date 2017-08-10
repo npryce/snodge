@@ -47,13 +47,12 @@ object ExampleJsonFiles {
     
     fun list() = examples.keys
     
-    fun <T> load(name: String, block: (JsonElement) -> T) =
+    operator fun get(name: String): JsonElement =
         (examples[name]?: throw IllegalArgumentException("JSON example $name not found"))
             .toJsonElement()
-            .let(block)
             
     
     fun forEach(block: (String, JsonElement) -> Unit) {
-        list().forEach { name -> load(name) { json -> block(name, json) } }
+        list().forEach { name -> block(name, get(name)) }
     }
 }

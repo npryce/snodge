@@ -67,14 +67,14 @@ object ExampleXmlFiles {
     fun list() = examples.keys
     
     fun forEach(block: (String, XmlDocument) -> Unit) =
-        list().forEach { name -> block(name, load(name)) }
+        list().forEach { name -> block(name, get(name)) }
     
     fun forEachText(block: (String, String) -> Unit) =
-        list().forEach { name -> block(name, loadText(name)) }
+        list().forEach { name -> block(name, getText(name)) }
     
-    private fun loadText(name: String): String =
+    private fun getText(name: String): String =
         examples[name] ?: throw IllegalArgumentException("example $name not found")
     
-    private fun load(name: String): XmlDocument =
-        loadText(name).toXmlDocument()
+    private fun get(name: String): XmlDocument =
+        getText(name).toXmlDocument()
 }
