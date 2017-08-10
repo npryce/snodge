@@ -43,7 +43,8 @@ $(js_outdir)/test-report.txt: $(JS_LIB_SCRIPTS) test-js.html
 $(js_outdir)/test-report.txt: $(js_outdir)/$(package).js $(js_outdir)/$(package)-test.js
 	@mkdir -p $(dir $@)
 	@echo
-	./node_modules/.bin/node-qunit-phantomjs test-js.html $(QUNIT_FLAGS) | tee $@
+	./node_modules/.bin/node-qunit-phantomjs test-js.html $(QUNIT_FLAGS)
+	@echo SUCCESS > $@
 	@echo
 
 $(js_outdir)/lib/kotlin.js: $(KOTLINHOME)/lib/kotlin-stdlib-js.jar
