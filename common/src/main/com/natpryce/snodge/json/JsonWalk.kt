@@ -5,24 +5,23 @@ import com.natpryce.jsonk.JsonElement
 import com.natpryce.jsonk.JsonObject
 import com.natpryce.jsonk.replace
 import com.natpryce.jsonk.withProperty
+import com.natpryce.snodge.walk
 
 
 fun JsonElement.walk(): Sequence<Pair<JsonElement, (JsonElement) -> JsonElement>> =
-    walk(this, { it })
+    walk(::listChildren, { it })
 
-private fun walk(element: JsonElement, replaceInDocument: (JsonElement) -> JsonElement): Sequence<Pair<JsonElement, (JsonElement) -> JsonElement>> =
-    sequenceOf(Pair(element, replaceInDocument)) + walkChildren(element, replaceInDocument)
-
-private fun walkChildren(parent: JsonElement, replaceInDocument: (JsonElement) -> JsonElement) =
-    when (parent) {
+private fun listChildren(parent: JsonElement): Sequence<Pair<JsonElement, (JsonElement) -> JsonElement>> {
+    return when (parent) {
         is JsonObject ->
-            parent.asSequence().flatMap { (key, child) ->
-                walk(child, { newChild: JsonElement -> replaceInDocument(parent.withProperty(key to newChild)) })
+            parent.asSequence().map { (key, child) ->
+                child to { newChild: JsonElement -> parent.withProperty(key to newChild) }
             }
         is JsonArray ->
-            parent.asSequence().withIndex().flatMap { (i, child) ->
-                walk(child, { newChild: JsonElement -> replaceInDocument(parent.replace(i, newChild)) })
+            parent.asSequence().withIndex().map { (i, child) ->
+                child to { newChild: JsonElement -> parent.replace(i, newChild) }
             }
         else ->
             emptySequence()
     }
+}
