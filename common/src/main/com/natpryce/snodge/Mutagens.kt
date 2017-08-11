@@ -1,5 +1,7 @@
 package com.natpryce.snodge
 
+import com.natpryce.snodge.internal.mapLazy
+
 
 /**
  * Returns a Mutagen that ignores the original value and generates a fixed sequence of values.
@@ -30,3 +32,19 @@ fun <T> repeat(n: Int, mutagen: Mutagen<T>): Mutagen<T> =
 fun <T> map(f: (T)->T): Mutagen<T> =
     fun (_: Random, original: T) =
         sequenceOf(lazy { f(original) })
+
+/**
+ * Creates a mutagen of a recursive data structure, by applying the given mutagen to every applicable node within the structure.
+ */
+inline fun <ROOT, NODE, reified T : NODE> recurse(
+    crossinline walk: (ROOT) -> Sequence<Pair<NODE, (NODE) -> ROOT>>,
+    crossinline nodeMutagen: Mutagen<T>): Mutagen<ROOT> =
+    { random: Random, original: ROOT ->
+        walk(original)
+            .flatMap { (node, replaceInDocument) ->
+                when (node) {
+                    is T -> nodeMutagen(random, node).mapLazy(replaceInDocument)
+                    else -> emptySequence()
+                }
+            }
+    }

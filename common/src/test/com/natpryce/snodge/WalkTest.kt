@@ -22,7 +22,7 @@ class WalkTest {
     enum class NodeType { B, L }
     
     @Test
-    fun walks_structure() {
+    fun walks_recursive_structure() {
         val tree = Branch(Leaf, Branch(Branch(Leaf, Leaf), Branch(Branch(Leaf, Leaf), Leaf)))
         val steps = tree.walk(Node::listChildren)
         
