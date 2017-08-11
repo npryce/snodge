@@ -50,10 +50,6 @@ tagged:
 	@false
 endif
 
-platform/%/common-src/.mounted: common/src/.mounted
-	mkdir -p $(dir $<)
-	$(bindfs) $(dir $<) $(dir $@)
-
 published: $(platforms:%=%-published)
 
 print-%:
