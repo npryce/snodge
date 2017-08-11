@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+case $(uname -s)
+in
+    Darwin)
+        bindfs=bindfs
+        ;;
+    *)
+        bindfs="mount --bind"
+        ;;
+esac
+
+for d in platform/*
+do
+    mkdir -p ${d}
+    ${bindfs} common/src ${d}/common-src
+done

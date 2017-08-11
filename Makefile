@@ -22,13 +22,11 @@ ifndef DOKKA
     DOKKA=dokka
 endif
 
-srcfiles=$(shell find $(wildcard platform/$1/common-src/$2 platform/$1/src/$2) -name '*.kt')
+srcfiles=$(shell find $(wildcard common/src/$2 platform/$1/src/$2) -name '*.kt')
 topath=$(subst $(eval) ,:,$1)
 
 all: $(platforms)
 
-include Makefile_$(shell uname -s)
-include $(platforms:%=platform/%/common-src/.mounted)
 include $(platforms:%=Makefile_%)
 
 clean:
