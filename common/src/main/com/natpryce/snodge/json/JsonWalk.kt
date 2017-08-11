@@ -9,7 +9,7 @@ import com.natpryce.snodge.walk
 
 
 fun JsonElement.walk(): Sequence<Pair<JsonElement, (JsonElement) -> JsonElement>> =
-    walk(::listChildren, { it })
+    walk(::listChildren)
 
 private fun listChildren(parent: JsonElement): Sequence<Pair<JsonElement, (JsonElement) -> JsonElement>> {
     return when (parent) {
