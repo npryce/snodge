@@ -36,4 +36,9 @@ class JsonMutagenApiAdaptersTest(val exampleName: String) {
     fun can_apply_mutagen_to_JSONP_tree() {
         assertThat(original.toJsonp().toJsonk(), equalTo(original))
     }
+    
+    @Test
+    fun can_apply_mutagen_to_Argo_tree() {
+        assertThat(original.toArgo().toJsonk(), equalTo(original))
+    }
 }
