@@ -46,7 +46,7 @@ class JsonMutagenTest {
         val mutatedDocs = random.mutants(mutagen, 2, doc)
         
         assertEquals(
-            message="number of mutations",
+            message = "number of mutations",
             actual = mutatedDocs.size,
             expected = 2)
         
@@ -65,17 +65,17 @@ class JsonMutagenTest {
         val doc = list(list(1, 2), list(list(3, 4), list(5, 6, list(7, 8)), list(9, 10)), list(11, 12))
         
         random.setSeed(0)
-        val mutatedDocs = random.mutants(mutagen, 2, doc)
+        val mutatedDocs = random.mutants(mutagen, 2, original = doc)
         
         assertEquals(
-            message="number of mutations",
+            message = "number of mutations",
             actual = mutatedDocs.size,
             expected = 2)
         
         random.setSeed(99)
         assertNotEquals(
-            random.mutants(mutagen, 2, doc),
-            random.mutants(mutagen, 2, doc))
+            random.mutants(mutagen, 2, original = doc),
+            random.mutants(mutagen, 2, original = doc))
     }
     
     @Test
@@ -84,7 +84,7 @@ class JsonMutagenTest {
         
         assertEquals(
             message = "number of mutations",
-            actual = random.mutants(mutagen, 10, doc).size,
+            actual = random.mutants(mutagen, 10, original = doc).size,
             expected = 3)
     }
     
