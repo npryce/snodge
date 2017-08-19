@@ -72,7 +72,7 @@ Example output:
 API Adapters
 ------------
 
-On the JVM, Snodge can mutate the JSON object models of the [Jackson](https://github.com/FasterXML/jackson), [GSON](https://github.com/google/gson) & [JSR-374 JSONP](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm) APIs, and JSON and XML serialised as text and binary. 
+On the JVM, Snodge can mutate the JSON object models of the [Jackson](https://github.com/FasterXML/jackson), [GSON](https://github.com/google/gson) & [JSR-374 JSONP](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm) and [Argo](http://argo.sourceforge.net/) APIs, and JSON and XML serialised as text and binary. 
 
 On JavaScript, Snodge can mutate XML as DOM Documents, and XML and JSON as text.
 
