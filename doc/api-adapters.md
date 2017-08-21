@@ -9,6 +9,8 @@ If your favourite API is not supported let us know. Until it is, you can fall ba
 
 ## JSON API Adapters:
 
+Import `com.natpryce.snodge.json.`_forXxx_ (where _forXxx_ is the API adapter you want to use).
+
 [Argo](http://argo.sourceforge.net/): `Mutagen<JsonElement>.forArgo()`
 
 [GSON](https://github.com/google/gson): `Mutagen<JsonElement>.forGson()`
@@ -20,6 +22,8 @@ If your favourite API is not supported let us know. Until it is, you can fall ba
 JSON serialised as a string: `Mutagen<JsonElement>.forStrings()`
 
 ## XML API Adapters
+
+Import `com.natpryce.snodge.xml.`_forXxx_ (where _forXxx_ is the API adapter you want to use).
 
 [W3C DOM](https://www.w3.org/DOM/): `Mutagen<XmlDocument>.forDOM()`
 
