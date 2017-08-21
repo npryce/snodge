@@ -23,7 +23,7 @@ JSON serialised as a string: `Mutagen<JsonElement>.forStrings()`
 
 ## XML API Adapters
 
-Import `com.natpryce.snodge.xml.`_forXxx_ (where _forXxx_ is the API adapter you want to use).
+Import `com.natpryce.snodge.xml.forXxx` (where _forXxx_ is the API adapter you want to use).
 
 [W3C DOM](https://www.w3.org/DOM/): `Mutagen<XmlDocument>.forDOM()`
 
