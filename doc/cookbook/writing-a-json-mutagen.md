@@ -4,8 +4,8 @@ The `JsonMutagen` function turns a mutagen of a node within a JSON document into
 
 For example, a Mutagen that replaces any number node with a random integer:
 
-~~~~kotlin
+````kotlin
 fun numberToRandomInteger() = JsonMutagen<JsonNumber> { random, original ->
     sequenceOf(lazy { JsonNumber(random.nextInt()) })
 }
-~~~~
+````
