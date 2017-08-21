@@ -9,7 +9,7 @@ If your favourite API is not supported let us know. Until it is, you can fall ba
 
 ## JSON API Adapters:
 
-Import `com.natpryce.snodge.json.`_forXxx_ (where _forXxx_ is the API adapter you want to use).
+Import `com.natpryce.snodge.json.forXxx` (where _forXxx_ is the API adapter you want to use).
 
 [Argo](http://argo.sourceforge.net/): `Mutagen<JsonElement>.forArgo()`
 
