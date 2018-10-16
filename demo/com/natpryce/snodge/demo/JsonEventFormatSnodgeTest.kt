@@ -11,7 +11,7 @@ import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
 import com.natpryce.snodge.json.reorderObjectProperties
 import com.natpryce.snodge.mutants
-import org.junit.Test
+import kotlin.test.Test
 import java.io.IOException
 import java.net.URI
 

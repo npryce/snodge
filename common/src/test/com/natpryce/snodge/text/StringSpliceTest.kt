@@ -3,7 +3,7 @@ package com.natpryce.snodge.text
 import com.natpryce.snodge.Mutagen
 import com.natpryce.snodge.Random
 import com.natpryce.snodge.repeat
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class StringSpliceTest {

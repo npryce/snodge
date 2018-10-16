@@ -14,7 +14,7 @@ private fun Any?.toJsonElement(): JsonElement {
         is Boolean -> JsonBoolean(this)
         is Array<*> -> JsonArray(this.map { it.toJsonElement() })
         else -> { // assume object
-            @Suppress("UNCHECKED_CAST_TO_NATIVE_INTERFACE")
+            @Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
             val json: Json = this as Json
             JsonObject(Object.keys(json).map { it to json[it].toJsonElement() })
         }

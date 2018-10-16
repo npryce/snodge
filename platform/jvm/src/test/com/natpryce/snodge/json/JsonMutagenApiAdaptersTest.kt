@@ -3,7 +3,7 @@ package com.natpryce.snodge.json
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.jsonk.ExampleJsonFiles
-import org.junit.Test
+import kotlin.test.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters

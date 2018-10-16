@@ -3,7 +3,7 @@ package com.natpryce.snodge.xml;
 import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutant
 import com.natpryce.xmlk.toXmlDocument
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertNotEquals
 
 class XmlMutagenForStringsTest {

@@ -5,7 +5,7 @@ import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutant
 import com.natpryce.snodge.mutants
 import com.natpryce.snodge.plus
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue

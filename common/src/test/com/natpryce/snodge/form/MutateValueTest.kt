@@ -2,7 +2,7 @@ package com.natpryce.snodge.form
 
 import com.natpryce.snodge.Random
 import com.natpryce.snodge.always
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 

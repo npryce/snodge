@@ -5,7 +5,7 @@ import com.natpryce.xmlk.XmlComment
 import com.natpryce.xmlk.XmlDocument
 import com.natpryce.xmlk.XmlElement
 import com.natpryce.xmlk.XmlText
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class XmlWalkTest {

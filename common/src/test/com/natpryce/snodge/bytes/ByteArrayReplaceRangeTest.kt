@@ -1,7 +1,7 @@
 package com.natpryce.snodge.bytes
 
 import com.natpryce.snodge.internal.replaceRange
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 

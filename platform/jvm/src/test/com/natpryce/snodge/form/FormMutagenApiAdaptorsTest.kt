@@ -2,7 +2,7 @@ package com.natpryce.snodge.form
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.junit.Test
+import kotlin.test.Test
 
 class FormMutagenApiAdaptorsTest {
     val original = form(

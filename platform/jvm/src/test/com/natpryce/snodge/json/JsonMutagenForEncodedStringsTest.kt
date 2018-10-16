@@ -6,7 +6,7 @@ import com.natpryce.jsonk.toJsonString
 import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutant
 import com.natpryce.snodge.plus
-import org.junit.Test
+import kotlin.test.Test
 import java.nio.charset.Charset
 import kotlin.test.assertNotEquals
 

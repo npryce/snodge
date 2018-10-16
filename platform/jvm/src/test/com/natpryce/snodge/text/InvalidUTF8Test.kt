@@ -3,7 +3,7 @@ package com.natpryce.snodge.text
 import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutants
 import org.junit.Assert.fail
-import org.junit.Test
+import kotlin.test.Test
 import java.nio.ByteBuffer
 import java.nio.charset.CharacterCodingException
 import java.nio.charset.CodingErrorAction

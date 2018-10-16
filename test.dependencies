@@ -1,3 +1,4 @@
 mvn:junit:junit:jar|sources:4.12
 mvn:org.hamcrest:java-hamcrest:jar|sources:2.0.0.0
 mvn:com.natpryce:hamkrest:jar|sources:1.4.0.0
+mvn:org.jetbrains.kotlin:kotlin-test-junit:jar|sources:1.2.71

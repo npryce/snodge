@@ -2,7 +2,7 @@ package com.natpryce.snodge
 
 import com.natpryce.snodge.WalkTest.NodeType.B
 import com.natpryce.snodge.WalkTest.NodeType.L
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 

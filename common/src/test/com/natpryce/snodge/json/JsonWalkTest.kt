@@ -3,7 +3,7 @@ package com.natpryce.snodge.json
 import com.natpryce.jsonk.JsonElement
 import com.natpryce.jsonk.JsonNull
 import com.natpryce.jsonk.JsonString
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class JsonWalkTest {

@@ -25,6 +25,7 @@ private fun Node.toXmlNode(): XmlNode =
         else -> throw IllegalArgumentException("cannot convert ${this::class.simpleName} to XmlNode")
     }
 
+@Suppress("UNNECESSARY_SAFE_CALL") // Required for JVM platform but not JS platform
 private fun ProcessingInstruction.toXmlProcessingInstruction() =
     XmlProcessingInstruction(target, data?.takeIf { it.isNotEmpty() })
 
