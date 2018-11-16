@@ -5,7 +5,7 @@ jdk:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y xsltproc xmlstarlet nodejs
+  - sudo apt-get install -y xsltproc xmlstarlet libxml2-utils nodejs
   - rm -rf ~/.sdkman
   - curl -s get.sdkman.io > ~/install_sdkman.sh
   - chmod 775 ~/install_sdkman.sh
