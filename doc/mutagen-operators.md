@@ -69,7 +69,7 @@ For example:
 * a mutagen for JSON serialised as UTF-8 text, that also generates mutants with invalid UTF-8 byte sequences:
 
   ~~~~~~~~kotlin
-  allJsonLMutagens().forEncodedStrings(UTF_8).and(invalidUTF8())
+  allJsonMutagens().forEncodedStrings(UTF_8).and(invalidUTF8())
   ~~~~~~~~  
 
 ### Repeat
