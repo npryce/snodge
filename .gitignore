@@ -6,3 +6,4 @@ libs/
 node_modules/
 .idea/shelf/
 platform/*/common-src/
+build/
