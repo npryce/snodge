@@ -1,5 +1,6 @@
 package com.natpryce.snodge.json
 
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.natpryce.jsonk.JsonArray
 import com.natpryce.jsonk.JsonBoolean
 import com.natpryce.jsonk.JsonElement
@@ -30,7 +31,7 @@ fun JacksonNode.toJsonk(): JsonElement =
 fun JsonElement.toJackson(): JacksonNode =
     when (this) {
         is JsonObject -> jackson.objectNode().also {
-            it.setAll(properties.mapValues { (_, value) -> value.toJackson() })
+            it.setAll<ObjectNode>(properties.mapValues { (_, value) -> value.toJackson() })
         }
         is JsonArray -> jackson.arrayNode().also {
             it.addAll(elements.map { it.toJackson() })

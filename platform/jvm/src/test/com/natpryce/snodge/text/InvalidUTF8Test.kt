@@ -1,12 +1,12 @@
 package com.natpryce.snodge.text
 
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutants
 import org.junit.Assert.fail
 import kotlin.test.Test
 import java.nio.ByteBuffer
 import java.nio.charset.CharacterCodingException
 import java.nio.charset.CodingErrorAction
+import kotlin.random.Random
 import kotlin.text.Charsets.UTF_8
 
 class InvalidUTF8Test {
@@ -16,7 +16,7 @@ class InvalidUTF8Test {
         
         val decoder = UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
         
-        Random().mutants(invalidUTF8(), 1000, original).forEach { mutantEncoded ->
+        Random.mutants(invalidUTF8(), 1000, original).forEach { mutantEncoded ->
             try {
                 decoder.decode(ByteBuffer.wrap(mutantEncoded))
                 fail("decoding should have failed")

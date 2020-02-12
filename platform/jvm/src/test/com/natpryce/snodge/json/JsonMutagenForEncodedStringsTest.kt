@@ -3,15 +3,15 @@ package com.natpryce.snodge.json
 import com.natpryce.jsonk.JsonNull
 import com.natpryce.jsonk.toJsonElement
 import com.natpryce.jsonk.toJsonString
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutant
 import com.natpryce.snodge.plus
 import kotlin.test.Test
 import java.nio.charset.Charset
+import kotlin.random.Random
 import kotlin.test.assertNotEquals
 
 class JsonMutagenForEncodedStringsTest {
-    val random = Random()
+    val random = Random
     val mutagen = addObjectProperty(JsonNull) + addArrayElement(JsonNull)
     
     @Test

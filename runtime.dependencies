@@ -1,6 +1,6 @@
 mvn:org.glassfish:javax.json:jar|sources:1.1
 mvn:com.google.code.gson:gson:jar|sources:2.8.0
-mvn:com.fasterxml.jackson.core:jackson-core:jar|sources:2.9.7
-mvn:com.fasterxml.jackson.core:jackson-databind:jar|sources:2.9.7
+mvn:com.fasterxml.jackson.core:jackson-core:jar|sources:2.10.2
+mvn:com.fasterxml.jackson.core:jackson-databind:jar|sources:2.10.2
 mvn:net.sourceforge.argo:argo:jar|sources:4.6
 mvn:io.undertow:undertow-core:jar|sources:1.4.16.Final

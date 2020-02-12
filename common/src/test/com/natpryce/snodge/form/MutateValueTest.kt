@@ -1,7 +1,7 @@
 package com.natpryce.snodge.form
 
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.always
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -11,7 +11,7 @@ class MutateValueTest {
     fun mutate_value_of_form_field() {
         val original = form("a" to "a1", "b" to "b1", "a" to "a2")
         
-        val mutants = mutateValue(always("x")).invoke(Random(), original).map { it.value }.toSet()
+        val mutants = mutateValue(always("x")).invoke(Random.Default, original).map { it.value }.toSet()
         
         assertEquals(
             setOf(

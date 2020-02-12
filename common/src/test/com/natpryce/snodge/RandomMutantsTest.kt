@@ -1,11 +1,12 @@
 package com.natpryce.snodge
 
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class RandomMutantsTest {
-    val rng = Random()
+    val rng = Random.Default
     val mutagen = { _: Random, original: String -> sequenceOf(lazyOf(original+"-1"), lazyOf(original+"-2")) }
     
     @Test

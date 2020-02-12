@@ -1,17 +1,17 @@
 package com.natpryce.snodge.json
 
 import com.natpryce.jsonk.JsonNull
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutant
 import com.natpryce.snodge.mutants
 import com.natpryce.snodge.plus
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class JsonMutagenTest {
-    val random = Random()
+    val random = Random.Default
     val mutagen = addObjectProperty(JsonNull) + addArrayElement(JsonNull)
     
     @Test
@@ -64,18 +64,18 @@ class JsonMutagenTest {
     fun returns_a_random_sample_of_all_possible_mutations() {
         val doc = list(list(1, 2), list(list(3, 4), list(5, 6, list(7, 8)), list(9, 10)), list(11, 12))
         
-        random.setSeed(0)
-        val mutatedDocs = random.mutants(mutagen, 2, original = doc)
+        val random0 = Random(0)
+        val mutatedDocs = random0.mutants(mutagen, 2, original = doc)
         
         assertEquals(
             message = "number of mutations",
             actual = mutatedDocs.size,
             expected = 2)
         
-        random.setSeed(99)
+        val random99 = Random(99)
         assertNotEquals(
-            random.mutants(mutagen, 2, original = doc),
-            random.mutants(mutagen, 2, original = doc))
+            random0.mutants(mutagen, 2, original = doc),
+            random99.mutants(mutagen, 2, original = doc))
     }
     
     @Test

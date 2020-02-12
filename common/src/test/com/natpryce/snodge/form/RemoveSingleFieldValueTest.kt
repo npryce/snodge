@@ -1,6 +1,6 @@
 package com.natpryce.snodge.form
 
-import com.natpryce.snodge.Random
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -10,7 +10,7 @@ class RemoveSingleFieldValueTest {
     fun removes_single_mapping_from_form() {
         val original = form("a" to "a1", "b" to "b1", "a" to "a2")
         
-        val mutants = removeSingleFieldValue().invoke(Random(), original).map { it.value }.toSet()
+        val mutants = removeSingleFieldValue().invoke(Random.Default, original).map { it.value }.toSet()
         
         assertEquals(
             setOf(

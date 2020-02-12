@@ -1,13 +1,15 @@
 package com.natpryce.snodge
 
+import kotlin.random.Random
+
 fun <T> Random.sample(maxSampleSize: Int, sequence: Sequence<T>): List<T> =
     sampleFrom(sequence.iterator(), maxSampleSize, this)
 fun <T> Random.sample(maxSampleSize: Int, sequence: Iterable<T>): List<T> =
     sampleFrom(sequence.iterator(), maxSampleSize, this)
 
-fun <T> Sequence<T>.sample(maxSampleSize: Int, rng: Random = Random()): List<T> =
+fun <T> Sequence<T>.sample(maxSampleSize: Int, rng: Random = Random.Default): List<T> =
     sampleFrom(this.iterator(), maxSampleSize, rng)
-fun <T> Iterable<T>.sample(maxSampleSize: Int, rng: Random = Random()): List<T> =
+fun <T> Iterable<T>.sample(maxSampleSize: Int, rng: Random = Random.Default): List<T> =
     sampleFrom(this.iterator(), maxSampleSize, rng)
 
 private fun <T> sampleFrom(sequence: Iterator<T>, maxSampleSize: Int, random: Random): MutableList<T> {

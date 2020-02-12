@@ -1,8 +1,8 @@
 package com.natpryce.snodge.bytes
 
 import com.natpryce.snodge.Mutagen
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.repeat
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -14,7 +14,7 @@ class ByteArraySpliceTest {
         
         val spliceLocations = mutableSetOf<Int>()
         
-        mutagen(Random(), original).map { it.value }.forEach {
+        mutagen(Random.Default, original).map { it.value }.forEach {
             assertTrue(1 in it && 2 in it, "original: $original, mutant: $it")
             
             spliceLocations += it.indexOf(1)
@@ -32,7 +32,7 @@ class ByteArraySpliceTest {
         val mutagen = repeat(100, splice(sliceMutagen))
         val original = byteArrayOf(1, 2, 3, 4)
         
-        mutagen(Random(), original).map { it.value }.forEach { mutant ->
+        mutagen(Random.Default, original).map { it.value }.forEach { mutant ->
             assertTrue(mutant.find { it > 10 } != null, "original: $original, mutant: $mutant")
         }
     }

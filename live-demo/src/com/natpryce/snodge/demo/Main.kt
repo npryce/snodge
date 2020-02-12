@@ -1,7 +1,6 @@
 package com.natpryce.snodge.demo
 
 import com.natpryce.snodge.Mutagen
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
 import com.natpryce.snodge.mutant
@@ -17,6 +16,7 @@ import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.dom.addClass
 import kotlin.dom.removeClass
+import kotlin.random.Random
 
 external class SyntaxError : Throwable
 
@@ -96,12 +96,11 @@ val dataTypes = mapOf(
         mutagen = { defaultJsonMutagens().forStrings() })
 )
 
-val random = Random()
 val originalTextArea = document.getElementById("original") as HTMLTextAreaElement
 val mutantTextArea = document.getElementById("mutant") as HTMLTextAreaElement
 val inputTypeSelector = document.getElementById("type") as HTMLSelectElement
 
-fun main(args: Array<String>) {
+fun main() {
     val mutateButton = document.getElementById("mutate") as HTMLButtonElement
     
     var timer: Int? = null
@@ -143,7 +142,7 @@ fun selectedMutagen(code: String): Mutagen<String> =
 private fun mutate() {
     val originalText = originalTextArea.value
     try {
-        val mutantText = random.mutant(selectedMutagen(inputTypeSelector.value), originalText)
+        val mutantText = Random.mutant(selectedMutagen(inputTypeSelector.value), originalText)
         mutantTextArea.value = mutantText
         clearError()
     }

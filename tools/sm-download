@@ -1,2 +1,5 @@
 #!/bin/sh
-java -cp $(dirname $0)/sm-*.jar com.googlecode.shavenmaven.Dependencies "$@"
+java -cp "$(dirname $0)"/sm-*.jar \
+  -Dshavenmaven.default-repository=https://repo1.maven.org/maven2/ \
+  com.googlecode.shavenmaven.Dependencies \
+  "$@"

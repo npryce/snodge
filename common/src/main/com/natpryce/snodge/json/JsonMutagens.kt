@@ -17,7 +17,6 @@ import com.natpryce.snodge.combine
 import com.natpryce.snodge.filtered
 import com.natpryce.snodge.plus
 import com.natpryce.snodge.reflect.troublesomeClasses
-import com.natpryce.snodge.shuffled
 
 
 fun addArrayElement(newElement: JsonElement) = JsonMutagen { _, elementToMutate: JsonArray ->
@@ -67,7 +66,7 @@ fun replaceJsonElement(replacement: JsonElement) =
 
 fun reorderObjectProperties() = JsonMutagen { random, elementToMutate: JsonObject ->
     sequenceOf(lazy {
-        JsonObject(random.shuffled(elementToMutate.properties.toList()))
+        JsonObject(elementToMutate.properties.toList().shuffled(random))
     })
 }
 

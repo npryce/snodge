@@ -9,7 +9,7 @@ js_src_test:=$(call srcfiles,js,test)
 js_src_demo:=$(shell find live-demo/src -name '*.kt')
 
 JS_KOTLINC=kotlinc-js
-JS_KOTLINC_FLAGS=-meta-info -source-map -target v5 -module-kind umd -language-version 1.1 -api-version 1.1
+JS_KOTLINC_FLAGS=-meta-info -source-map -target v5 -module-kind umd -language-version 1.3 -api-version 1.3
 
 JS_LIB_SCRIPTS=$(js_outdir)/lib/kotlin.js $(js_outdir)/lib/kotlin-test.js
 .PRECIOUS: $(JS_LIB_SCRIPTS)

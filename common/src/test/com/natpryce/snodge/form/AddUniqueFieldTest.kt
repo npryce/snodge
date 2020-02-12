@@ -1,6 +1,6 @@
 package com.natpryce.snodge.form
 
-import com.natpryce.snodge.Random
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -11,7 +11,7 @@ class AddUniqueFieldTest {
         val original = form("a" to "1")
         val mutagen = addUniqueField(listOf("10", "11", "12"), basename = "x")
         
-        val mutants = mutagen.invoke(Random(), original).map { it.value }.toSet()
+        val mutants = mutagen(Random.Default, original).map { it.value }.toSet()
         
         assertEquals(setOf(form("a" to "1", "x" to "10", "x" to "11", "x" to "12")), mutants)
     }
@@ -21,7 +21,7 @@ class AddUniqueFieldTest {
         val original = form("x" to "1")
         val mutagen = addUniqueField(listOf("10", "11"), basename = "x")
         
-        val mutants = mutagen.invoke(Random(), original).map { it.value }.toSet()
+        val mutants = mutagen(Random.Default, original).map { it.value }.toSet()
         
         assertEquals(setOf(form("x" to "1", "x_1" to "10", "x_1" to "11")), mutants)
     }

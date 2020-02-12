@@ -1,5 +1,6 @@
 package com.natpryce.snodge
 
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -10,7 +11,7 @@ class MutagenAndTest {
         val mutagen = always("alice", "bob")
             .and { _, mutant -> sequenceOf(lazy { mutant.toUpperCase() }, lazy { mutant.substring(0, 1) }) }
         
-        val mutants = mutagen(Random(), "original").map { it.value }.toSet()
+        val mutants = mutagen(Random.Default, "original").map { it.value }.toSet()
         
         assertEquals(
             setOf(

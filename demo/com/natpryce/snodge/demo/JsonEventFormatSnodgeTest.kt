@@ -5,7 +5,6 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.jsonk.JsonElement
 import com.natpryce.jsonk.JsonString
 import com.natpryce.snodge.Mutagen
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.json.addObjectProperty
 import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
@@ -14,6 +13,7 @@ import com.natpryce.snodge.mutants
 import kotlin.test.Test
 import java.io.IOException
 import java.net.URI
+import kotlin.random.Random
 
 class JsonEventFormatSnodgeTest {
     
@@ -29,7 +29,7 @@ class JsonEventFormatSnodgeTest {
     
     @Test
     fun parsesEventSuccessfullyOrThrowsIOException() {
-        Random().mutants(defaultJsonMutagens().forStrings(), mutationCount, format.serialise(originalEvent)).forEach { s ->
+        Random.mutants(defaultJsonMutagens().forStrings(), mutationCount, format.serialise(originalEvent)).forEach { s ->
             assertParsesEventSuccessfullyOrThrowsIOException(s)
         }
     }
@@ -45,7 +45,7 @@ class JsonEventFormatSnodgeTest {
     }
     
     private fun assertSerialisationUnaffectedBy(mutagen: Mutagen<JsonElement>) {
-        Random().mutants(mutagen.forStrings(), 1000, format.serialise(originalEvent))
+        Random.mutants(mutagen.forStrings(), 1000, format.serialise(originalEvent))
             .forEach { assertParsedEventEqualToOriginal(it) }
     }
     

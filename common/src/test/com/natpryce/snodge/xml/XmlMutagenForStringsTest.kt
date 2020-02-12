@@ -1,14 +1,14 @@
-package com.natpryce.snodge.xml;
+package com.natpryce.snodge.xml
 
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutant
 import com.natpryce.xmlk.toXmlDocument
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
 
 class XmlMutagenForStringsTest {
     val mutagen = replaceText("XXXX")
-    val random = Random()
+    val random = Random.Default
     
     @Test
     fun can_mutate_xml_text() {

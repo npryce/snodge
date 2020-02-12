@@ -1,12 +1,12 @@
 package com.natpryce.snodge.form
 
 import com.natpryce.snodge.Mutagen
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.combine
 import com.natpryce.snodge.internal.mapLazy
 import com.natpryce.snodge.reflect.replaceWithTroublesomeClassName
 import com.natpryce.snodge.text.possiblyMeaningfulStrings
 import com.natpryce.snodge.text.replaceWithPossiblyMeaningfulText
+import kotlin.random.Random
 
 fun removeSingleFieldValue(): Mutagen<Form> =
     fun(_: Random, original: Form) =

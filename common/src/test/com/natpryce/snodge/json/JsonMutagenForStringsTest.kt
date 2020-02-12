@@ -2,15 +2,15 @@ package com.natpryce.snodge.json
 
 import com.natpryce.jsonk.JsonNull
 import com.natpryce.jsonk.toJsonElement
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.mutant
 import com.natpryce.snodge.plus
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertNotEquals
 
 class JsonMutagenForStringsTest {
     val mutagen = addObjectProperty(JsonNull) + addArrayElement(JsonNull)
-    val random = Random()
+    val random = Random.Default
     
     @Test
     fun can_mutate_json_text() {

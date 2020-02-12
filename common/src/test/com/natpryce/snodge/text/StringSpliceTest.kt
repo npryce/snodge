@@ -1,8 +1,8 @@
 package com.natpryce.snodge.text
 
 import com.natpryce.snodge.Mutagen
-import com.natpryce.snodge.Random
 import com.natpryce.snodge.repeat
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -14,7 +14,7 @@ class StringSpliceTest {
         
         val spliceLocations = mutableSetOf<Int>()
         
-        mutagen(Random(), original).map { it.value }.forEach {
+        mutagen(Random.Default, original).map { it.value }.forEach {
             assertTrue("original: $original, mutant: $it") {it.contains("foo")}
             
             spliceLocations += it.indexOf("foo")
@@ -31,7 +31,7 @@ class StringSpliceTest {
         val mutagen = repeat(100, splice(toUpperCase))
         val original = "alice"
         
-        mutagen(Random(), original).map { it.value }.forEach { mutant ->
+        mutagen(Random.Default, original).map { it.value }.forEach { mutant ->
             assertTrue("original: $original, mutant: $mutant") {mutant.any { it == it.toUpperCase() }}
         }
     }

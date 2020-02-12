@@ -1,6 +1,6 @@
 package com.natpryce.snodge.form
 
-import com.natpryce.snodge.Random
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -16,7 +16,7 @@ class RemoveFieldTest {
             "b" to "b3"
         )
         
-        val mutants = removeField().invoke(Random(), original).map { it.value }.toSet()
+        val mutants = removeField().invoke(Random.Default, original).map { it.value }.toSet()
         
         assertEquals(
             setOf(

@@ -5,7 +5,7 @@ jvm_srcdir_main=platform/jvm/src/main
 jvm_srcdir_test=platform/jvm/src/test
 
 JVM_KOTLINC=kotlinc-jvm
-JVM_KOTLINCFLAGS=-Xmulti-platform
+JVM_KOTLINCFLAGS=-Xmulti-platform -language-version 1.3 -api-version 1.3
 
 jvm_classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(filter %.jar,$^))))
 
@@ -45,8 +45,7 @@ $(jvm_outdir)/$(package)-$(version)-test.jar: $(jvm_src_test) $(jvm_outdir)/$(pa
     $(KOTLINHOME)/lib/kotlin-test.jar
 
 $(jvm_outdir)/test-report.txt: $(jvm_outdir)/$(package)-$(version)-test.jar $(jvm_outdir)/$(package)-$(version).jar $(libs_main) $(libs_runtime) $(libs_test)
-	$(JAVA) $(jvm_classpath):$(KOTLINHOME)/lib/kotlin-runtime.jar:$(KOTLINHOME)/lib/kotlin-reflect.jar:$(KOTLINHOME)/lib/kotlin-test.jar \
-	    org.junit.runner.JUnitCore $(jvm_tests) | tee "$@"
+	kotlin $(jvm_classpath):$(KOTLINHOME)/lib/kotlin-test.jar org.junit.runner.JUnitCore $(jvm_tests) | tee "$@"
 	@tail -n 2 "$@" | head -n 1 | grep -E --quiet '^OK'
 
 $(jvm_outdir)/$(package)-$(version)-sources.jar: $(jvm_src_main)

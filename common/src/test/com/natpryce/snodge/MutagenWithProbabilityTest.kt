@@ -1,5 +1,6 @@
 package com.natpryce.snodge
 
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -17,6 +18,7 @@ class MutagenWithProbabilityTest {
     
     fun randomReturning(value: Double) = object: Random() {
         override fun nextDouble() = value
+        override fun nextBits(bitCount: Int) = throw NotImplementedError("not implemented")
     }
 }
 
