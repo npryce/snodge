@@ -28,7 +28,7 @@ In a Nutshell
 Add a dependency on Snodge (replace `<version>` with the version of Snodge you wish to use):
 
 ~~~~~~~~~~~~~~~~~~~~~~gradle
-compile 'com.natpryce:snodge:<version>'
+testImplementation 'com.natpryce:snodge:<version>'
 ~~~~~~~~~~~~~~~~~~~~~~
 
 For the JVM platform, add an implementation of the [JSR-374 JSONP API](http://docs.oracle.com/middleware/1213/wls/WLPRG/java-api-for-json-proc.htm), such as:
