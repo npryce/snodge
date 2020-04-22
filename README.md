@@ -89,5 +89,6 @@ Previous versions:
 - Version 1.x.x.x (java7 branch) is for Java 7 and depends on Guava
 
 [Download from Maven Central](http://mvnrepository.com/artifact/com.natpryce/snodge)
+
 [Download from NPM](https://www.npmjs.com/package/snodge-3)
 
