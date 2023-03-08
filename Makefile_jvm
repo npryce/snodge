@@ -5,7 +5,7 @@ jvm_srcdir_main=platform/jvm/src/main
 jvm_srcdir_test=platform/jvm/src/test
 
 JVM_KOTLINC=kotlinc-jvm
-JVM_KOTLINCFLAGS=-Xmulti-platform -language-version 1.3 -api-version 1.3
+JVM_KOTLINCFLAGS=-Xmulti-platform -language-version 1.8 -api-version 1.8
 
 jvm_classpath=$(patsubst %,-classpath %,$(call topath,$(filter-out %-sources.jar,$(filter %.jar,$^))))
 
