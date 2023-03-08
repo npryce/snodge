@@ -12,6 +12,6 @@ esac
 
 for d in platform/*
 do
-    mkdir -p ${d}/common-src
-    ${bindfs} common/src ${d}/common-src
+    mkdir -p "${d}/common-src"
+    ${bindfs} "common/src" "${d}/common-src"
 done
